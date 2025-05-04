@@ -1,0 +1,84 @@
+Time tracker:
+
+User management:
+	Log in:
+		Login with email and password
+	Register:
+		Register with email, password, display name
+	User settings:
+		Change password, display name and image
+
+Admin user:
+	Can create groups of users
+	Can add/remove users from groups
+	Can create categories / subcategories
+	
+Time tracking:
+	Table view
+	Day view
+	Week view
+	Month view
+	Normal users:
+		Can add own time to schedule
+		Can edit records on own timeline (unless added and locked by admin)
+	Admin users:
+		Can select group to filter users
+		Can select user to edit timeline
+	Real-time changes:
+		Use SignalR to propagate changes done by other users
+
+Reports:
+	Can see percentage of tasks based on categories
+	Can see graphs of categories based on days / weeks
+	Can export reports
+	Normal user:
+		Can see report of own hours
+	Admin user:
+		Can see report of group for all users and categories
+		
+Audits:
+	Every action is stored in DB in format: Action, EntityId, UserId, Timestamp
+	Normal users:
+		Can see actions from them or affecting them
+	Admin users:
+		Can see all actions in groups they administer
+		
+Chat: 
+	Use chat between users in side panel
+		
+Technical:
+	Backend:
+		Auth: either own or Auth0
+		Configuration to be loaded from local and from Azure Config and Key Vault
+		Minimal API
+		Mediator
+			Middleware for command validation
+			Middleware for authorization validation
+		Database
+			Models in db layer
+			SQL server
+		Messaging
+			Used for email send
+			ServiceBus
+		Function for ServiceBus handling
+	Frontend
+		React
+			Suspense for loading
+			React query for caching
+			Api wrapper for endpoint organization
+			Lazy loading for module deferred load
+			Zustand for cross-page browser management
+	Testing:
+		Backend:
+			Unit tests
+			Integration tests
+		Frontend:
+			Component testing
+			Unit testing if possible
+
+Notes:
+	User middleware to load into context and accessor injected
+	Use database models for persistence and map to domain models
+	For testing, use builders and mock implementations for setup
+	For integration tests, use SQLite
+	Use at least one hour each day to add code

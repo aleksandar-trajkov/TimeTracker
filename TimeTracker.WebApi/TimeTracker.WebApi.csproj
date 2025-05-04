@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>526e9268-cc5d-47fa-a1dc-3d9b4bde8286</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.15" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TimeTracker.Application.Interfaces\TimeTracker.Application.Interfaces.csproj" />
+    <ProjectReference Include="..\TimeTracker.Application\TimeTracker.Application.csproj" />
+    <ProjectReference Include="..\TimeTracker.Domain\TimeTracker.Domain.csproj" />
+    <ProjectReference Include="..\TimeTracker.IoC\TimeTracker.IoC.csproj" />
+    <ProjectReference Include="..\TimeTracker.WebApi.Contracts\TimeTracker.WebApi.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
