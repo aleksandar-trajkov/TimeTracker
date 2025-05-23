@@ -18,10 +18,10 @@ public class UserRepository : BaseRepository<User, Guid>, IUserRepository
             .AnyAsync(u => u.Email == email, cancellationToken);
     }
 
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         return await this.Entities
             .Include(x => x.Permissions)
-            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+            .SingleAsync(u => u.Email == email, cancellationToken);
     }
 }

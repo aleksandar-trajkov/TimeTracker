@@ -21,7 +21,7 @@ namespace TimeTracker.Application.UseCases.Auth.Validators
                 .WithMessage("Password is required");
             RuleFor(x => x.Password)
                 .MinimumLength(8)
-                .WithMessage("Password must be at least 6 characters long.");
+                .WithMessage("Password must be at least 8 characters long.");
 
             RuleFor(x => x.Email)
                 .MustAsync(async (email, cancellation) => await userRepository.ExistsByEmailAsync(email, cancellation))

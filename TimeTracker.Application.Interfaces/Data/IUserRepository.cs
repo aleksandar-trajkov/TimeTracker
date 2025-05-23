@@ -6,5 +6,5 @@ namespace TimeTracker.Application.Interfaces.Data;
 public interface IUserRepository : IBaseRepository<User, Guid>
 {
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
-    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 }

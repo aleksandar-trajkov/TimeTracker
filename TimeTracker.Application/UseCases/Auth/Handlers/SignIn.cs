@@ -20,20 +20,16 @@ public class SignIn : IRequestHandler<SignIn.Query, User>
     public async Task<User> Handle(Query request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
-        if (user is null)
-        {
-            throw new ValidationException(ListHelper.CreateList(new ValidationFailure("user", ValidationErrorCodes.NotFound)));
-        }
 
         var passwordHash = EncryptionHelper.GenerateHash(request.Password);
-        if (user.PasswordHash.Equals(passwordHash, StringComparison.InvariantCulture))
+        if (!user.PasswordHash.Equals(passwordHash, StringComparison.InvariantCulture))
         {
             throw new AuthenticationException("Invalid username or password", request.Email);
         }
 
         if(!user.IsActive)
         {
-            throw new AuthenticationException("User is not active in system",request.Email);
+            throw new AuthenticationException("User is not active in system", request.Email);
         }
 
         return user;
