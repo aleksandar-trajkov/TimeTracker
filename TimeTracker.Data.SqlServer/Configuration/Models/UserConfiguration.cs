@@ -31,8 +31,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder.HasMany(x => x.Permissions)
-            .WithOne()
-            .HasForeignKey(x => x.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(x => x.User)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

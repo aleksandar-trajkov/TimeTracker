@@ -25,12 +25,18 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
             modelBuilder.Entity("TimeTracker.Domain.Auth.Permission", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Key")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Permissions", (string)null);
                 });
@@ -73,11 +79,13 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
 
             modelBuilder.Entity("TimeTracker.Domain.Auth.Permission", b =>
                 {
-                    b.HasOne("TimeTracker.Domain.Auth.User", null)
+                    b.HasOne("TimeTracker.Domain.Auth.User", "User")
                         .WithMany("Permissions")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TimeTracker.Domain.Auth.User", b =>
