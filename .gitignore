@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TimeTracker.WebApi/appsettings.Development.json
+/TimeTracker.WebApi/appsettings.Development.json
