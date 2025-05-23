@@ -1,6 +1,3 @@
-@TimeTracker.WebApi_HostAddress = http://localhost:5125
-
-GET {{TimeTracker.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
+@TimeTracker.WebApi_HostAddress = http://localhost:7179
 
 ###

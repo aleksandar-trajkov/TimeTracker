@@ -4,7 +4,7 @@ using TimeTracker.Infrastructure.Data.SqlServer;
 
 namespace AttributeBuilder.IoC;
 
-public static class HelperWorkarounds
+public static class DatabaseMigrationHelper
 {
     public static void MigrateDatabase(this IServiceProvider serviceProvider)
     {
