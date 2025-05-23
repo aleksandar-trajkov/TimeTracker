@@ -29,5 +29,5 @@ public class DatabaseContext : DbContext, IDatabaseContext
     #endregion Methods
 }
 
-// dotnet ef migrations add [] --startup-project ../AttributeBuilder.WebApi
-// dotnet ef database update --startup-project ../AttributeBuilder.WebApi
+// dotnet ef migrations add [] --startup-project ../TimeTracker.WebApi
+// dotnet ef database update --startup-project ../TimeTracker.WebApi

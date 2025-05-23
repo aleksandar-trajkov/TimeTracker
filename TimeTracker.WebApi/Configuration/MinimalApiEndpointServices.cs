@@ -2,7 +2,7 @@
 using System.Reflection;
 using TimeTracker.WebApi.Interfaces;
 
-namespace TimeTracker.WebApi.Configuration.Endpoints;
+namespace TimeTracker.WebApi.Configuration;
 
 public static class MinimalApiEndpointServices
 {

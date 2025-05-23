@@ -5,5 +5,5 @@ public record ServerErrorResponse
     /// <summary>
     /// Exception message
     /// </summary>
-    public required string Message { get; set; } = null!;
+    public required string Message { get; init; }
 }

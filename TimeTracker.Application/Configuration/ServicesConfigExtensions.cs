@@ -11,7 +11,7 @@ public static class ServicesConfigExtensions
     {
         services.AddMediatR(config => {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            config.AddBehavior(typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
         return services;

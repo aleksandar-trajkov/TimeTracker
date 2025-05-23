@@ -15,8 +15,4 @@
     <ProjectReference Include="..\TimeTracker.Domain\TimeTracker.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Configuration\Models\" />
-  </ItemGroup>
-
 </Project>

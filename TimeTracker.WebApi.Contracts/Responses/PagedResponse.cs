@@ -9,7 +9,7 @@ public class PagedResponse<T, TMetadata> where TMetadata : PageResponseMetadata
     /// <summary>
     /// The data set in the paged result
     /// </summary>
-    public IList<T> Data { get; set; } = new List<T>();
+    public IList<T> Data { get; init; } = new List<T>();
 
     /// <summary>
     /// Contains metadata about the paged result, such as total items, page number, and page size

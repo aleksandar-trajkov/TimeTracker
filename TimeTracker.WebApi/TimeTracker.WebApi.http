@@ -1,3 +1,10 @@
 @TimeTracker.WebApi_HostAddress = http://localhost:7179
 
-###
+### Login
+
+POST {{TimeTracker.WebApi_HostAddress}}/api/Auth/Login
+Content-Type: application/json
+{
+  "email": "test@test.com",
+  "password": "test123"
+}

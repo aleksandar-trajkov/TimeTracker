@@ -6,14 +6,12 @@ namespace TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 public class PermissionBuilder : EntityBuilder<PermissionBuilder, Permission>
 {
     private Guid _id = Guid.NewGuid();
-    private string _name = RandomStringGenerator.GenerateString(20, 30);
-    private string _description = RandomStringGenerator.GenerateString(200, 500);
+    private PermissionEnum _key;
 
     protected override Permission Instance => new Permission
     {
         Id = _id,
-        Name = _name,
-        Description = _description
+        Key = _key
     };
 
     public PermissionBuilder WithId(Guid id)
@@ -22,15 +20,9 @@ public class PermissionBuilder : EntityBuilder<PermissionBuilder, Permission>
         return this;
     }
 
-    public PermissionBuilder WithName(string name)
+    public PermissionBuilder WithKey(PermissionEnum key)
     {
-        _name = name;
-        return this;
-    }
-
-    public PermissionBuilder WithDescription(string description)
-    {
-        _description = description;
+        _key = key;
         return this;
     }
 }

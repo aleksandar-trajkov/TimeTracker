@@ -1,13 +1,13 @@
 using AttributeBuilder.IoC;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using TimeTracker.WebApi.Configuration.Endpoints;
+using TimeTracker.WebApi.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddOptions(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     var securitySchema = new OpenApiSecurityScheme
@@ -51,6 +51,8 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 builder.Services.AddAuthorization();
+builder.Services.AddMapster();
+builder.Services.AddEndpoints();
 
 var app = builder.Build();
 

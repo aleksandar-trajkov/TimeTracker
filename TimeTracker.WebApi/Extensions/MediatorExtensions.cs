@@ -5,6 +5,8 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Mapster;
+using TimeTracker.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TimeTracker.WebApi.Extensions;
 
@@ -52,6 +54,26 @@ public static class MediatorExtensions
             {
                 return Results.BadRequest(MapErrors(validationEx));
             }
+        }
+        catch (AuthenticationException authEx)
+        {
+            return Results.Problem(new ProblemDetails
+            {
+                Title = "Unauthorized",
+                Detail = authEx.Message,
+                Status = StatusCodes.Status401Unauthorized,
+                Extensions = { ["email"] = authEx.Email }
+            });
+        }
+        catch (AuthorizationException authEx)
+        {
+            return Results.Problem(new ProblemDetails
+            {
+                Title = "Forbidden",
+                Detail = authEx.Message,
+                Status = StatusCodes.Status403Forbidden,
+                Extensions = { ["email"] = authEx.Email, ["permission"] = authEx.Permission }
+            });
         }
         catch (Exception ex)
         {
