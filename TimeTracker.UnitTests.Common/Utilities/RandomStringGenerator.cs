@@ -14,4 +14,9 @@ public static class RandomStringGenerator
         return new string(Enumerable.Repeat(chars, random.Next(minLength, maxLength))
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
+
+    public static string GenerateEmail(int length = 10)
+    {
+        return $"{GenerateString(length)}@{GenerateString(10)}.{GenerateString(3)}";
+    }
 }

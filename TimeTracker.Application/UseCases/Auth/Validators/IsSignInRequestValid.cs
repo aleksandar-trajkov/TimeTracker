@@ -11,7 +11,6 @@ namespace TimeTracker.Application.UseCases.Auth.Validators
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .WithMessage("Email is required.");
-
             RuleFor(x => x.Email)
                 .EmailAddress()
                 .WithMessage("Invalid email format.");

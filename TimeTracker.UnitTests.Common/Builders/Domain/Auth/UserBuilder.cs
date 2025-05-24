@@ -8,7 +8,7 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
     private Guid _id = Guid.NewGuid();
     private string _firstName = RandomStringGenerator.GenerateString(5, 20);
     private string _lastName = RandomStringGenerator.GenerateString(10, 30);
-    private string _email = RandomStringGenerator.GenerateString(10, 30);
+    private string _email = RandomStringGenerator.GenerateEmail(10);
     private string _passwordHash = RandomStringGenerator.GenerateString(512);
     private bool _isActive = true;
     private IList<Permission> _permissions = new List<Permission>();
