@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOptions(builder.Configuration);
 builder.Services.AddSwagger();
+builder.Services.AddApiVersions();
 builder.Services.AddApplicationLogic();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
@@ -43,6 +44,7 @@ if (bool.TryParse(builder.Configuration["Database:AutoMigrate"], out var autoMig
 }
 
 app.UseHttpsRedirection();
+app.UseApiVersioning();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();

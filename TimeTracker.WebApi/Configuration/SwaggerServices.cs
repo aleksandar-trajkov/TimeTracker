@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Asp.Versioning;
+using Microsoft.OpenApi.Models;
 
 namespace TimeTracker.WebApi.Configuration
 {
@@ -33,6 +34,7 @@ namespace TimeTracker.WebApi.Configuration
                     }
                 });
             });
+            
             return services;
         }
     }

@@ -1,16 +1,17 @@
-﻿using TimeTracker.Application.Behaviours;
-using TimeTracker.WebApi.Contracts.Responses;
-using Azure.Core;
+﻿using Azure.Core;
 using FluentValidation;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
-using Mapster;
-using TimeTracker.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using TimeTracker.Application.Behaviours;
+using TimeTracker.Domain.Exceptions;
+using TimeTracker.WebApi.Contracts.Responses;
 
 namespace TimeTracker.WebApi.Extensions;
 
-public static class MediatorExtensions
+public static partial class MediatorExtensions
 {
     public static async Task<IResult> SendAndProcessResponseAsync<TRequest, TResponse>(this IMediator mediator, TRequest request)
     {
@@ -30,6 +31,17 @@ public static class MediatorExtensions
         }, request);
     }
 
+    public static async Task<IResult> SendAndProcessResponseManuallyAsync<TRequest, TResult, TResponse>(this IMediator mediator, TRequest request, Func<TResult?, Task<TResponse>> processFunc)
+        where TResult : class
+    {
+        return await ProcessSendAsync(async () =>
+        {
+            var result = await mediator.Send(request!);
+            var mappedResult = processFunc(result as TResult);
+            return Results.Ok(mappedResult);
+        }, request);
+    }
+
     private static async Task<IResult> ProcessSendAsync<TRequest>(Func<Task<IResult>> sendFunc, TRequest request)
     {
         try
@@ -44,15 +56,30 @@ public static class MediatorExtensions
         {
             if (validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.NotFound))
             {
-                return Results.NotFound(MapErrors(validationEx));
+                return Results.Problem(new ProblemDetails
+                {
+                    Title = "Not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Extensions = { ["errors"] = validationEx.ToValidationErrorResponses() }
+                });
             }
             else if(validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.Conflict))
             {
-                return Results.Conflict(MapErrors(validationEx));
+                return Results.Problem(new ProblemDetails
+                {
+                    Title = "Conflict",
+                    Status = StatusCodes.Status409Conflict,
+                    Extensions = { ["errors"] = validationEx.ToValidationErrorResponses() }
+                });
             }
             else
             {
-                return Results.BadRequest(MapErrors(validationEx));
+                return Results.Problem(new ProblemDetails
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Extensions = { ["errors"] = validationEx.ToValidationErrorResponses() }
+                });
             }
         }
         catch (AuthenticationException authEx)
@@ -81,12 +108,12 @@ public static class MediatorExtensions
         }
     }
 
-    private static IEnumerable<ValidationErrorResponse> MapErrors(ValidationException validationEx)
+    private static IEnumerable<ValidationErrorResponse> ToValidationErrorResponses(this ValidationException validationException)
     {
-        return validationEx.Errors.Select(x => new ValidationErrorResponse
+        return validationException.Errors.Select(error => new ValidationErrorResponse
         {
-            Property = x.PropertyName,
-            Message = x.ErrorMessage
+            Property = error.PropertyName,
+            Message = error.ErrorMessage
         });
     }
 }
