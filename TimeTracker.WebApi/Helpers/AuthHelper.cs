@@ -5,7 +5,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TimeTracker.Application.Extensions;
-using TimeTracker.Application.Helpers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Options;
 
@@ -40,16 +39,16 @@ public static class AuthHelper
         {
             return null!;
         }
-        var userId = EncryptionHelper.Constants.Fluff + username.ToString() + EncryptionHelper.Constants.Fluff;
-        return EncryptionHelper.Encrypt(userId, authOptions.UserKey);
+        var userId = EncryptionExtensions.Constants.Fluff + username.ToString() + EncryptionExtensions.Constants.Fluff;
+        return userId.Encrypt(authOptions.UserKey);
     }
 
     public static string? TryLoginEmailFromRememberMeToken(string? rememberMeToken, AuthOptions authOptions)
     {
         if (rememberMeToken != null)
         {
-            var decryptedString = EncryptionHelper.Decrypt(rememberMeToken, authOptions.UserKey);
-            return decryptedString.TrimStart(EncryptionHelper.Constants.Fluff).TrimEnd(EncryptionHelper.Constants.Fluff);
+            var decryptedString = rememberMeToken.Decrypt(authOptions.UserKey);
+            return decryptedString.TrimStart(EncryptionExtensions.Constants.Fluff).TrimEnd(EncryptionExtensions.Constants.Fluff);
         }
         return null;
     }

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TimeTracker.Domain\TimeTracker.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
 </Project>

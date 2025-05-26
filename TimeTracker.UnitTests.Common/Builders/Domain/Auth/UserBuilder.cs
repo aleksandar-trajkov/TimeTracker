@@ -1,17 +1,17 @@
 ﻿using TimeTracker.Domain.Auth;
-using TimeTracker.UnitTests.Common.Utilities;
+using TimeTracker.UnitTests.Common.Extensions;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 
 public class UserBuilder : EntityBuilder<UserBuilder, User>
 {
     private Guid _id = Guid.NewGuid();
-    private string _firstName = RandomStringGenerator.GenerateString(5, 20);
-    private string _lastName = RandomStringGenerator.GenerateString(10, 30);
-    private string _email = RandomStringGenerator.GenerateEmail(10);
-    private string _passwordHash = RandomStringGenerator.GenerateString(512);
+    private string _firstName = Random.Shared.GenerateString(5, 20);
+    private string _lastName = Random.Shared.GenerateString(10, 30);
+    private string _email = Random.Shared.GenerateEmail(10);
+    private string _passwordHash = Random.Shared.GenerateString(512);
     private bool _isActive = true;
-    private IList<Permission> _permissions = new List<Permission>();
+    private IEnumerable<Permission> _permissions = new List<Permission>();
 
     protected override User Instance => new User
     {
@@ -20,7 +20,8 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
         LastName = _lastName,
         Email = _email,
         PasswordHash = _passwordHash,
-        IsActive = _isActive
+        IsActive = _isActive,
+        Permissions = _permissions.ToList()
     };
 
     public UserBuilder WithId(Guid id)
@@ -59,7 +60,7 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
         return this;
     }
 
-    public UserBuilder WithPermissions(IList<Permission> permissions)
+    public UserBuilder WithPermissions(IEnumerable<Permission> permissions)
     {
         _permissions = permissions;
         return this;

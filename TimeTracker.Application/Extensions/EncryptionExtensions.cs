@@ -1,28 +1,28 @@
-﻿namespace TimeTracker.Application.Helpers
+﻿namespace TimeTracker.Application.Extensions
 {
     using System;
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
-    public static class EncryptionHelper
+    public static class EncryptionExtensions
     {
         public static class Constants
         {
             public const string Fluff = "mnygrtjnw4e";
         }
 
-        public static string GenerateHash(string input, int iterations = 107)
+        public static string GenerateHash(this string input, int iterations = 107)
         {
             iterations = Math.Min(iterations, 5);
             for (var i = 0; i < iterations; i++)
             {
-                input = GenerateHashInternal(input);
+                input = input.GenerateHashInternal();
             }
             return input;
         }
 
-        private static string GenerateHashInternal(string input)
+        private static string GenerateHashInternal(this string input)
         {
             byte[] data = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes(input));
             StringBuilder sBuilder = new StringBuilder();
@@ -33,7 +33,7 @@
             return sBuilder.ToString();
         }
 
-        public static string Encrypt(string input, string key)
+        public static string Encrypt(this string input, string key)
         {
             using (var aes = Aes.Create())
             {
@@ -57,7 +57,7 @@
             }
         }
 
-        public static string Decrypt(string input, string key)
+        public static string Decrypt(this string input, string key)
         {
             byte[] fullCipher = Convert.FromBase64String(input);
             using (var aes = Aes.Create())

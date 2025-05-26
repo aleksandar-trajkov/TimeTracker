@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using MediatR;
 using TimeTracker.Application.Behaviours;
-using TimeTracker.Application.Helpers;
+using TimeTracker.Application.Extensions;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
@@ -21,7 +21,7 @@ public class SignIn : IRequestHandler<SignIn.Query, User>
     {
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
 
-        var passwordHash = EncryptionHelper.GenerateHash(request.Password);
+        var passwordHash = request.Password.GenerateHash();
         if (!user.PasswordHash.Equals(passwordHash, StringComparison.InvariantCulture))
         {
             throw new AuthenticationException("Invalid username or password", request.Email);

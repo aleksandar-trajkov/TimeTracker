@@ -10,5 +10,5 @@ public class User : BaseModel<Guid>
     public string PasswordHash { get; set; } = string.Empty;
     public bool IsActive { get; init; } = false;
 
-    public IList<Permission> Permissions { get; private set; } = new List<Permission>();
+    public ICollection<Permission> Permissions { get; init; } = new List<Permission>();
 }

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using FluentValidation;
 using TimeTracker.Application.Behaviours;
-using TimeTracker.Application.Helpers;
+using TimeTracker.Application.Extensions;
 using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
@@ -31,7 +31,7 @@ public class SignInTests
         var password = "validPassword";
         var user = UserBuilder.Build(x => x
             .WithEmail(email)
-            .WithPasswordHash(EncryptionHelper.GenerateHash(password)));
+            .WithPasswordHash(password.GenerateHash()));
 
         _userRepository.GivenGetByEmail(email, user);
 
@@ -78,7 +78,7 @@ public class SignInTests
         var password = "validPassword";
         var user = UserBuilder.Build(x => x
             .WithEmail(email)
-            .WithPasswordHash(EncryptionHelper.GenerateHash(password))
+            .WithPasswordHash(password.GenerateHash())
             .WithIsActive(false));
 
         _userRepository.GivenGetByEmail(email, user);
