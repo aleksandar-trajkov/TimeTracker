@@ -9,15 +9,16 @@ using TimeTracker.UnitTests.Data.Fixtures;
 
 namespace TimeTracker.UnitTests.Data.Repositories;
 
-public class UserRepositoryTests : DataTestFixture
+public class UserRepositoryTests : IClassFixture<DataTestFixture>
 {
     UserRepository _sut;
     private Guid _userId;
     private User _user;
+    private readonly DataTestFixture _fixture;
 
-    public UserRepositoryTests()
+    public UserRepositoryTests(DataTestFixture _fixture)
     {
-        _sut = new UserRepository(Context);
+        _sut = new UserRepository(_fixture.Context);
 
         _userId = Guid.NewGuid();
         _user = UserBuilder.Build(x => x
@@ -26,10 +27,10 @@ public class UserRepositoryTests : DataTestFixture
                 PermissionBuilder.Build(x => x.WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(_userId)),
                 PermissionBuilder.Build(x => x.WithKey(PermissionEnum.CanEditAnyRecord).WithUserId(_userId))
         ).AsEnumerable()));
-        this.Seed<Guid>(ListHelper.CreateList(_user));
+        _fixture.Seed<Guid>(ListHelper.CreateList(_user));
 
         var permissions = (ICollection<Domain.Auth.Permission>)_user.Permissions;
-        this.Seed<Guid>(permissions);
+        _fixture.Seed<Guid>(permissions);
     }
 
     [Fact]
