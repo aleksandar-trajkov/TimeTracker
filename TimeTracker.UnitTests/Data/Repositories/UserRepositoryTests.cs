@@ -21,12 +21,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         _sut = new UserRepository(_fixture.Context);
 
         _userId = Guid.NewGuid();
-        _user = UserBuilder.Build(x => x
+        _user = new UserBuilder()
             .WithId(_userId)
             .WithPermissions(ListHelper.CreateList<Domain.Auth.Permission>(
-                PermissionBuilder.Build(x => x.WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(_userId)),
-                PermissionBuilder.Build(x => x.WithKey(PermissionEnum.CanEditAnyRecord).WithUserId(_userId))
-        ).AsEnumerable()));
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(_userId).Build(),
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyRecord).WithUserId(_userId).Build())
+            .AsEnumerable())
+            .Build();
         _fixture.Seed<Guid>(ListHelper.CreateList(_user));
 
         var permissions = (ICollection<Domain.Auth.Permission>)_user.Permissions;

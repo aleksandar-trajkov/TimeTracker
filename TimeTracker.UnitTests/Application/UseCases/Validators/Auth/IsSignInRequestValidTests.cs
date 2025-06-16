@@ -23,8 +23,7 @@ public class IsSignInRequestValidTests
     [Fact]
     public async Task ValidQuery_ShouldPassValidation()
     {
-        var user = UserBuilder.Build(x => x.WithEmail("user@valid.com"));
-        // Arrange
+        var user = new UserBuilder().WithEmail("user@valid.com").Build();
         _userRepository.GivenExistsByEmail(user.Email, true);
         var query = new SignIn.Query(user.Email, user.PasswordHash);
 

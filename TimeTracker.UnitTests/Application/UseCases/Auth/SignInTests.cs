@@ -29,9 +29,10 @@ public class SignInTests
         // Arrange
         var email = "user@valid.com";
         var password = "validPassword";
-        var user = UserBuilder.Build(x => x
+        var user = new UserBuilder()
             .WithEmail(email)
-            .WithPasswordHash(password.GenerateHash()));
+            .WithPasswordHash(password.GenerateHash())
+            .Build();
 
         _userRepository.GivenGetByEmail(email, user);
 
@@ -52,9 +53,10 @@ public class SignInTests
         // Arrange
         var email = "user@inactive.com";
         var password = "invalidPassword";
-        var user = UserBuilder.Build(x => x
+        var user = new UserBuilder()
             .WithEmail(email)
-            .WithPasswordHash(password));
+            .WithPasswordHash(password)
+            .Build();
 
         _userRepository.GivenGetByEmail(email, user);
 
@@ -76,10 +78,11 @@ public class SignInTests
         // Arrange
         var email = "user@inactive.com";
         var password = "validPassword";
-        var user = UserBuilder.Build(x => x
+        var user = new UserBuilder()
             .WithEmail(email)
             .WithPasswordHash(password.GenerateHash())
-            .WithIsActive(false));
+            .WithIsActive(false)
+            .Build();
 
         _userRepository.GivenGetByEmail(email, user);
 

@@ -5,10 +5,9 @@ public abstract class EntityBuilder<TBuilder, TEntity> where TBuilder : EntityBu
 {
     protected abstract TEntity Instance { get; }
 
-    public static TEntity Build(Func<TBuilder, TBuilder>? configurator = null)
+    public TEntity Build(Func<TBuilder, TBuilder>? configurator = null)
     {
-        var builder = new TBuilder();
-        return configurator?.Invoke(builder).Instance ?? builder.Instance;
+        return this.Instance;
     }
 
     protected TBuilder With(Action<TEntity> action)
