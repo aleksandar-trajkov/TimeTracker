@@ -2,7 +2,7 @@
 
 namespace TimeTracker.Domain.Auth;
 
-public class UserVerificationCode : BaseModel<Guid>
+public class VerificationCode : BaseModel<Guid>
 {
 
     public string Code { get; set; } = string.Empty;
