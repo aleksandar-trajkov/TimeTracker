@@ -31,17 +31,6 @@ public static partial class MediatorExtensions
         }, request);
     }
 
-    public static async Task<IResult> SendAndProcessResponseManuallyAsync<TRequest, TResult, TResponse>(this IMediator mediator, TRequest request, Func<TResult?, Task<TResponse>> processFunc)
-        where TResult : class
-    {
-        return await ProcessSendAsync(async () =>
-        {
-            var result = await mediator.Send(request!);
-            var mappedResult = processFunc(result as TResult);
-            return Results.Ok(mappedResult);
-        }, request);
-    }
-
     private static async Task<IResult> ProcessSendAsync<TRequest>(Func<Task<IResult>> sendFunc, TRequest request)
     {
         try

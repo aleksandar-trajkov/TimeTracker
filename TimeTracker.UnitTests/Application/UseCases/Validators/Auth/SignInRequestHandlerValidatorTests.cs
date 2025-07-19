@@ -7,17 +7,17 @@ using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Validators.Auth;
 
-public class IsSignInRequestValidTests
+public class SignInRequestHandlerValidatorTests
 {
     private readonly UserRepositoryMockDouble _userRepository;
 
-    private readonly IsSignInRequestValid _validator;
+    private readonly SignInRequestHandlerValidator _validator;
 
-    public IsSignInRequestValidTests()
+    public SignInRequestHandlerValidatorTests()
     {
         _userRepository = new UserRepositoryMockDouble();
 
-        _validator = new IsSignInRequestValid(_userRepository.Instance);
+        _validator = new SignInRequestHandlerValidator(_userRepository.Instance);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class IsSignInRequestValidTests
     {
         var user = new UserBuilder().WithEmail("user@valid.com").Build();
         _userRepository.GivenExistsByEmail(user.Email, true);
-        var query = new SignIn.Query(user.Email, user.PasswordHash);
+        var query = new SignInRequestHandler.Query(user.Email, user.PasswordHash);
 
         // Act
         var result = await _validator.ValidateAsync(query);
@@ -36,7 +36,7 @@ public class IsSignInRequestValidTests
 
     [Theory]
     [ClassData(typeof(IsSignInRequestValidTheoryData))]
-    public async Task InvalidQuery_ShouldFailValidation(SignIn.Query query, string expectedErrorMessage)
+    public async Task InvalidQuery_ShouldFailValidation(SignInRequestHandler.Query query, string expectedErrorMessage)
     {
         // Arrange
         _userRepository.GivenExistsByEmail(query.Email, false);

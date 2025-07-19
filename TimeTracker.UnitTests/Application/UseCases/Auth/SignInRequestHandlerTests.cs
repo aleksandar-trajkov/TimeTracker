@@ -2,25 +2,33 @@
 using FluentValidation;
 using TimeTracker.Application.Behaviours;
 using TimeTracker.Application.Extensions;
+using TimeTracker.Application.UseCases.Auth.Dtos;
 using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
+using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Auth;
 
-public class SignInTests
+public class SignInRequestHandlerTests
 {
+    private readonly EncryptionProvider _encryptionProvider = new EncryptionProvider();
+
     private readonly UserRepositoryMockDouble _userRepository;
 
-    private SignIn _sut;
+    private readonly TokenProviderMockDouble _tokenProvider;
 
-    public SignInTests()
+    private SignInRequestHandler _sut;
+
+    public SignInRequestHandlerTests()
     {
         _userRepository = new UserRepositoryMockDouble();
 
-        _sut = new SignIn(_userRepository.Instance);
+        _tokenProvider = new TokenProviderMockDouble();
+
+        _sut = new SignInRequestHandler(_userRepository.Instance, _tokenProvider.Instance, _encryptionProvider);
     }
 
     [Fact]
@@ -31,20 +39,19 @@ public class SignInTests
         var password = "validPassword";
         var user = new UserBuilder()
             .WithEmail(email)
-            .WithPasswordHash(password.GenerateHash())
+            .WithPasswordHash(_encryptionProvider.GenerateHash(password))
             .Build();
 
         _userRepository.GivenGetByEmail(email, user);
 
-        var query = new SignIn.Query(email, "validPassword");
+        var query = new SignInRequestHandler.Query(email, "validPassword");
 
         // Act
         var result = await _sut.Handle(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<User>();
-        result.Should().BeEquivalentTo(user);
+        result.Should().BeOfType<SignInResponseDto>();
     }
 
     [Fact]
@@ -60,7 +67,7 @@ public class SignInTests
 
         _userRepository.GivenGetByEmail(email, user);
 
-        var query = new SignIn.Query(email, password);
+        var query = new SignInRequestHandler.Query(email, password);
 
         // Act
         var result = await Record.ExceptionAsync(() => _sut.Handle(query, CancellationToken.None));
@@ -80,13 +87,13 @@ public class SignInTests
         var password = "validPassword";
         var user = new UserBuilder()
             .WithEmail(email)
-            .WithPasswordHash(password.GenerateHash())
+            .WithPasswordHash(_encryptionProvider.GenerateHash(password))
             .WithIsActive(false)
             .Build();
 
         _userRepository.GivenGetByEmail(email, user);
 
-        var query = new SignIn.Query(email, password);
+        var query = new SignInRequestHandler.Query(email, password);
 
         // Act
         var result = await Record.ExceptionAsync(() => _sut.Handle(query, CancellationToken.None));

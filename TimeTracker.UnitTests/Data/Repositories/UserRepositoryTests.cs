@@ -14,7 +14,6 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     UserRepository _sut;
     private Guid _userId;
     private User _user;
-    private readonly DataTestFixture _fixture;
 
     public UserRepositoryTests(DataTestFixture _fixture)
     {

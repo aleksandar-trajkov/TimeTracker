@@ -4,9 +4,9 @@ using TimeTracker.Application.UseCases.Auth.Handlers;
 
 namespace TimeTracker.Application.UseCases.Auth.Validators
 {
-    public class IsSignInRequestValid : AbstractValidator<SignIn.Query>
+    public class SignInRequestHandlerValidator : AbstractValidator<SignInRequestHandler.Query>
     {
-        public IsSignInRequestValid(IUserRepository userRepository)
+        public SignInRequestHandlerValidator(IUserRepository userRepository)
         {
             RuleFor(x => x.Email)
                 .NotEmpty()

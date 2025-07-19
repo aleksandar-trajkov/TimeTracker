@@ -11,4 +11,6 @@ public class AuthOptions : IOption
 
     public required string UserKey { get; set; }
     public required string Authority { get; set; }
+
+    public required string Audience { get; set; }
 }

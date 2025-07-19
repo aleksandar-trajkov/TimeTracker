@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Infrastructure.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Infrastructure.Email.Smtp", "TimeTracker.Infrastructure.Email.Smtp\TimeTracker.Infrastructure.Email.Smtp.csproj", "{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Common", "TimeTracker.Common\TimeTracker.Common.csproj", "{E89590D7-4D12-472C-8707-C75529A03BC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E89590D7-4D12-472C-8707-C75529A03BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E89590D7-4D12-472C-8707-C75529A03BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E89590D7-4D12-472C-8707-C75529A03BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E89590D7-4D12-472C-8707-C75529A03BC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,6 +120,7 @@ Global
 		{76E8E960-395E-4FE7-A83C-0F5B68B8C32B} = {266AD54D-294A-4677-A5A0-430860345226}
 		{721F9CCE-F4B5-4C3F-ABF7-3C3A6045F13A} = {266AD54D-294A-4677-A5A0-430860345226}
 		{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B} = {266AD54D-294A-4677-A5A0-430860345226}
+		{E89590D7-4D12-472C-8707-C75529A03BC2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA4001BF-542F-44E9-8214-8BE8453CDDD4}

@@ -2,6 +2,7 @@
 using TimeTracker.Application.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TimeTracker.Infrastructure.Auth.Custom.Configuration;
 
 namespace AttributeBuilder.IoC;
 
@@ -18,6 +19,12 @@ public static class ServiceRegistration
     {
         services.AddDatabaseServices(configuration);
 
+        return services;
+    }
+
+    public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddCustomAuthServices(configuration);
         return services;
     }
 }

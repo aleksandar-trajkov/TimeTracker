@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TimeTracker.Application.Interfaces\TimeTracker.Application.Interfaces.csproj" />
     <ProjectReference Include="..\TimeTracker.Application\TimeTracker.Application.csproj" />
+    <ProjectReference Include="..\TimeTracker.Common\TimeTracker.Common.csproj" />
     <ProjectReference Include="..\TimeTracker.Domain\TimeTracker.Domain.csproj" />
     <ProjectReference Include="..\TimeTracker.IoC\TimeTracker.IoC.csproj" />
     <ProjectReference Include="..\TimeTracker.WebApi.Contracts\TimeTracker.WebApi.Contracts.csproj" />

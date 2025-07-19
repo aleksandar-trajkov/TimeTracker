@@ -10,7 +10,6 @@ using TimeTracker.Domain.Options;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
 using TimeTracker.WebApi.Contracts.Responses.Auth;
 using TimeTracker.WebApi.Extensions;
-using TimeTracker.WebApi.Helpers;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.Auth
@@ -26,18 +25,8 @@ namespace TimeTracker.WebApi.Endpoints.Auth
                 [FromServices] IOptions<AuthOptions> authOptions,
                 [FromBody] SignInRequest request) =>
             {
-                var query = new SignIn.Query(request.Email, request.Password);
-                return await mediator.SendAndProcessResponseManuallyAsync<SignIn.Query, User, SignInResponse>(query, user =>
-                {
-                    var jwt = AuthHelper.CreateToken(user, authOptions.Value);
-                    var rememberMeToken = AuthHelper.CreateRememberMeToken(request.Email, request.RememberMe, authOptions.Value);
-
-                    return Task.FromResult(new SignInResponse
-                    {
-                        Token = jwt,
-                        RememberMeToken = rememberMeToken
-                    });
-                });
+                var query = new SignInRequestHandler.Query(request.Email, request.Password);
+                return await mediator.SendAndProcessResponseAsync<SignInRequestHandler.Query, SignInResponse>(query);
             }).WithTags("Auth");
         }
     }

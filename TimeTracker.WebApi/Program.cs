@@ -4,14 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using TimeTracker.WebApi.Configuration;
+using TimeTracker.Common.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOptions(builder.Configuration);
 builder.Services.AddSwagger();
 builder.Services.AddApiVersions();
+builder.Services.AddCommonServices();
 builder.Services.AddApplicationLogic();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.Authority = "me";
