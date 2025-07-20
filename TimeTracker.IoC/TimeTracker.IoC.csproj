@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TimeTracker.Application\TimeTracker.Application.csproj" />
-    <ProjectReference Include="..\TimeTracker.Data.SqlServer\TimeTracker.Infrastructure.Data.SqlServer.csproj" />
+    <ProjectReference Include="..\TimeTracker.Infrastructure.Data.SqlServer\TimeTracker.Infrastructure.Data.SqlServer.csproj" />
     <ProjectReference Include="..\TimeTracker.Infrastructure.Auth.Custom\TimeTracker.Infrastructure.Auth.Custom.csproj" />
     <ProjectReference Include="..\TimeTracker.Infrastructure.Email.Smtp\TimeTracker.Infrastructure.Email.Smtp.csproj" />
     <ProjectReference Include="..\TimeTracker.Infrastructure.Messaging.ServiceBus\TimeTracker.Infrastructure.Messaging.ServiceBus.csproj" />

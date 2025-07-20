@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Application.Int
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Infrastructure", "3. Infrastructure", "{266AD54D-294A-4677-A5A0-430860345226}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Infrastructure.Data.SqlServer", "TimeTracker.Data.SqlServer\TimeTracker.Infrastructure.Data.SqlServer.csproj", "{7DD547D0-BE67-43E9-AD02-79089717F4D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Infrastructure.Data.SqlServer", "TimeTracker.Infrastructure.Data.SqlServer\TimeTracker.Infrastructure.Data.SqlServer.csproj", "{7DD547D0-BE67-43E9-AD02-79089717F4D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Presentation", "4. Presentation", "{E47E1B94-027A-4A91-BAF5-71D05020BAB4}"
 EndProject
