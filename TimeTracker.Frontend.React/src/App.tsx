@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Layout from './Layout';
 import Loading from './Loading';
-import SignIn from './SignIn';
+import { SignIn } from './modules/auth';
 
 // Create a client
 const queryClient = new QueryClient({
