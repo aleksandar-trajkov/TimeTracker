@@ -31,6 +31,11 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
         return Entities.AsNoTracking();
     }
 
+    public virtual async Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await Entities.ToListAsync(cancellationToken);
+    }
+
     public Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken = default)
     {
         return Entities.AnyAsync(x => EqualityComparer<TId>.Default.Equals(x.Id, id), cancellationToken);

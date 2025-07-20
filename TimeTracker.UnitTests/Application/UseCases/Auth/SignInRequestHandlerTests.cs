@@ -21,7 +21,7 @@ public class SignInRequestHandlerTests
 
     private readonly TokenProviderMockDouble _tokenProvider;
 
-    private SignInRequestHandler _sut;
+    private SignInHandler _sut;
 
     public SignInRequestHandlerTests()
     {
@@ -29,7 +29,7 @@ public class SignInRequestHandlerTests
 
         _tokenProvider = new TokenProviderMockDouble();
 
-        _sut = new SignInRequestHandler(_userRepository.Instance, _tokenProvider.Instance, _encryptionProvider);
+        _sut = new SignInHandler(_userRepository.Instance, _tokenProvider.Instance, _encryptionProvider);
     }
 
     [Fact]

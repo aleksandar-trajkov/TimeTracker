@@ -24,8 +24,8 @@ namespace TimeTracker.WebApi.Endpoints.Auth
                 [FromServices] IMediator mediator,
                 [FromBody] SignInRequest request) =>
             {
-                var query = TypeAdapter.Adapt<SignInRequestHandler.Query>(request);
-                return await mediator.SendAndProcessResponseAsync<SignInRequestHandler.Query, SignInResponse>(query);
+                var query = TypeAdapter.Adapt<SignInHandler.Query>(request);
+                return await mediator.SendAndProcessResponseAsync<SignInHandler.Query, SignInResponse>(query);
             }).WithTags("Auth");
         }
     }

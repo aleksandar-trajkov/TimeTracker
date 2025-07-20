@@ -42,7 +42,7 @@ public class RememberMeSignInRequestHandlerValidatorTests
 
     [Theory]
     [ClassData(typeof(IsRememberMeSignInRequestInvalidTheoryData))]
-    public async Task InvalidQuery_ShouldFailValidation(RememberMeSignInRequestHandler.Query query, string expectedErrorMessage)
+    public async Task InvalidQuery_ShouldFailValidation(RememberMeSignInHandler.Query query, string expectedErrorMessage)
     {
         // Act
         var result = await _validator.ValidateAsync(query);

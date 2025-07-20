@@ -21,8 +21,8 @@ namespace TimeTracker.WebApi.Endpoints.Auth
                 [FromServices] ITokenProvider tokenProvider,
                 [FromBody] RememberMeSignInRequest request) =>
             {
-                var query = TypeAdapter.Adapt<RememberMeSignInRequestHandler.Query>(request);
-                return await mediator.SendAndProcessResponseAsync<RememberMeSignInRequestHandler.Query, SignInResponse>(query);
+                var query = TypeAdapter.Adapt<RememberMeSignInHandler.Query>(request);
+                return await mediator.SendAndProcessResponseAsync<RememberMeSignInHandler.Query, SignInResponse>(query);
             }).WithTags("Auth");
         }
     }

@@ -5,7 +5,7 @@ namespace TimeTracker.Application.Interfaces.Data.Base;
 
 public interface IBaseRepository<TEntity, TId> where TEntity : BaseModel<TId>
 {
-    IQueryable<TEntity> Select();
+    Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
     Task<int> InsertAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default);

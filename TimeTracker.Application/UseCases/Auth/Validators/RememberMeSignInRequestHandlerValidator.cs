@@ -5,7 +5,7 @@ using TimeTracker.Application.UseCases.Auth.Handlers;
 
 namespace TimeTracker.Application.UseCases.Auth.Validators
 {
-    public class RememberMeSignInRequestHandlerValidator : AbstractValidator<RememberMeSignInRequestHandler.Query>
+    public class RememberMeSignInRequestHandlerValidator : AbstractValidator<RememberMeSignInHandler.Query>
     {
         public RememberMeSignInRequestHandlerValidator(ITokenProvider tokenProvider, IUserRepository userRepository)
         {

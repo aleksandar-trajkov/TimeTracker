@@ -6,12 +6,12 @@ using TimeTracker.Domain.Exceptions;
 
 namespace TimeTracker.Application.UseCases.Auth.Handlers;
 
-public class RememberMeSignInRequestHandler : IRequestHandler<RememberMeSignInRequestHandler.Query, SignInResponseDto>
+public class RememberMeSignInHandler : IRequestHandler<RememberMeSignInHandler.Query, SignInResponseDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenProvider _tokenProvider;
 
-    public RememberMeSignInRequestHandler(IUserRepository userRepository, ITokenProvider tokenProvider)
+    public RememberMeSignInHandler(IUserRepository userRepository, ITokenProvider tokenProvider)
     {
         _userRepository = userRepository;
         _tokenProvider = tokenProvider;

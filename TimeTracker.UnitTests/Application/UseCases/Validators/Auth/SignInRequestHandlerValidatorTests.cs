@@ -40,7 +40,7 @@ public class SignInRequestHandlerValidatorTests
 
     [Theory]
     [ClassData(typeof(IsSignInRequestInvalidTheoryData))]
-    public async Task InvalidQuery_ShouldFailValidation(SignInRequestHandler.Query query, string expectedErrorMessage)
+    public async Task InvalidQuery_ShouldFailValidation(SignInHandler.Query query, string expectedErrorMessage)
     {
         // Arrange
         _userRepository.GivenExistsByEmail(query.Email, false);

@@ -12,13 +12,13 @@ using TimeTracker.Domain.Exceptions;
 
 namespace TimeTracker.Application.UseCases.Auth.Handlers;
 
-public class SignInRequestHandler : IRequestHandler<SignInRequestHandler.Query, SignInResponseDto>
+public class SignInHandler : IRequestHandler<SignInHandler.Query, SignInResponseDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenProvider _tokenProvider;
     private readonly EncryptionProvider _encryptionProvider;
 
-    public SignInRequestHandler(IUserRepository userRepository, ITokenProvider tokenProvider, EncryptionProvider encryptionProvider)
+    public SignInHandler(IUserRepository userRepository, ITokenProvider tokenProvider, EncryptionProvider encryptionProvider)
     {
         _userRepository = userRepository;
         _tokenProvider = tokenProvider;

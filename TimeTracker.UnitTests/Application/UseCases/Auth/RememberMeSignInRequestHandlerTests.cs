@@ -15,13 +15,13 @@ public class RememberMeSignInRequestHandlerTests
 {
     private readonly UserRepositoryMockDouble _userRepository;
     private readonly TokenProviderMockDouble _tokenProvider;
-    private readonly RememberMeSignInRequestHandler _sut;
+    private readonly RememberMeSignInHandler _sut;
 
     public RememberMeSignInRequestHandlerTests()
     {
         _userRepository = new UserRepositoryMockDouble();
         _tokenProvider = new TokenProviderMockDouble();
-        _sut = new RememberMeSignInRequestHandler(_userRepository.Instance, _tokenProvider.Instance);
+        _sut = new RememberMeSignInHandler(_userRepository.Instance, _tokenProvider.Instance);
     }
 
     [Fact]
