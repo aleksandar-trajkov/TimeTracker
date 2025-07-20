@@ -3,13 +3,14 @@ const executeFetch = async function (url: string, method: string, body: any | nu
     method,
     headers: {
       'Content-Type': 'application/json'
-    }
+    } as any,
+    body: null as any
   }
   if (body) {
-    //params.body = JSON.stringify(body);
+    params.body = JSON.stringify(body);
   }
   if(token) {
-    //params.headers['Authorization'] = 'Bearer ' + token;
+    params.headers['Authorization'] = 'Bearer ' + token;
   }
   var response = await fetch(url, params);
   return response;

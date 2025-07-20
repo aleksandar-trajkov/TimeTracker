@@ -16,7 +16,7 @@ namespace TimeTracker.WebApi.Endpoints.Auth
 {
     public class SignInEndpoint : IMinimalApiEndpointDefinition
     {
-        internal static readonly string EndpointUrl = "/auth/signin";
+        internal static readonly string EndpointUrl = "/api/auth/signin";
         public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
         {
             return app.MapPost(EndpointUrl, async (
