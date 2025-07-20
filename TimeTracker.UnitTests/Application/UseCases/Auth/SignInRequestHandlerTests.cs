@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using FluentValidation;
 using TimeTracker.Application.Behaviours;
-using TimeTracker.Application.Extensions;
 using TimeTracker.Application.UseCases.Auth.Dtos;
 using TimeTracker.Application.UseCases.Auth.Handlers;
+using TimeTracker.Common.Encryption;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;

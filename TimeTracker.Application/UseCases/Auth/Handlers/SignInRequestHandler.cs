@@ -3,10 +3,10 @@ using FluentValidation.Results;
 using MediatR;
 using System.Reflection.Metadata.Ecma335;
 using TimeTracker.Application.Behaviours;
-using TimeTracker.Application.Extensions;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Application.UseCases.Auth.Dtos;
+using TimeTracker.Common.Encryption;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
 

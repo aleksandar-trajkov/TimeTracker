@@ -1,4 +1,4 @@
-﻿namespace TimeTracker.Application.Extensions;
+﻿namespace TimeTracker.Common.Encryption;
 
 using System;
 using System.IO;

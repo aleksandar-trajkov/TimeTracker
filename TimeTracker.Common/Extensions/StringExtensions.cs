@@ -1,4 +1,4 @@
-﻿namespace TimeTracker.Application.Extensions;
+﻿namespace TimeTracker.Common.Extensions;
 
 public static class StringExtensions
 {

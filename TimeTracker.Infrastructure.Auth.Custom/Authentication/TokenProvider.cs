@@ -4,8 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Security.Claims;
 using System.Text;
-using TimeTracker.Application.Extensions;
 using TimeTracker.Application.Interfaces.Auth;
+using TimeTracker.Common.Encryption;
+using TimeTracker.Common.Extensions;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Options;
 

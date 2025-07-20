@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TimeTracker.Application.Extensions;
+using TimeTracker.Common.Encryption;
 
 namespace TimeTracker.Common.Configuration;
 
