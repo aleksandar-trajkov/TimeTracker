@@ -22,8 +22,6 @@ namespace TimeTracker.WebApi.Endpoints.Auth
         {
             return app.MapPost(EndpointUrl, async (
                 [FromServices] IMediator mediator,
-                [FromServices] IMapper mapper,
-                [FromServices] IOptions<AuthOptions> authOptions,
                 [FromBody] SignInRequest request) =>
             {
                 var query = TypeAdapter.Adapt<SignInRequestHandler.Query>(request);
