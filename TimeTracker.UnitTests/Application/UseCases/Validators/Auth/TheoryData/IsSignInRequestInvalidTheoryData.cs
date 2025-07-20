@@ -3,9 +3,9 @@ using TimeTracker.UnitTests.Common.Builders.Application.Auth;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Validators.Auth.TheoryData
 {
-    public class IsSignInRequestValidTheoryData : TheoryData<SignInRequestHandler.Query, string>
+    public class IsSignInRequestInvalidTheoryData : TheoryData<SignInRequestHandler.Query, string>
     {
-        public IsSignInRequestValidTheoryData()
+        public IsSignInRequestInvalidTheoryData()
         {
             Add(new SignInQueryBuilder().WithEmail(string.Empty).Build(), "Email is required.");
             Add(new SignInQueryBuilder().WithEmail("invalid-email-format").Build(), "Invalid email format.");

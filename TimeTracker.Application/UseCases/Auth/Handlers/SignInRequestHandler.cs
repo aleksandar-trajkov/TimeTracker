@@ -42,9 +42,9 @@ public class SignInRequestHandler : IRequestHandler<SignInRequestHandler.Query, 
         return new SignInResponseDto
         {
             Token = _tokenProvider.CreateAuthToken(user),
-            RememberMeToken = _tokenProvider.CreateRememberMeToken(user.Email),
+            RememberMeToken = request.RememberMe ? _tokenProvider.CreateRememberMeToken(user.Email) : null,
         };
     }
 
-    public record Query(string Email, string Password) : IRequest<SignInResponseDto>;
+    public record Query(string Email, string Password, bool RememberMe) : IRequest<SignInResponseDto>;
 }

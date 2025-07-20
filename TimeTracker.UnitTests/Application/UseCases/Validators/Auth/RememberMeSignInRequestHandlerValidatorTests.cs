@@ -1,34 +1,36 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.Application.UseCases.Auth.Validators;
 using TimeTracker.UnitTests.Application.UseCases.Validators.Auth.TheoryData;
 using TimeTracker.UnitTests.Common.Builders.Application.Auth;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
+using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Validators.Auth;
 
-public class SignInRequestHandlerValidatorTests
+public class RememberMeSignInRequestHandlerValidatorTests
 {
     private readonly UserRepositoryMockDouble _userRepository;
+    private readonly TokenProviderMockDouble _tokenProvider;
+    private readonly RememberMeSignInRequestHandlerValidator _validator;
 
-    private readonly SignInRequestHandlerValidator _validator;
-
-    public SignInRequestHandlerValidatorTests()
+    public RememberMeSignInRequestHandlerValidatorTests()
     {
         _userRepository = new UserRepositoryMockDouble();
-
-        _validator = new SignInRequestHandlerValidator(_userRepository.Instance);
+        _tokenProvider = new TokenProviderMockDouble();
+        _validator = new RememberMeSignInRequestHandlerValidator(_tokenProvider.Instance, _userRepository.Instance);
     }
 
     [Fact]
     public async Task ValidQuery_ShouldPassValidation()
     {
-        var user = new UserBuilder().WithEmail("user@valid.com").Build();
-        _userRepository.GivenExistsByEmail(user.Email, true);
-        var query = new SignInQueryBuilder()
-            .WithEmail(user.Email)
-            .WithPassword(user.PasswordHash)
+        // Arrange
+        var user = new UserBuilder().Build();
+        var validToken = $"remember_me_{user.Email}";
+        
+        var query = new RememberMeSignInQueryBuilder()
+            .WithRememberMeToken(validToken)
             .Build();
 
         // Act
@@ -39,12 +41,9 @@ public class SignInRequestHandlerValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(IsSignInRequestInvalidTheoryData))]
-    public async Task InvalidQuery_ShouldFailValidation(SignInRequestHandler.Query query, string expectedErrorMessage)
+    [ClassData(typeof(IsRememberMeSignInRequestInvalidTheoryData))]
+    public async Task InvalidQuery_ShouldFailValidation(RememberMeSignInRequestHandler.Query query, string expectedErrorMessage)
     {
-        // Arrange
-        _userRepository.GivenExistsByEmail(query.Email, false);
-
         // Act
         var result = await _validator.ValidateAsync(query);
 

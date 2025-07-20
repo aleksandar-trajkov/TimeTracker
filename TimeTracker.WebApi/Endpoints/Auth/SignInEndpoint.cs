@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Mapster;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,7 @@ using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.Auth
 {
-    public class SignInEndpoint : IMinimalApiEndpointDefinition
+    public class SignInEndpoint : IEndpointDefinition
     {
         internal static readonly string EndpointUrl = "/api/auth/signin";
         public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
@@ -25,7 +26,7 @@ namespace TimeTracker.WebApi.Endpoints.Auth
                 [FromServices] IOptions<AuthOptions> authOptions,
                 [FromBody] SignInRequest request) =>
             {
-                var query = new SignInRequestHandler.Query(request.Email, request.Password);
+                var query = TypeAdapter.Adapt<SignInRequestHandler.Query>(request);
                 return await mediator.SendAndProcessResponseAsync<SignInRequestHandler.Query, SignInResponse>(query);
             }).WithTags("Auth");
         }

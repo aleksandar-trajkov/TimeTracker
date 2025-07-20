@@ -1,6 +1,6 @@
 ﻿namespace TimeTracker.WebApi.Interfaces;
 
-public interface IMinimalApiEndpointDefinition
+public interface IEndpointDefinition
 {
     IEndpointConventionBuilder Map(IEndpointRouteBuilder app);
 }

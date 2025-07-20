@@ -6,5 +6,6 @@ public interface ITokenProvider
 {
     string CreateAuthToken(User user);
 
-    string? CreateRememberMeToken(string username);
+    string? CreateRememberMeToken(string email);
+    string? TryGetLoginEmailFromRememberMeToken(string? rememberMeToken);
 }
