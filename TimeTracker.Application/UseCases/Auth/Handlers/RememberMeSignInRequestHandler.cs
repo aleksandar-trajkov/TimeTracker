@@ -20,12 +20,18 @@ public class RememberMeSignInRequestHandler : IRequestHandler<RememberMeSignInRe
     public async Task<SignInResponseDto> Handle(Query request, CancellationToken cancellationToken)
     {
         var email = _tokenProvider.TryGetLoginEmailFromRememberMeToken(request.RememberMeToken);
-        var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
-
-        if (user == null)
+        
+        if (string.IsNullOrEmpty(email))
         {
             throw new AuthenticationException("Invalid remember me token", email);
         }
+
+        if(await _userRepository.ExistsByEmailAsync(email, cancellationToken) == false)
+        {
+            throw new AuthenticationException("Invalid remember me token", email);
+        }
+
+        var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
 
         if (!user.IsActive)
         {

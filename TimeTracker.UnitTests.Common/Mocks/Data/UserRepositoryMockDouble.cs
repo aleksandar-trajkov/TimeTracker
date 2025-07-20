@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain.Auth;
 using TimeTracker.UnitTests.Common.Extensions;
@@ -11,6 +12,12 @@ public class UserRepositoryMockDouble : MockDouble<IUserRepository>
     {
         Instance.GetByEmailAsync(email, Arg.Any<CancellationToken>())
             .ReturnsAsync(user);
+    }
+
+    public void GivenGetByEmailThrows(string email, Exception exception)
+    {
+        Instance.GetByEmailAsync(email, Arg.Any<CancellationToken>())
+            .ThrowsAsync(exception);
     }
 
     public void GivenExistsByEmail(string email, bool exists)

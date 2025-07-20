@@ -33,7 +33,7 @@ public class SignInRequestHandlerTests
     }
 
     [Fact]
-    public async Task WhenCalling_SignIn_With_ValidCredentials_Returns_Tokens()
+    public async Task SignIn_With_ValidCredentials_Returns_Tokens()
     {
         // Arrange
         var email = "user@valid.com";
@@ -64,7 +64,7 @@ public class SignInRequestHandlerTests
     }
 
     [Fact]
-    public async Task WhenCalling_SignIn_With_ValidCredentials_WithoutRememberMe_Returns_OnlyAuthToken()
+    public async Task SignIn_With_ValidCredentials_WithoutRememberMe_Returns_OnlyAuthToken()
     {
         // Arrange
         var email = "user@valid.com";
@@ -95,7 +95,7 @@ public class SignInRequestHandlerTests
     }
 
     [Fact]
-    public async Task WhenCalling_SignIn_With_UserInvalidPassword_Throws_AuthenticationException()
+    public async Task SignIn_With_UserInvalidPassword_Throws_AuthenticationException()
     {
         // Arrange
         var email = "user@inactive.com";
@@ -123,7 +123,7 @@ public class SignInRequestHandlerTests
     }
 
     [Fact]
-    public async Task WhenCalling_SignIn_With_InactiveUser_Throws_AuthenticationException()
+    public async Task SignIn_With_InactiveUser_Throws_AuthenticationException()
     {
         // Arrange
         var email = "user@inactive.com";
