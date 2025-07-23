@@ -24,7 +24,7 @@ namespace TimeTracker.WebApi.Configuration
                         Type = ReferenceType.SecurityScheme,
                     }
                 };
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Charge point management service", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Time Tracking API service", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", securitySchema);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {

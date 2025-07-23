@@ -3,8 +3,10 @@ using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using TimeTracker.WebApi.Configuration;
 using TimeTracker.Common.Configuration;
+using TimeTracker.WebApi.Configuration;
+using TimeTracker.WebApi.Helpers;
+using TimeTracker.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,12 +41,13 @@ if (bool.TryParse(builder.Configuration["Database:AutoMigrate"], out var autoMig
 {
     app.Services.MigrateDatabase();
 }
-
+RouteGroupBuilder groupBuilder;
 app.UseHttpsRedirection();
-app.UseApiVersioning();
+app.UseApiVersioning(out groupBuilder);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();
-app.MapEndpoints(app.Services);
+app.UseMiddleware<BuildTimeHeaderMiddleware>();
+groupBuilder.MapEndpoints(app.Services);
 
 app.Run();

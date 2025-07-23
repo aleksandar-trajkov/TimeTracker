@@ -12,8 +12,7 @@ public static class ApiVersioningServices
             options.DefaultApiVersion = new ApiVersion(1);
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
-            options.ApiVersionReader = ApiVersionReader.Combine(
-                new UrlSegmentApiVersionReader());
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
         }).AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'V";
@@ -22,15 +21,15 @@ public static class ApiVersioningServices
         return services;
     }
 
-    public static WebApplication UseApiVersioning(this WebApplication app)
+    public static WebApplication UseApiVersioning(this WebApplication app, out RouteGroupBuilder groupBuilder)
     {
         ApiVersionSet apiVersionSet = app.NewApiVersionSet()
             .HasApiVersion(new ApiVersion(1))
             .ReportApiVersions()
             .Build();
 
-        RouteGroupBuilder group = app
-            .MapGroup("api/v{version:apiVersion}")
+        groupBuilder = app
+            .MapGroup("/api/v{version:apiVersion}")
             .WithApiVersionSet(apiVersionSet);
 
         return app;
