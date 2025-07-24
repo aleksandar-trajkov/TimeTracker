@@ -1,4 +1,4 @@
-﻿namespace TimeTracker.WebApi.Contracts.Responses.Auth;
+﻿namespace TimeTracker.WebApi.Contracts.Responses.V1.Auth;
 
 public class SignInResponse
 {

@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
-using TimeTracker.WebApi.Contracts.Responses.Auth;
+using TimeTracker.WebApi.Contracts.Responses.V1.Auth;
 using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
-namespace TimeTracker.WebApi.Endpoints.Auth
+namespace TimeTracker.WebApi.Endpoints.V1.Auth
 {
     public class RememberMeSignInEndpoint : IEndpointDefinition
     {
@@ -21,7 +21,7 @@ namespace TimeTracker.WebApi.Endpoints.Auth
                 [FromServices] ITokenProvider tokenProvider,
                 [FromBody] RememberMeSignInRequest request) =>
             {
-                var query = TypeAdapter.Adapt<RememberMeSignInHandler.Query>(request);
+                var query = request.Adapt<RememberMeSignInHandler.Query>();
                 return await mediator.SendAndProcessResponseAsync<RememberMeSignInHandler.Query, SignInResponse>(query);
             })
                 .Produces<SignInResponse>(StatusCodes.Status200OK)

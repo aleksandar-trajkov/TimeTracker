@@ -9,11 +9,11 @@ using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Options;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
-using TimeTracker.WebApi.Contracts.Responses.Auth;
+using TimeTracker.WebApi.Contracts.Responses.V1.Auth;
 using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
-namespace TimeTracker.WebApi.Endpoints.Auth
+namespace TimeTracker.WebApi.Endpoints.V1.Auth
 {
     public class SignInEndpoint : IEndpointDefinition
     {
@@ -24,9 +24,14 @@ namespace TimeTracker.WebApi.Endpoints.Auth
                 [FromServices] IMediator mediator,
                 [FromBody] SignInRequest request) =>
             {
-                var query = TypeAdapter.Adapt<SignInHandler.Query>(request);
+                var query = request.Adapt<SignInHandler.Query>();
                 return await mediator.SendAndProcessResponseAsync<SignInHandler.Query, SignInResponse>(query);
-            }).WithTags("Auth");
+            })
+                .Produces<SignInResponse>(StatusCodes.Status200OK)
+                .ProducesProblem(StatusCodes.Status400BadRequest)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .HasApiVersion(1.0)
+                .WithTags("Auth");
         }
     }
 }

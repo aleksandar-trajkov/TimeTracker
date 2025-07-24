@@ -5,12 +5,13 @@ using Microsoft.Extensions.Options;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain.Options;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
-using TimeTracker.WebApi.Contracts.Responses.TimeEntries;
+using TimeTracker.WebApi.Contracts.Responses.V1.Auth;
+using TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
 using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Helpers;
 using TimeTracker.WebApi.Interfaces;
 
-namespace TimeTracker.WebApi.Endpoints.Categories;
+namespace TimeTracker.WebApi.Endpoints.V1.Categories;
 
 public class GetAllEndpoint : IEndpointDefinition
 {
@@ -21,7 +22,10 @@ public class GetAllEndpoint : IEndpointDefinition
         {
             return await mediator.SendAndProcessResponseAsync< GetAllCategoriesHandler.Query, List<CategoriesResponse>>(new GetAllCategoriesHandler.Query());
         })
-            .MapToApiVersion(2.0)
+                .Produces<List<CategoriesResponse>>(StatusCodes.Status200OK)
+                .ProducesProblem(StatusCodes.Status400BadRequest)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .MapToApiVersion(1.0)
             .RequireAuthorization()
             .WithTags("Categories");
     }

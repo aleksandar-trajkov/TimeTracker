@@ -23,7 +23,7 @@ public class RememberMeSignInHandler : IRequestHandler<RememberMeSignInHandler.Q
         
         if (string.IsNullOrEmpty(email))
         {
-            throw new AuthenticationException("Invalid remember me token", email);
+            throw new AuthenticationException("Invalid remember me token", string.Empty);
         }
 
         if(await _userRepository.ExistsByEmailAsync(email, cancellationToken) == false)
