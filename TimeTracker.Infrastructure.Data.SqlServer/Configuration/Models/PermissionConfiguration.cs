@@ -14,6 +14,22 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Configuration.Models
 
             builder.Property(x => x.Key)
                 .IsRequired();
+
+            builder.Property(x => x.UserId)
+                .IsRequired();
+
+            // Relationships
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.Permissions)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Composite unique index to prevent duplicate permissions per user
+            builder.HasIndex(x => new { x.UserId, x.Key })
+                .IsUnique();
+
+            // Index for performance
+            builder.HasIndex(x => x.UserId);
         }
     }
 }

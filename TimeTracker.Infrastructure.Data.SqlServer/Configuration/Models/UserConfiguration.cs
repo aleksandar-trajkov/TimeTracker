@@ -30,8 +30,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(512)
             .IsRequired();
 
+        builder.Property(x => x.OrganizationId)
+            .IsRequired();
+
+        // Relationships
+        builder.HasOne(x => x.Organization)
+            .WithMany(x => x.Users)
+            .HasForeignKey(x => x.OrganizationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasMany(x => x.Permissions)
             .WithOne(x => x.User)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Indexes for performance
+        builder.HasIndex(x => x.OrganizationId);
     }
 }

@@ -2,7 +2,7 @@
 using TimeTracker.Application.Helpers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Base;
-using TimeTracker.Infrastructure.Data.SqlServer;
+using TimeTracker.Infrastructure.Data.SqlServer.Repositories;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 using TimeTracker.UnitTests.Common.Extensions;
 using TimeTracker.UnitTests.Data.Fixtures;

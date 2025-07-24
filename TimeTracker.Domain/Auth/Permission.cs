@@ -7,6 +7,5 @@ public class Permission : BaseModel<Guid>
     public PermissionEnum Key { get; init; }
 
     public Guid UserId { get; init; }
-
     public User User { get; init; } = null!;
 }

@@ -38,6 +38,9 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserId", "Key")
+                        .IsUnique();
+
                     b.ToTable("Permissions", (string)null);
                 });
 
@@ -64,6 +67,9 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(512)
@@ -73,6 +79,8 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("Users", (string)null);
                 });
@@ -119,9 +127,73 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizationId");
+
                     b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("TimeTracker.Domain.Organization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Organizations", (string)null);
+                });
+
+            modelBuilder.Entity("TimeTracker.Domain.TimeEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset>("From")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("To")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("From");
+
+                    b.HasIndex("To");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TimeEntries", (string)null);
                 });
 
             modelBuilder.Entity("TimeTracker.Domain.Auth.Permission", b =>
@@ -129,10 +201,21 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
                     b.HasOne("TimeTracker.Domain.Auth.User", "User")
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TimeTracker.Domain.Auth.User", b =>
+                {
+                    b.HasOne("TimeTracker.Domain.Organization", "Organization")
+                        .WithMany("Users")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("TimeTracker.Domain.Auth.VerificationCode", b =>
@@ -146,9 +229,51 @@ namespace TimeTracker.Infrastructure.Data.SqlServer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TimeTracker.Domain.Category", b =>
+                {
+                    b.HasOne("TimeTracker.Domain.Organization", "Organization")
+                        .WithMany("Categories")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("TimeTracker.Domain.TimeEntry", b =>
+                {
+                    b.HasOne("TimeTracker.Domain.Category", "Category")
+                        .WithMany("TimeEntries")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TimeTracker.Domain.Auth.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TimeTracker.Domain.Auth.User", b =>
                 {
                     b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("TimeTracker.Domain.Category", b =>
+                {
+                    b.Navigation("TimeEntries");
+                });
+
+            modelBuilder.Entity("TimeTracker.Domain.Organization", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
