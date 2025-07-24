@@ -9,7 +9,7 @@ using TimeTracker.UnitTests.Data.Fixtures;
 
 namespace TimeTracker.UnitTests.Data.Repositories;
 
-public class UserRepositoryTests : IClassFixture<DataTestFixture>
+public class UserRepositoryTests :IClassFixture<DataTestFixture>
 {
     UserRepository _sut;
     private Guid _userId;
@@ -68,4 +68,6 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         var result = await _sut.ExistsByEmailAsync(Random.Shared.GenerateEmail(10), CancellationToken.None);
         result.Should().BeFalse();
     }
+
+
 }

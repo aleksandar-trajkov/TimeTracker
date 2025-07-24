@@ -3,46 +3,38 @@ using TimeTracker.UnitTests.Common.Extensions;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain;
 
-public class CategoryBuilder : EntityBuilder<CategoryBuilder, Category>
+public class OrganizationBuilder : EntityBuilder<OrganizationBuilder, Organization>
 {
     private Guid _id = Guid.NewGuid();
     private string _name = Random.Shared.GenerateString(5, 20);
     private string? _description = Random.Shared.GenerateString(10, 50);
-    private Guid _organizationId = Guid.NewGuid();
 
-    protected override Category Instance => new Category
+    protected override Organization Instance => new Organization
     {
         Id = _id,
         Name = _name,
-        Description = _description,
-        OrganizationId = _organizationId
+        Description = _description
     };
 
-    public CategoryBuilder WithId(Guid id)
+    public OrganizationBuilder WithId(Guid id)
     {
         _id = id;
         return this;
     }
 
-    public CategoryBuilder WithName(string name)
+    public OrganizationBuilder WithName(string name)
     {
         _name = name;
         return this;
     }
 
-    public CategoryBuilder WithDescription(string? description)
+    public OrganizationBuilder WithDescription(string? description)
     {
         _description = description;
         return this;
     }
 
-    public CategoryBuilder WithOrganizationId(Guid organizationId)
-    {
-        _organizationId = organizationId;
-        return this;
-    }
-
-    public CategoryBuilder WithoutDescription()
+    public OrganizationBuilder WithoutDescription()
     {
         _description = null;
         return this;

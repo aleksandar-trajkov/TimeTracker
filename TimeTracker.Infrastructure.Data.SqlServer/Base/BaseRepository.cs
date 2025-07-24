@@ -6,7 +6,7 @@ using TimeTracker.Infrastructure.Data.SqlServer.Interfaces;
 
 namespace TimeTracker.Infrastructure.Data.SqlServer.Base;
 
-public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where TEntity : BaseModel<TId>
+public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where TEntity : BaseModel<TId> where TId : IEquatable<TId>
 {
     public readonly IDatabaseContext _context;
     private DbSet<TEntity>? _entities;
@@ -26,7 +26,7 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
         }
     }
 
-    public virtual IQueryable<TEntity> Select()
+    protected virtual IQueryable<TEntity> Select()
     {
         return Entities.AsNoTracking();
     }
@@ -38,12 +38,12 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
 
     public Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return Entities.AnyAsync(x => EqualityComparer<TId>.Default.Equals(x.Id, id), cancellationToken);
+        return Entities.AnyAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return await Entities.FirstOrDefaultAsync(x => EqualityComparer<TId>.Default.Equals(x.Id, id), cancellationToken);
+        return await Entities.FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
     public virtual async Task<int> InsertAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default)

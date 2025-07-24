@@ -11,6 +11,7 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
     private string _email = Random.Shared.GenerateEmail(10);
     private string _passwordHash = Random.Shared.GenerateString(512);
     private bool _isActive = true;
+    private Guid _organizationId = Guid.NewGuid();
     private IEnumerable<Permission> _permissions = new List<Permission>();
 
     protected override User Instance => new User
@@ -21,6 +22,7 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
         Email = _email,
         PasswordHash = _passwordHash,
         IsActive = _isActive,
+        OrganizationId = _organizationId,
         Permissions = _permissions.ToList()
     };
 
@@ -57,6 +59,12 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
     public UserBuilder WithIsActive(bool isActive)
     {
         _isActive = isActive;
+        return this;
+    }
+
+    public UserBuilder WithOrganizationId(Guid organizationId)
+    {
+        _organizationId = organizationId;
         return this;
     }
 
