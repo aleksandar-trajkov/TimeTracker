@@ -41,6 +41,6 @@ public class HealthCheckFilter : IDocumentFilter
         operation.Responses.Add("200", response);
         pathItem.AddOperation(OperationType.Get, operation);
 
-        swaggerDoc?.Paths.Add($"/api/{swaggerDoc.Info.Version}{_options.Endpoint}", pathItem);
+        swaggerDoc?.Paths.Add($"/api{_options.Endpoint}", pathItem);
     }
 }

@@ -19,7 +19,7 @@ public static class HealthCheckExtensions
     public static WebApplication UseHealthCheck(this WebApplication app, IConfiguration configuration)
     {
         var healthCheckOptions = configuration.GetSection("HealthCheck").Get<Options.HealthCheckOptions>()!;
-        app.MapHealthChecks(healthCheckOptions.Endpoint, new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        app.MapHealthChecks("/api" + healthCheckOptions.Endpoint, new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
