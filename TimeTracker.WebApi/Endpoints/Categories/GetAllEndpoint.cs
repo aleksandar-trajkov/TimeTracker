@@ -21,7 +21,7 @@ public class GetAllEndpoint : IEndpointDefinition
         {
             return await mediator.SendAndProcessResponseAsync< GetAllCategoriesHandler.Query, List<CategoriesResponse>>(new GetAllCategoriesHandler.Query());
         })
-            .MapToApiVersion(1.0)
+            .MapToApiVersion(2.0)
             .RequireAuthorization()
             .WithTags("Categories");
     }

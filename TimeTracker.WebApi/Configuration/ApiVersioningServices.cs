@@ -5,11 +5,11 @@ namespace TimeTracker.WebApi.Configuration;
 
 public static class ApiVersioningServices
 {
-    public static IServiceCollection AddApiVersions(this IServiceCollection services)
+    public static IServiceCollection AddApiVersionServices(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
         {
-            options.DefaultApiVersion = new ApiVersion(1);
+            options.DefaultApiVersion = new ApiVersion(1.0);
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
@@ -21,10 +21,11 @@ public static class ApiVersioningServices
         return services;
     }
 
-    public static WebApplication UseApiVersioning(this WebApplication app, out RouteGroupBuilder groupBuilder)
+    public static WebApplication UseApiVersionServices(this WebApplication app, out RouteGroupBuilder groupBuilder)
     {
         ApiVersionSet apiVersionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1))
+            .HasApiVersion(new ApiVersion(1.0))
+            .HasApiVersion(new ApiVersion(2.0))
             .ReportApiVersions()
             .Build();
 

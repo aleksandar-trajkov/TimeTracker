@@ -1,7 +1,9 @@
 using AttributeBuilder.IoC;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Text.Json.Serialization;
 using TimeTracker.Common.Configuration;
 using TimeTracker.WebApi.Configuration;
@@ -10,13 +12,12 @@ using TimeTracker.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSwagger();
-builder.Services.AddApiVersions();
 builder.Services.AddCommonServices();
 builder.Services.AddApplicationLogic();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
-
+builder.Services.AddHealthCheck(builder.Configuration);
+builder.Services.AddApiVersionServices();
 builder.Services.ConfigureHttpJsonOptions(options => {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -28,26 +29,24 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddMapster();
 builder.Services.AddEndpoints();
+builder.Services.AddProblemDetails();
+builder.Services.AddSwaggerServices();
+
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+RouteGroupBuilder groupBuilder;
+app.UseApiVersionServices(out groupBuilder);
 if (bool.TryParse(builder.Configuration["Database:AutoMigrate"], out var autoMigrate) && autoMigrate)
 {
     app.Services.MigrateDatabase();
 }
-RouteGroupBuilder groupBuilder;
+app.UseHealthCheck(builder.Configuration);
 app.UseHttpsRedirection();
-app.UseApiVersioning(out groupBuilder);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();
 app.UseMiddleware<BuildTimeHeaderMiddleware>();
 groupBuilder.MapEndpoints(app.Services);
+app.UseSwaggerServices();
 
 app.Run();

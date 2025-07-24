@@ -23,7 +23,11 @@ namespace TimeTracker.WebApi.Endpoints.Auth
             {
                 var query = TypeAdapter.Adapt<RememberMeSignInHandler.Query>(request);
                 return await mediator.SendAndProcessResponseAsync<RememberMeSignInHandler.Query, SignInResponse>(query);
-            }).WithTags("Auth");
+            })
+                .Produces<SignInResponse>(StatusCodes.Status200OK)
+                .ProducesProblem(StatusCodes.Status400BadRequest)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .WithTags("Auth");
         }
     }
 }
