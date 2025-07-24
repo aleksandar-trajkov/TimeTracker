@@ -19,46 +19,6 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnAllVerificationCodes_WhenVerificationCodesExist()
-    {
-        // Arrange
-        var organization = new OrganizationBuilder().Build();
-        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
-
-        var verificationCodes = new[]
-        {
-            new VerificationCodeBuilder().WithUserId(user.Id).AsValid().Build(),
-            new VerificationCodeBuilder().WithUserId(user.Id).AsUsed().Build(),
-            new VerificationCodeBuilder().WithUserId(user.Id).AsExpired().Build()
-        };
-        _fixture.Seed<Guid>(verificationCodes);
-
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(3);
-        result.Should().OnlyContain(vc => vc.UserId == user.Id);
-        result.Should().Contain(vc => vc.IsUsed == false);
-        result.Should().Contain(vc => vc.IsUsed == true);
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoVerificationCodesExist()
-    {
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
     public async Task GetByIdAsync_ShouldReturnVerificationCode_WhenVerificationCodeExists()
     {
         // Arrange

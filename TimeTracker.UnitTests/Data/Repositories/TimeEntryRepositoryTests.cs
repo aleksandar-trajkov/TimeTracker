@@ -19,46 +19,6 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnAllTimeEntries_WhenTimeEntriesExist()
-    {
-        // Arrange
-        var organization = new OrganizationBuilder().Build();
-        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
-        _fixture.Seed<Guid>(new[] { category });
-
-        var timeEntries = new[]
-        {
-            new TimeEntryBuilder().WithUserId(user.Id).WithCategoryId(category.Id).Build(),
-            new TimeEntryBuilder().WithUserId(user.Id).WithCategoryId(category.Id).Build(),
-            new TimeEntryBuilder().WithUserId(user.Id).WithCategoryId(category.Id).Build()
-        };
-        _fixture.Seed<Guid>(timeEntries);
-
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(3);
-        result.Should().OnlyContain(te => te.UserId == user.Id && te.CategoryId == category.Id);
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoTimeEntriesExist()
-    {
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
     public async Task GetByIdAsync_ShouldReturnTimeEntry_WhenTimeEntryExists()
     {
         // Arrange

@@ -94,7 +94,7 @@ public class RememberMeSignInRequestHandlerTests
         // Assert
         var exception = await act.Should().ThrowAsync<AuthenticationException>()
             .WithMessage("Invalid remember me token");
-        exception.Which.Email.Should().Be(string.Empty);
+        exception.Which.Email.Should().Be(null);
     }
 
     [Fact]

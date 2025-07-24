@@ -31,11 +31,6 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
         return Entities.AsNoTracking();
     }
 
-    public virtual async Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        return await Entities.ToListAsync(cancellationToken);
-    }
-
     public Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken = default)
     {
         return Entities.AnyAsync(x => x.Id.Equals(id), cancellationToken);
@@ -62,6 +57,8 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
     public virtual async Task<int> UpdateAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entity);
+
+        (_context as DbContext)!.ChangeTracker.Clear();
 
         (_context as DbContext)!.Entry(entity).State = EntityState.Modified;
 

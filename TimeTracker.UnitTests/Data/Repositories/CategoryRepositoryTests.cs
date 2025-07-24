@@ -18,41 +18,6 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnAllCategories_WhenCategoriesExist()
-    {
-        // Arrange
-        var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
-
-        var categories = new[]
-        {
-            new CategoryBuilder().WithOrganizationId(organization.Id).Build(),
-            new CategoryBuilder().WithOrganizationId(organization.Id).Build(),
-            new CategoryBuilder().WithOrganizationId(organization.Id).Build()
-        };
-        _fixture.Seed<Guid>(categories);
-
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(3);
-        result.Should().OnlyContain(c => c.OrganizationId == organization.Id);
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoCategoriesExist()
-    {
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
     public async Task GetByIdAsync_ShouldReturnCategory_WhenCategoryExists()
     {
         // Arrange

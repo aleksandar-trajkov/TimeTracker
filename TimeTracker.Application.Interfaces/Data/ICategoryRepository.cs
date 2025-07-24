@@ -5,4 +5,5 @@ namespace TimeTracker.Application.Interfaces.Data;
 
 public interface ICategoryRepository : IBaseRepository<Category, Guid>
 {
+    Task<IEnumerable<Category>> GetAllAsync(Guid organizationId, CancellationToken cancellationToken);
 }

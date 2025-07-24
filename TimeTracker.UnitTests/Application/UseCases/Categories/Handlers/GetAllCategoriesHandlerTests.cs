@@ -21,17 +21,18 @@ public class GetAllCategoriesHandlerTests
     [Fact]
     public async Task Handle_WhenCategoriesExist_ShouldReturnAllCategories()
     {
+        var organizationId = Guid.NewGuid();
         // Arrange
         var categories = new List<Category>
         {
-            new CategoryBuilder().WithName("Work").WithDescription("Work related tasks").Build(),
-            new CategoryBuilder().WithName("Personal").WithDescription("Personal tasks").Build(),
-            new CategoryBuilder().WithName("Education").WithoutDescription().Build()
+            new CategoryBuilder().WithName("Work").WithDescription("Work related tasks").WithOrganizationId(organizationId).Build(),
+            new CategoryBuilder().WithName("Personal").WithDescription("Personal tasks").WithOrganizationId(organizationId).Build(),
+            new CategoryBuilder().WithName("Education").WithoutDescription().WithOrganizationId(organizationId).Build()
         };
 
-        _categoryRepository.GivenGetAllAsync(categories);
+        _categoryRepository.GivenGetAllAsync(organizationId, categories);
 
-        var query = new GetAllCategoriesHandler.Query();
+        var query = new GetAllCategoriesHandler.Query(organizationId);
 
         // Act
         var result = await _sut.Handle(query, CancellationToken.None);
@@ -45,11 +46,12 @@ public class GetAllCategoriesHandlerTests
     [Fact]
     public async Task Handle_WhenNoCategoriesExist_ShouldReturnEmptyList()
     {
+        var organizationId = Guid.NewGuid();
         // Arrange
         var emptyCategories = new List<Category>();
-        _categoryRepository.GivenGetAllAsync(emptyCategories);
+        _categoryRepository.GivenGetAllAsync(organizationId, emptyCategories);
 
-        var query = new GetAllCategoriesHandler.Query();
+        var query = new GetAllCategoriesHandler.Query(organizationId);
 
         // Act
         var result = await _sut.Handle(query, CancellationToken.None);

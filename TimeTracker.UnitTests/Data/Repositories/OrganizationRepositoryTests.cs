@@ -18,40 +18,6 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnAllOrganizations_WhenOrganizationsExist()
-    {
-        // Arrange
-        var organizations = new[]
-        {
-            new OrganizationBuilder().WithName("Organization 1").Build(),
-            new OrganizationBuilder().WithName("Organization 2").Build(),
-            new OrganizationBuilder().WithName("Organization 3").Build()
-        };
-        _fixture.Seed<Guid>(organizations);
-
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(3);
-        result.Should().Contain(o => o.Name == "Organization 1");
-        result.Should().Contain(o => o.Name == "Organization 2");
-        result.Should().Contain(o => o.Name == "Organization 3");
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoOrganizationsExist()
-    {
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
     public async Task GetByIdAsync_ShouldReturnOrganization_WhenOrganizationExists()
     {
         // Arrange

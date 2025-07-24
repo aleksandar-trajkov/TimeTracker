@@ -6,9 +6,9 @@ namespace TimeTracker.UnitTests.Common.Mocks.Data;
 
 public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
 {
-    public void GivenGetAllAsync(ICollection<Category> categories)
+    public void GivenGetAllAsync(Guid organizationId, ICollection<Category> categories)
     {
-        Instance.GetAllAsync(Arg.Any<CancellationToken>())
+        Instance.GetAllAsync(organizationId, Arg.Any<CancellationToken>())
             .Returns(categories);
     }
 

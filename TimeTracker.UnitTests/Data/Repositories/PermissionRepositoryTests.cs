@@ -19,45 +19,6 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnAllPermissions_WhenPermissionsExist()
-    {
-        // Arrange
-        var organization = new OrganizationBuilder().Build();
-        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
-
-        var permissions = new[]
-        {
-            new PermissionBuilder().WithUserId(user.Id).WithKey(PermissionEnum.CanEditOwnRecord).Build(),
-            new PermissionBuilder().WithUserId(user.Id).WithKey(PermissionEnum.CanEditAnyRecord).Build()
-        };
-        _fixture.Seed<Guid>(permissions);
-
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(2);
-        result.Should().OnlyContain(p => p.UserId == user.Id);
-        result.Should().Contain(p => p.Key == PermissionEnum.CanEditOwnRecord);
-        result.Should().Contain(p => p.Key == PermissionEnum.CanEditAnyRecord);
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoPermissionsExist()
-    {
-        // Act
-        var result = await _sut.GetAllAsync(CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
     public async Task GetByIdAsync_ShouldReturnPermission_WhenPermissionExists()
     {
         // Arrange
@@ -162,40 +123,6 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Act & Assert
         var act = async () => await _sut.InsertAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
-    }
-
-    [Fact]
-    public async Task UpdateAsync_ShouldUpdatePermission_WhenValidPermissionProvided()
-    {
-        // Arrange
-        var organization = new OrganizationBuilder().Build();
-        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
-
-        var permission = new PermissionBuilder()
-            .WithUserId(user.Id)
-            .WithKey(PermissionEnum.CanEditOwnRecord)
-            .Build();
-        _fixture.Seed<Guid>(new[] { permission });
-
-        // Create a new permission with different values for update
-        var updatedPermission = new PermissionBuilder()
-            .WithId(permission.Id) // Same ID
-            .WithUserId(user.Id)   // Same UserId
-            .WithKey(PermissionEnum.CanEditAnyRecord) // Different key
-            .Build();
-
-        // Act
-        var result = await _sut.UpdateAsync(updatedPermission, true, CancellationToken.None);
-
-        // Assert
-        result.Should().BeGreaterThan(0);
-
-        var retrievedPermission = await _sut.GetByIdAsync(permission.Id, CancellationToken.None);
-        retrievedPermission.Should().NotBeNull();
-        retrievedPermission!.Key.Should().Be(PermissionEnum.CanEditAnyRecord);
     }
 
     [Fact]

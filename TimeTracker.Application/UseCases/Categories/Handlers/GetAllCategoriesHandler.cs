@@ -15,7 +15,7 @@ public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesHandler.Q
     }
     public async Task<List<Category>> Handle(Query request, CancellationToken cancellationToken)
     {
-        return (await _categoryRepository.GetAllAsync(cancellationToken)).ToList();
+        return (await _categoryRepository.GetAllAsync(request.OrganizationId, cancellationToken)).ToList();
     }
-    public record Query : IRequest<List<Category>>;
+    public record Query(Guid OrganizationId) : IRequest<List<Category>>;
 }
