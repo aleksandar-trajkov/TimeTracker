@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: Your_password123
+          ACCEPT_EULA: Y
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Your_password123 -Q 'SELECT 1'"
+          --health-interval=10s
+          --health-timeout=3s
+          --health-retries=10
+          --health-start-period=10s
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build solution
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
+      env:
+        DOCKER_HOST: unix:///var/run/docker.sock
+    
+    - name: Upload coverage reports to Codecov
+      if: success()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: '**/coverage.cobertura.xml'
+        fail_ci_if_error: false
