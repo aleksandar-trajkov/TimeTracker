@@ -36,10 +36,90 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release --verbosity minimal
       
-    - name: Test
-      run: dotnet test --no-build --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+    - name: Test with Coverage
+      run: |
+        dotnet test --no-build --configuration Release \
+          --verbosity normal \
+          --logger trx \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./coverage \
+          --settings coverlet.runsettings \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[*.Tests]*,[*.UnitTests]*,[*]*.Program,[*]*Migrations*"
       env:
         DOCKER_HOST: unix:///var/run/docker.sock
+        
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+      
+    - name: Generate Coverage Report
+      run: |
+        reportgenerator \
+          -reports:"./coverage/**/coverage.cobertura.xml" \
+          -targetdir:"./coverage/report" \
+          -reporttypes:"Html;JsonSummary;Badges;TextSummary" \
+          -verbosity:Info
+          
+    - name: Coverage Summary
+      run: |
+        echo "## ?? Code Coverage Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "./coverage/report/Summary.txt" ]; then
+          echo "### Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat "./coverage/report/Summary.txt" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ -f "./coverage/report/Summary.json" ]; then
+          LINE_COVERAGE=$(cat "./coverage/report/Summary.json" | grep -o '"linecoverage":"[^"]*"' | cut -d'"' -f4)
+          BRANCH_COVERAGE=$(cat "./coverage/report/Summary.json" | grep -o '"branchcoverage":"[^"]*"' | cut -d'"' -f4)
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Line Coverage | ${LINE_COVERAGE}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch Coverage | ${BRANCH_COVERAGE}% |" >> $GITHUB_STEP_SUMMARY
+          
+          # Set coverage as output for quality gate
+          echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_OUTPUT
+          echo "branch_coverage=${BRANCH_COVERAGE}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Coverage Quality Gate
+      run: |
+        LINE_COVERAGE=$(cat "./coverage/report/Summary.json" | grep -o '"linecoverage":"[^"]*"' | cut -d'"' -f4 | sed 's/%//')
+        BRANCH_COVERAGE=$(cat "./coverage/report/Summary.json" | grep -o '"branchcoverage":"[^"]*"' | cut -d'"' -f4 | sed 's/%//')
+        
+        echo "Line Coverage: ${LINE_COVERAGE}%"
+        echo "Branch Coverage: ${BRANCH_COVERAGE}%"
+        
+        # Quality gate thresholds
+        MIN_LINE_COVERAGE=80
+        MIN_BRANCH_COVERAGE=70
+        
+        if (( $(echo "${LINE_COVERAGE} < ${MIN_LINE_COVERAGE}" | bc -l) )); then
+          echo "? Line coverage ${LINE_COVERAGE}% is below minimum threshold ${MIN_LINE_COVERAGE}%"
+          exit 1
+        fi
+        
+        if (( $(echo "${BRANCH_COVERAGE} < ${MIN_BRANCH_COVERAGE}" | bc -l) )); then
+          echo "? Branch coverage ${BRANCH_COVERAGE}% is below minimum threshold ${MIN_BRANCH_COVERAGE}%"
+          exit 1
+        fi
+        
+        echo "? Coverage quality gate passed!"
+        
+    - name: Upload Coverage Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-reports
+        path: |
+          ./coverage/report/
+          ./coverage/**/coverage.cobertura.xml
+        retention-days: 30
         
     - name: Publish Test Results
       uses: dorny/test-reporter@v1
@@ -48,6 +128,21 @@ jobs:
         name: Test Results
         path: "**/*.trx"
         reporter: dotnet-trx
+        
+    - name: Comment Coverage on PR
+      if: github.event_name == 'pull_request'
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: coverage
+        message: |
+          ## ?? Code Coverage Report
+          
+          | Metric | Coverage |
+          |--------|----------|
+          | Line Coverage | ${{ steps.coverage.outputs.line_coverage }}% |
+          | Branch Coverage | ${{ steps.coverage.outputs.branch_coverage }}% |
+          
+          [?? View detailed coverage report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
   code-quality:
     name: Code Quality
