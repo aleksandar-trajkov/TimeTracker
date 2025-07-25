@@ -71,9 +71,7 @@ jobs:
       run: dotnet restore
       
     - name: Check package consolidation
-      run: |
-        echo "=== Checking for package consolidation opportunities ==="
-        dotnet consolidate --preview
+      run: dotnet consolidate
         
     - name: Check for vulnerable packages
       run: dotnet list package --vulnerable --include-transitive
