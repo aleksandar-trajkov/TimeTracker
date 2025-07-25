@@ -64,14 +64,22 @@ jobs:
       with:
         dotnet-version: '9.0.x'
         
+    - name: Install dotnet-consolidate tool
+      run: dotnet tool install --global dotnet-consolidate
+        
     - name: Restore dependencies
       run: dotnet restore
       
+    - name: Check package consolidation
+      run: |
+        echo "=== Checking for package consolidation opportunities ==="
+        dotnet consolidate --preview
+        
     - name: Check for vulnerable packages
-      run: dotnet list package --vulnerable --include-transitive
+      run: dotnet list package --vulnerable --include-transitive --outdated
       
     - name: Format check
-      run: dotnet format --verify-no-changes --verbosity diagnostic
+      run: dotnet format --verify-no-changes
       
     - name: Build for analysis
       run: dotnet build --configuration Release
