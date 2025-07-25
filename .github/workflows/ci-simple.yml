@@ -76,7 +76,7 @@ jobs:
         dotnet consolidate --preview
         
     - name: Check for vulnerable packages
-      run: dotnet list package --vulnerable --include-transitive --outdated
+      run: dotnet list package --vulnerable --include-transitive
       
     - name: Format check
       run: dotnet format --verify-no-changes
