@@ -49,89 +49,17 @@ jobs:
         
     - name: Install ReportGenerator
       run: dotnet tool install --global dotnet-reportgenerator-globaltool
-      
-    - name: Debug Coverage Files
-      run: |
-        echo "Looking for coverage files..."
-        find . -name "*.cobertura.xml" -type f | head -10
-        find . -name "coverage.cobertura.xml" -type f | head -10
-        ls -la ./TestResults/ || echo "TestResults directory not found"
-        find ./TestResults -name "*coverage*" -type f 2>/dev/null || echo "No coverage files found in TestResults"
         
     - name: Generate Coverage Report
       run: |
         # Find all coverage files
         COVERAGE_FILES=$(find ./TestResults -name "coverage.cobertura.xml" -type f | tr '\n' ';' | sed 's/;$//')
         
-        if [ -z "$COVERAGE_FILES" ]; then
-          echo "No coverage files found. Looking for alternative patterns..."
-          COVERAGE_FILES=$(find ./TestResults -name "*.cobertura.xml" -type f | tr '\n' ';' | sed 's/;$//')
-        fi
-        
-        if [ -z "$COVERAGE_FILES" ]; then
-          echo "❌ No coverage files found!"
-          echo "Available files in TestResults:"
-          find ./TestResults -type f | head -20
-          exit 1
-        fi
-        
-        echo "Found coverage files: $COVERAGE_FILES"
-        
         reportgenerator \
           -reports:"$COVERAGE_FILES" \
           -targetdir:"./coverage-report" \
           -reporttypes:"Html;JsonSummary;Badges;TextSummary" \
           -verbosity:Info
-          
-    - name: Coverage Summary
-      id: coverage
-      run: |
-        echo "## 📊 Code Coverage Report" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        
-        if [ -f "./coverage-report/Summary.txt" ]; then
-          echo "### Coverage Summary" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat "./coverage-report/Summary.txt" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-        fi
-        
-        if [ -f "./coverage-report/Summary.json" ]; then
-          # Extract coverage percentages using more robust parsing
-          LINE_COVERAGE=$(python3 -c "
-        import json
-        try:
-            with open('./coverage-report/Summary.json', 'r') as f:
-                data = json.load(f)
-                print(data.get('summary', {}).get('linecoverage', '0'))
-        except:
-            print('0')
-        " 2>/dev/null || echo "0")
-          
-          BRANCH_COVERAGE=$(python3 -c "
-        import json
-        try:
-            with open('./coverage-report/Summary.json', 'r') as f:
-                data = json.load(f)
-                print(data.get('summary', {}).get('branchcoverage', '0'))
-        except:
-            print('0')
-        " 2>/dev/null || echo "0")
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Line Coverage | ${LINE_COVERAGE}% |" >> $GITHUB_STEP_SUMMARY
-          echo "| Branch Coverage | ${BRANCH_COVERAGE}% |" >> $GITHUB_STEP_SUMMARY
-          
-          # Set coverage as output for quality gate
-          echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_OUTPUT
-          echo "branch_coverage=${BRANCH_COVERAGE}" >> $GITHUB_OUTPUT
-        else
-          echo "⚠️ Summary.json not found, setting default values" >> $GITHUB_STEP_SUMMARY
-          echo "line_coverage=0" >> $GITHUB_OUTPUT
-          echo "branch_coverage=0" >> $GITHUB_OUTPUT
-        fi
         
     - name: Coverage Quality Gate
       run: |
