@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-and-test:
+    permissions: write-all
     name: Build and Test
     runs-on: ubuntu-latest
     
