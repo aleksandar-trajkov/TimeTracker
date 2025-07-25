@@ -28,7 +28,7 @@ public class RememberMeSignInRequestHandlerValidatorTests
         // Arrange
         var user = new UserBuilder().Build();
         var validToken = $"remember_me_{user.Email}";
-        
+
         var query = new RememberMeSignInQueryBuilder()
             .WithRememberMeToken(validToken)
             .Build();

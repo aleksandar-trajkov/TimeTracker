@@ -46,7 +46,7 @@ internal sealed class TokenProvider : ITokenProvider
             SigningCredentials = credentials,
             Issuer = _authOptions.Authority,
             Audience = _authOptions.Audience,
-            
+
         };
 
         var handler = new JsonWebTokenHandler();

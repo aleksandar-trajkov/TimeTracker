@@ -52,7 +52,7 @@ public static partial class MediatorExtensions
                     Extensions = { ["errors"] = validationEx.ToValidationErrorResponses() }
                 });
             }
-            else if(validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.Conflict))
+            else if (validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.Conflict))
             {
                 return Results.Problem(new ProblemDetails
                 {

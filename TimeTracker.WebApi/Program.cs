@@ -18,7 +18,8 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddHealthCheck(builder.Configuration);
 builder.Services.AddApiVersionServices();
-builder.Services.ConfigureHttpJsonOptions(options => {
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });

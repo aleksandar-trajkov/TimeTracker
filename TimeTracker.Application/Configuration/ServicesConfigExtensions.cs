@@ -9,7 +9,8 @@ public static class ServicesConfigExtensions
 {
     public static IServiceCollection AddMediatorServices(this IServiceCollection services)
     {
-        services.AddMediatR(config => {
+        services.AddMediatR(config =>
+        {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });

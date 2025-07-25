@@ -13,7 +13,7 @@ namespace TimeTracker.WebApi.Endpoints.V1.Auth
     public class RememberMeSignInEndpoint : IEndpointDefinition
     {
         internal static readonly string EndpointUrl = "/auth/rememberme-signin";
-        
+
         public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
         {
             return app.MapPost(EndpointUrl, async (

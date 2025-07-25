@@ -25,7 +25,7 @@ namespace TimeTracker.WebApi.Configuration
                         Type = ReferenceType.SecurityScheme,
                     }
                 };
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Time Tracking API service" , Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Time Tracking API service", Version = "v1" });
                 c.SwaggerDoc("v2", new OpenApiInfo { Title = "Time Tracking API service", Version = "v2" });
                 c.AddSecurityDefinition("Bearer", securitySchema);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -37,7 +37,7 @@ namespace TimeTracker.WebApi.Configuration
                 });
                 c.DocumentFilter<HealthCheckFilter>();
             });
-            
+
             return services;
         }
 

@@ -25,7 +25,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });
@@ -68,7 +68,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });
@@ -103,7 +103,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });
@@ -140,7 +140,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });
@@ -184,7 +184,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });
@@ -217,7 +217,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });
@@ -241,7 +241,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
         _fixture.Seed<Guid>(new[] { category });

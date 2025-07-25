@@ -34,7 +34,7 @@ public class SignInHandler : IRequestHandler<SignInHandler.Query, SignInResponse
             throw new AuthenticationException("Invalid username or password", request.Email);
         }
 
-        if(!user.IsActive)
+        if (!user.IsActive)
         {
             throw new AuthenticationException("User is not active in system", request.Email);
         }

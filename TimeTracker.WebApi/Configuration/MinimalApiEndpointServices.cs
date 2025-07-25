@@ -25,7 +25,7 @@ public static class MinimalApiEndpointServices
         var typesToRegister = Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(p => p.IsClass && typeof(IEndpointDefinition).IsAssignableFrom(p));
-        
+
         foreach (var type in typesToRegister)
         {
             var instance = serviceProvider.GetService(type) as IEndpointDefinition;

@@ -24,7 +24,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 
@@ -65,7 +65,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 
@@ -98,7 +98,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 
@@ -135,7 +135,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 
@@ -175,7 +175,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 
@@ -206,7 +206,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 
@@ -228,7 +228,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
-        
+
         _fixture.Seed<Guid>(new[] { organization });
         _fixture.Seed<Guid>(new[] { user });
 

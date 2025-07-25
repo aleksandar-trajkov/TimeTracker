@@ -60,7 +60,7 @@ public class RememberMeSignInRequestHandlerTests
     {
         // Arrange
         var rememberMeToken = "invalid_remember_me_token";
-        
+
         _tokenProvider.GivenTryGetLoginEmailFromRememberMeToken(rememberMeToken, null);
 
         var query = new RememberMeSignInQueryBuilder()
@@ -81,7 +81,7 @@ public class RememberMeSignInRequestHandlerTests
     {
         // Arrange
         var rememberMeToken = "token_with_empty_email";
-        
+
         _tokenProvider.GivenTryGetLoginEmailFromRememberMeToken(rememberMeToken, string.Empty);
 
         var query = new RememberMeSignInQueryBuilder()
