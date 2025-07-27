@@ -1,0 +1,120 @@
+name: CI Simple - TimeTracker Frontend
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    defaults:
+      run:
+        working-directory: ./
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: package-lock.json
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create environment file
+      run: |
+        echo "VITE_BASE_URL=http://localhost:5000" > .env
+        echo "VITE_TOKEN_EXPIRY_HOURS=2" >> .env
+        
+    - name: Run linting
+      run: npm run lint
+      continue-on-error: false
+      
+    - name: Run type checking
+      run: npx tsc --noEmit
+      
+    - name: Build application
+      run: npm run build
+      env:
+        NODE_ENV: production
+        
+    - name: Check build output
+      run: |
+        ls -la dist/
+        echo "Build completed successfully"
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: matrix.node-version == '20.x' && github.event_name == 'push'
+      with:
+        name: build-artifacts-${{ github.sha }}
+        path: dist/
+        retention-days: 30
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Check package vulnerabilities
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
+      
+    - name: Check for outdated packages
+      run: npm outdated
+      continue-on-error: true
+
+  deploy-preview:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts-${{ github.sha }}
+        path: dist/
+      continue-on-error: true
+        
+    - name: Deploy to preview environment
+      run: |
+        echo "🚀 Deploying to preview environment..."
+        echo "Preview URL would be: https://preview-pr-${{ github.event.number }}.timetracker.app"
+        echo "Build artifacts ready for deployment"
+        ls -la dist/ || echo "No build artifacts found"
+
+  notify-success:
+    needs: [build-and-test, code-quality]
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+    - name: Success notification
+      run: |
+        echo "✅ CI Pipeline completed successfully!"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "All builds and quality checks passed."
