@@ -8,6 +8,7 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
     
     steps:
@@ -41,11 +42,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    - name: Create environment file
-      run: |
-        echo "VITE_BASE_URL=http://localhost:5000" > .env
-        echo "VITE_TOKEN_EXPIRY_HOURS=2" >> .env
-      
     - name: Build application
       run: npm run build
       env:
@@ -65,6 +61,7 @@ jobs:
         retention-days: 30
 
   code-quality:
+    name: Code Quality
     runs-on: ubuntu-latest
     
     defaults:
