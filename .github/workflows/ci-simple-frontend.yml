@@ -1,4 +1,4 @@
-name: CI Simple - TimeTracker Frontend
+name: Continuous Integration Frontend
 
 on:
   push:
@@ -12,9 +12,28 @@ jobs:
     
     defaults:
       run:
-        working-directory: './TimeTracker.Frontend.React'
+        working-directory: "./TimeTracker.Frontend.React"
     
     steps:
+      - name: List subfolders
+        id: list-subfolders
+        uses: Drafteame/list-folders-action@main
+        with:
+          paths: |
+            /path1
+            /path2
+
+      - name: Output total sub-folders
+        run: echo "Total sub-folders: ${{ steps.list-subfolders.outputs.total }}"
+
+      - name: Output folders with base path
+        run: echo "Folders with base path: ${{ steps.list-subfolders.outputs.folders }}"
+
+      - name: Output folders without base path
+        run: echo "Folders without base path: ${{ steps.list-subfolders.outputs.folders_no_base_path }}"
+
+      - name: Output folders by path
+        run: echo "Folders by path: ${{ steps.list-subfolders.outputs.folders_by_path }}"
     - name: Checkout code
       uses: actions/checkout@v4
       
