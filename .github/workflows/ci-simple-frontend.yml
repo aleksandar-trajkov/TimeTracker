@@ -15,22 +15,6 @@ jobs:
       
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: List subfolders
-      id: list-subfolders
-      uses: Drafteame/list-folders-action@main
-
-    - name: Output total sub-folders
-      run: echo "Total sub-folders ${{ steps.list-subfolders.outputs.total }}"
-
-    - name: Output folders with base path
-      run: echo "Folders with base path ${{ steps.list-subfolders.outputs.folders }}"
-
-    - name: Output folders without base path
-      run: echo "Folders without base path ${{ steps.list-subfolders.outputs.folders_no_base_path }}"
-
-    - name: Output folders by path
-      run: echo "Folders by path ${{ steps.list-subfolders.outputs.folders_by_path }}"
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -40,6 +24,7 @@ jobs:
         cache-dependency-path: "TimeTracker.Frontend.React/package-lock.json"
         
     - name: Install dependencies
+      working-directory: "./TimeTracker.Frontend.React"
       run: npm ci
       
     - name: Build application
