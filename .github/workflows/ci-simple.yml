@@ -221,10 +221,6 @@ jobs:
   build-and-test-frontend:
     runs-on: ubuntu-latest
     
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-    
     defaults:
       run:
         working-directory: ./TimeTracker.Frontend.React
@@ -236,24 +232,12 @@ jobs:
     - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '20.x'
         cache: 'npm'
         cache-dependency-path: package-lock.json
         
     - name: Install dependencies
       run: npm ci
-      
-    - name: Create environment file
-      run: |
-        echo "VITE_BASE_URL=http://localhost:5000" > .env
-        echo "VITE_TOKEN_EXPIRY_HOURS=2" >> .env
-        
-    - name: Run linting
-      run: npm run lint
-      continue-on-error: false
-      
-    - name: Run type checking
-      run: npx tsc --noEmit
       
     - name: Build application
       run: npm run build
@@ -300,3 +284,10 @@ jobs:
     - name: Check for outdated packages
       run: npm outdated
       continue-on-error: true
+        
+    - name: Run linting
+      run: npm run lint
+      continue-on-error: false
+      
+    - name: Run type checking
+      run: npx tsc --noEmit
