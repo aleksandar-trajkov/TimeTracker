@@ -26,6 +26,7 @@ const App: React.FC = () => {
         <BrowserRouter>
           <Layout>
               <Routes>
+                <Route path="/" element={<div>Home</div>} />
               </Routes>
             </Layout>
         </BrowserRouter>
