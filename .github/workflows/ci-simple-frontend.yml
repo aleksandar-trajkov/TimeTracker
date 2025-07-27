@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: List subfolders
       id: list-subfolders
       uses: Drafteame/list-folders-action@main
@@ -26,9 +30,6 @@ jobs:
 
     - name: Output folders by path
       run: echo "Folders by path ${{ steps.list-subfolders.outputs.folders_by_path }}"
-      
-    - name: Checkout code
-      uses: actions/checkout@v4
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
