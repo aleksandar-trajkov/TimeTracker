@@ -24,8 +24,7 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
-        working-directory: $WORKING_DIRECTORY
-        cache-dependency-path: package-lock.json
+        cache-dependency-path: "$WORKING_DIRECTORY/package-lock.json"
         
     - name: Install dependencies
       working-directory: $WORKING_DIRECTORY
