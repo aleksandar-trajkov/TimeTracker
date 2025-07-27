@@ -12,7 +12,7 @@ jobs:
     
     defaults:
       run:
-        working-directory: "./TimeTracker.Frontend.React"
+        working-directory: "TimeTracker.Frontend.React"
     
     steps:
     - name: List subfolders
