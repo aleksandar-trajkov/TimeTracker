@@ -202,12 +202,18 @@ jobs:
         
     - name: Install dotnet-consolidate tool
       run: dotnet tool install --global dotnet-consolidate
+
+    - name: install dotnet-outdated tool
+      run: dotnet tool install --global dotnet-outdated-tool
         
     - name: Restore dependencies
       run: dotnet restore
       
     - name: Check package consolidation
       run: dotnet consolidate
+
+    - name: Check for outdated packages
+      run: dotnet outdated --include-transitive --ignore-failed-sources
         
     - name: Check for vulnerable packages
       run: dotnet list package --vulnerable --include-transitive
