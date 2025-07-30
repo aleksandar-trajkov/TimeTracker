@@ -213,7 +213,7 @@ jobs:
       run: dotnet consolidate
 
     - name: Check for outdated packages
-      run: dotnet outdated --include-transitive --ignore-failed-sources
+      run: dotnet outdated --transitive --ignore-failed-sources
         
     - name: Check for vulnerable packages
       run: dotnet list package --vulnerable --include-transitive
