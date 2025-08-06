@@ -220,6 +220,3 @@ jobs:
       
     - name: Format check
       run: dotnet format --verify-no-changes
-      
-    - name: Build for analysis
-      run: dotnet build --configuration Release
