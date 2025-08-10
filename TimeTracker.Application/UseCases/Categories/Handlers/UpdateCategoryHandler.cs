@@ -16,11 +16,6 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Comma
     public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
     {
         var existingCategory = await _categoryRepository.GetByIdAsync(request.Id, cancellationToken);
-        
-        if (existingCategory == null)
-        {
-            return false;
-        }
 
         existingCategory.Name = request.Name;
         existingCategory.Description = request.Description;

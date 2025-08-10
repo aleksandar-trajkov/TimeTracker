@@ -36,6 +36,12 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
             .Returns(1);
     }
 
+    public void GivenInsertAsyncFails()
+    {
+        Instance.InsertAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(0);
+    }
+
     public void GivenUpdateAsync()
     {
         Instance.UpdateAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
@@ -48,9 +54,17 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
             .Returns(1);
     }
 
+    public void GivenUpdateAsyncFails()
+    {
+        Instance.UpdateAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(0);
+    }
+
     public void GivenDeleteAsync()
     {
         Instance.DeleteAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(1);
+        Instance.DeleteAsync(Arg.Any<Guid>(), true, Arg.Any<CancellationToken>())
             .Returns(1);
     }
 
@@ -58,6 +72,14 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     {
         Instance.DeleteAsync(Arg.Any<Category>(), true, cancellationToken)
             .Returns(1);
+        Instance.DeleteAsync(Arg.Any<Guid>(), true, Arg.Any<CancellationToken>())
+            .Returns(1);
+    }
+
+    public void GivenDeleteAsyncFails()
+    {
+        Instance.DeleteAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(0);
     }
 
     public async Task VerifyInsertAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
@@ -89,5 +111,34 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
                 c.Id == category.Id),
             true,
             cancellationToken);
+    }
+
+    public async Task VerifyDeleteAsyncWasCalledWith(Guid categoryId, CancellationToken cancellationToken)
+    {
+        await Instance.Received(1).DeleteAsync(
+            categoryId,
+            true,
+            cancellationToken);
+    }
+
+    public async Task VerifyUpdateAsyncWasNotCalled()
+    {
+        await Instance.DidNotReceive().UpdateAsync(
+            Arg.Any<Category>(), 
+            Arg.Any<bool>(), 
+            Arg.Any<CancellationToken>());
+    }
+
+    public async Task VerifyDeleteAsyncWasNotCalled()
+    {
+        await Instance.DidNotReceive().DeleteAsync(
+            Arg.Any<Category>(), 
+            Arg.Any<bool>(), 
+            Arg.Any<CancellationToken>());
+    }
+
+    public async Task VerifyGetByIdAsyncWasCalledWith(Guid id, CancellationToken cancellationToken)
+    {
+        await Instance.Received(1).GetByIdAsync(id, cancellationToken);
     }
 }

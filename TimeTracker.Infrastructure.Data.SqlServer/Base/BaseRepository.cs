@@ -36,9 +36,14 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
         return Entities.AnyAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return await Entities.FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
+        return await Entities.SingleAsync(x => x.Id.Equals(id), cancellationToken);
+    }
+
+    public async Task<TEntity?> FindByIdAsync(TId id, CancellationToken cancellationToken = default)
+    {
+        return await Entities.SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
     public virtual async Task<int> InsertAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default)
@@ -87,6 +92,17 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
 
         Entities.Remove(entity);
 
+
+        if (persist)
+        {
+            return await _context.SaveChangesAsync(cancellationToken);
+        }
+        return 0;
+    }
+
+    public virtual async Task<int> DeleteAsync(TId id, bool persist = true, CancellationToken cancellationToken = default)
+    {
+        return await Entities.Where(x => x.Id.Equals(id)).ExecuteDeleteAsync(cancellationToken);
 
         if (persist)
         {

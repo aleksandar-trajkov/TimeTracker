@@ -50,28 +50,6 @@ public class UpdateCategoryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenCategoryDoesNotExist_ShouldReturnFalse()
-    {
-        // Arrange
-        var categoryId = Guid.NewGuid();
-        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
-
-        _categoryRepository.GivenGetByIdAsync(categoryId, null);
-
-        // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
-
-        // Assert
-        result.Should().BeFalse();
-        
-        // Verify UpdateAsync was never called
-        await _categoryRepository.Instance.DidNotReceive().UpdateAsync(
-            Arg.Any<Category>(), 
-            Arg.Any<bool>(), 
-            Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
     public async Task Handle_WhenUpdateWithNullDescription_ShouldUpdateCategoryWithNullDescription()
     {
         // Arrange
@@ -115,8 +93,7 @@ public class UpdateCategoryHandlerTests
         var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
 
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
-        _categoryRepository.Instance.UpdateAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
-            .Returns(0); // Simulate update failure
+        _categoryRepository.GivenUpdateAsyncFails();
 
         // Act
         var result = await _sut.Handle(command, CancellationToken.None);
@@ -161,11 +138,15 @@ public class UpdateCategoryHandlerTests
     {
         // Arrange
         var categoryId = Guid.NewGuid();
+        var existingCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Original Name")
+            .Build();
+
         var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
         var cancellationToken = new CancellationToken(true);
 
-        _categoryRepository.Instance.GetByIdAsync(categoryId, cancellationToken)
-            .Returns((Category?)null);
+        _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
 
         // Act
         var result = await _sut.Handle(command, cancellationToken);
@@ -174,6 +155,6 @@ public class UpdateCategoryHandlerTests
         result.Should().BeFalse();
         
         // Verify GetByIdAsync was called with the cancellation token
-        await _categoryRepository.Instance.Received(1).GetByIdAsync(categoryId, cancellationToken);
+        await _categoryRepository.VerifyGetByIdAsyncWasCalledWith(categoryId, cancellationToken);
     }
 }
