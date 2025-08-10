@@ -8,6 +8,12 @@ namespace TimeTracker.UnitTests.Common.Mocks.Data;
 
 public class UserRepositoryMockDouble : MockDouble<IUserRepository>
 {
+    public void GivenGetAll(Guid organizationId, IEnumerable<User> users)
+    {
+        Instance.GetAllAsync(organizationId, Arg.Any<CancellationToken>())
+            .Returns(users);
+    }
+
     public void GivenGetByEmail(string email, User user)
     {
         Instance.GetByEmailAsync(email, Arg.Any<CancellationToken>())

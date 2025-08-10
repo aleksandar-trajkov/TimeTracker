@@ -25,6 +25,160 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     #region UserRepository-specific methods
 
     [Fact]
+    public async Task GetAllAsync_ShouldReturnUsersWithPermissions_WhenUsersExistInOrganization()
+    {
+        // Arrange
+        var organization1 = new OrganizationBuilder().Build();
+        var organization2 = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization1, organization2));
+
+        // Create users for organization1
+        var user1Id = Guid.NewGuid();
+        var user1 = new UserBuilder()
+            .WithId(user1Id)
+            .WithOrganizationId(organization1.Id)
+            .WithEmail("user1@org1.com")
+            .WithFirstName("User")
+            .WithLastName("One")
+            .WithPermissions(ListHelper.CreateList<Domain.Auth.Permission>(
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(user1Id).Build())
+            .AsEnumerable())
+            .Build();
+
+        var user2Id = Guid.NewGuid();
+        var user2 = new UserBuilder()
+            .WithId(user2Id)
+            .WithOrganizationId(organization1.Id)
+            .WithEmail("user2@org1.com")
+            .WithFirstName("User")
+            .WithLastName("Two")
+            .WithPermissions(ListHelper.CreateList<Domain.Auth.Permission>(
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(user2Id).Build(),
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyRecord).WithUserId(user2Id).Build())
+            .AsEnumerable())
+            .Build();
+
+        // Create user for organization2 (should not be returned)
+        var user3Id = Guid.NewGuid();
+        var user3 = new UserBuilder()
+            .WithId(user3Id)
+            .WithOrganizationId(organization2.Id)
+            .WithEmail("user3@org2.com")
+            .WithFirstName("User")
+            .WithLastName("Three")
+            .Build();
+
+        _fixture.Seed<Guid>(ListHelper.CreateList(user1, user2, user3));
+
+        // Seed permissions
+        var user1Permissions = (ICollection<Domain.Auth.Permission>)user1.Permissions;
+        var user2Permissions = (ICollection<Domain.Auth.Permission>)user2.Permissions;
+        _fixture.Seed<Guid>(user1Permissions);
+        _fixture.Seed<Guid>(user2Permissions);
+
+        // Act
+        var result = await _sut.GetAllAsync(organization1.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var resultList = result.ToList();
+        resultList.Should().Contain(u => u.Email == "user1@org1.com");
+        resultList.Should().Contain(u => u.Email == "user2@org1.com");
+        resultList.Should().NotContain(u => u.Email == "user3@org2.com");
+
+        // Verify permissions are included
+        var user1Result = resultList.First(u => u.Email == "user1@org1.com");
+        user1Result.Permissions.Should().NotBeNullOrEmpty();
+        user1Result.Permissions.Should().HaveCount(1);
+        user1Result.Permissions.First().Key.Should().Be(PermissionEnum.CanEditOwnRecord);
+
+        var user2Result = resultList.First(u => u.Email == "user2@org1.com");
+        user2Result.Permissions.Should().NotBeNullOrEmpty();
+        user2Result.Permissions.Should().HaveCount(2);
+        user2Result.Permissions.Should().Contain(p => p.Key == PermissionEnum.CanEditAnyRecord);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoUsersExistInOrganization()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        // Act
+        var result = await _sut.GetAllAsync(organization.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenOrganizationDoesNotExist()
+    {
+        // Arrange
+        var nonExistentOrganizationId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.GetAllAsync(nonExistentOrganizationId, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnUsersWithoutPermissions_WhenUsersHaveNoPermissions()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        var userWithoutPermissions = new UserBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithEmail("nopermissions@test.com")
+            .WithFirstName("No")
+            .WithLastName("Permissions")
+            .Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(userWithoutPermissions));
+
+        // Act
+        var result = await _sut.GetAllAsync(organization.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().HaveCount(1);
+        
+        var user = result.First();
+        user.Email.Should().Be("nopermissions@test.com");
+        user.Permissions.Should().NotBeNull();
+        user.Permissions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldRespectCancellationToken()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        var user = new UserBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithEmail("cancellation@test.com")
+            .Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        // Act & Assert
+        var act = async () => await _sut.GetAllAsync(organization.Id, cts.Token);
+        await act.Should().ThrowAsync<OperationCanceledException>();
+    }
+
+    [Fact]
     public async Task GetByEmailAsync_ShouldReturnUser_WhenEmailExists()
     {
         // Arrange
@@ -70,6 +224,27 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
+    public async Task GetByEmailAsync_ShouldRespectCancellationToken()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        var user = new UserBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithEmail("cancellation2@test.com")
+            .Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        // Act & Assert
+        var act = async () => await _sut.GetByEmailAsync(user.Email, cts.Token);
+        await act.Should().ThrowAsync<OperationCanceledException>();
+    }
+
+    [Fact]
     public async Task ExistsByEmailAsync_ShouldReturnTrue_WhenEmailExists()
     {
         // Arrange
@@ -100,6 +275,38 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
 
         // Assert
         result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExistsByEmailAsync_ShouldReturnTrue_WhenEmailExistsWithDifferentCasing()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        var user = new UserBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithEmail("CaseSensitive@Test.Com")
+            .Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+
+        // Act
+        var result = await _sut.ExistsByEmailAsync("casesensitive@test.com", CancellationToken.None);
+
+        // Assert - This depends on database collation, but typically should be case-insensitive
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ExistsByEmailAsync_ShouldRespectCancellationToken()
+    {
+        // Arrange
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        // Act & Assert
+        var act = async () => await _sut.ExistsByEmailAsync("test@example.com", cts.Token);
+        await act.Should().ThrowAsync<OperationCanceledException>();
     }
 
     #endregion

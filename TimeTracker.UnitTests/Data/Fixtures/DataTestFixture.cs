@@ -54,6 +54,13 @@ public class DataTestFixture : IDisposable
         _context.SaveChanges();
     }
 
+    public void Reset()
+    {
+        _context.ChangeTracker.Entries()
+            .Where(e => e.Entity != null).ToList()
+            .ForEach(e => e.State = EntityState.Detached);
+    }
+
     public void Dispose()
     {
         _context.Dispose();

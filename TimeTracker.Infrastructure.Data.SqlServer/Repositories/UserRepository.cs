@@ -12,15 +12,23 @@ public class UserRepository : BaseRepository<User, Guid>, IUserRepository
     {
     }
 
-    public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<User>> GetAllAsync(Guid organizationId, CancellationToken cancellationToken = default)
     {
-        return this.Entities
-            .AnyAsync(u => u.Email == email, cancellationToken);
+        return await this.Select()
+            .Include(u => u.Permissions)
+            .Where(u => u.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken);
     }
 
+
+    public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return this.Select()
+            .AnyAsync(u => u.Email == email, cancellationToken);
+    }
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await this.Entities
+        return await this.Select()
             .Include(x => x.Permissions)
             .SingleAsync(u => u.Email == email, cancellationToken);
     }

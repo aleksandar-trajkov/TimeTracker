@@ -19,8 +19,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(x => x.Description)
             .HasMaxLength(1000);
 
-        builder.Property(x => x.OrganizationId)
-            .IsRequired();
+        builder.Property(x => x.OrganizationId);
 
         // Relationships
         builder.HasOne(x => x.Organization)
