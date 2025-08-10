@@ -18,6 +18,42 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
+    public async Task FindByIdAsync_ShouldReturnCategory_WhenCategoryExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(new[] { organization });
+
+        var category = new CategoryBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithName("Test Category")
+            .Build();
+        _fixture.Seed<Guid>(new[] { category });
+
+        // Act
+        var result = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(category.Id);
+        result.Name.Should().Be("Test Category");
+        result.OrganizationId.Should().Be(organization.Id);
+    }
+
+    [Fact]
+    public async Task FindByIdAsync_ShouldReturnNull_WhenCategoryDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.FindByIdAsync(nonExistentId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnCategory_WhenCategoryExists()
     {
         // Arrange
@@ -41,16 +77,14 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenCategoryDoesNotExist()
+    public async Task GetByIdAsync_ShouldThrowInvalidOperationException_WhenCategoryDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
-        // Act
-        var result = await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
+        // Act & Assert
+        var act = async () => await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
@@ -101,7 +135,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var insertedCategory = await _sut.GetByIdAsync(category.Id, CancellationToken.None);
+        var insertedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
         insertedCategory.Should().NotBeNull();
         insertedCategory!.Name.Should().Be("New Category");
     }
@@ -137,7 +171,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var updatedCategory = await _sut.GetByIdAsync(category.Id, CancellationToken.None);
+        var updatedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
         updatedCategory.Should().NotBeNull();
         updatedCategory!.Name.Should().Be("Updated Name");
         updatedCategory.Description.Should().Be("Updated Description");
@@ -152,7 +186,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDeleteCategory_WhenValidCategoryProvided()
+    public async Task DeleteAsync_WithEntity_ShouldDeleteCategory_WhenValidCategoryProvided()
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
@@ -167,16 +201,63 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var deletedCategory = await _sut.GetByIdAsync(category.Id, CancellationToken.None);
+        var deletedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
         deletedCategory.Should().BeNull();
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenCategoryIsNull()
+    public async Task DeleteAsync_WithEntity_ShouldThrowArgumentNullException_WhenCategoryIsNull()
     {
         // Act & Assert
         var act = async () => await _sut.DeleteAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldDeleteCategory_WhenCategoryExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(new[] { organization });
+
+        var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
+        _fixture.Seed<Guid>(new[] { category });
+
+        // Act
+        await _sut.DeleteAsync(category.Id, CancellationToken.None);
+
+        var deletedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
+        deletedCategory.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldReturnZero_WhenCategoryDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        await _sut.DeleteAsync(nonExistentId, CancellationToken.None);
+
+        // Expect no exception and return zero rows affected
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_WithPersistFalse_ShouldReturnAffectedRowsCount()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(new[] { organization });
+
+        var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
+        _fixture.Seed<Guid>(new[] { category });
+
+        // Act
+        await _sut.DeleteAsync(category.Id, CancellationToken.None);
+
+        // Verify the category is actually deleted (ExecuteDeleteAsync persists changes immediately)
+        var deletedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
+        deletedCategory.Should().BeNull();
     }
 
     [Fact]
@@ -194,7 +275,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().Be(0);
 
-        var insertedCategory = await _sut.GetByIdAsync(category.Id, CancellationToken.None);
+        var insertedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
         insertedCategory.Should().BeNull();
     }
 
@@ -216,7 +297,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var savedCategory = await _sut.GetByIdAsync(category.Id, CancellationToken.None);
+        var savedCategory = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
         savedCategory.Should().NotBeNull();
     }
 }

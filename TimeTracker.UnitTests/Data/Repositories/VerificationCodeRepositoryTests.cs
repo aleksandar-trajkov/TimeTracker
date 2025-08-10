@@ -19,6 +19,47 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
+    public async Task FindByIdAsync_ShouldReturnVerificationCode_WhenVerificationCodeExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
+
+        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(new[] { user });
+
+        var verificationCode = new VerificationCodeBuilder()
+            .WithUserId(user.Id)
+            .WithCode("TEST123456")
+            .AsValid()
+            .Build();
+        _fixture.Seed<Guid>(new[] { verificationCode });
+
+        // Act
+        var result = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(verificationCode.Id);
+        result.Code.Should().Be("TEST123456");
+        result.UserId.Should().Be(user.Id);
+        result.IsUsed.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task FindByIdAsync_ShouldReturnNull_WhenVerificationCodeDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.FindByIdAsync(nonExistentId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnVerificationCode_WhenVerificationCodeExists()
     {
         // Arrange
@@ -47,16 +88,14 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenVerificationCodeDoesNotExist()
+    public async Task GetByIdAsync_ShouldThrowInvalidOperationException_WhenVerificationCodeDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
-        // Act
-        var result = await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
+        // Act & Assert
+        var act = async () => await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
@@ -114,7 +153,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var insertedVerificationCode = await _sut.GetByIdAsync(verificationCode.Id, CancellationToken.None);
+        var insertedVerificationCode = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
         insertedVerificationCode.Should().NotBeNull();
         insertedVerificationCode!.Code.Should().Be("NEWCODE123");
         insertedVerificationCode.UserId.Should().Be(user.Id);
@@ -155,7 +194,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var updatedVerificationCode = await _sut.GetByIdAsync(verificationCode.Id, CancellationToken.None);
+        var updatedVerificationCode = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
         updatedVerificationCode.Should().NotBeNull();
         updatedVerificationCode!.IsUsed.Should().BeTrue();
         updatedVerificationCode.Code.Should().Be("UPDATED123");
@@ -170,7 +209,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDeleteVerificationCode_WhenValidVerificationCodeProvided()
+    public async Task DeleteAsync_WithEntity_ShouldDeleteVerificationCode_WhenValidVerificationCodeProvided()
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
@@ -188,16 +227,47 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var deletedVerificationCode = await _sut.GetByIdAsync(verificationCode.Id, CancellationToken.None);
+        var deletedVerificationCode = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
         deletedVerificationCode.Should().BeNull();
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenVerificationCodeIsNull()
+    public async Task DeleteAsync_WithEntity_ShouldThrowArgumentNullException_WhenVerificationCodeIsNull()
     {
         // Act & Assert
         var act = async () => await _sut.DeleteAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldDeleteVerificationCode_WhenVerificationCodeExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
+
+        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(new[] { user });
+
+        var verificationCode = new VerificationCodeBuilder().WithUserId(user.Id).Build();
+        _fixture.Seed<Guid>(new[] { verificationCode });
+
+        // Act
+        await _sut.DeleteAsync(verificationCode.Id, CancellationToken.None);
+
+        // Assert
+        var deletedVerificationCode = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
+        deletedVerificationCode.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldReturnZero_WhenVerificationCodeDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        await _sut.DeleteAsync(nonExistentId, CancellationToken.None);
     }
 
     [Fact]
@@ -218,7 +288,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().Be(0);
 
-        var insertedVerificationCode = await _sut.GetByIdAsync(verificationCode.Id, CancellationToken.None);
+        var insertedVerificationCode = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
         insertedVerificationCode.Should().BeNull();
     }
 
@@ -243,7 +313,7 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var savedVerificationCode = await _sut.GetByIdAsync(verificationCode.Id, CancellationToken.None);
+        var savedVerificationCode = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
         savedVerificationCode.Should().NotBeNull();
     }
 }

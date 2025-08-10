@@ -11,7 +11,7 @@ public interface IBaseRepository<TEntity, TId> where TEntity : BaseModel<TId>
     Task<int> InsertAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default);
     Task<int> UpdateAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default);
     Task<int> InsertOrUpdateAsync(Expression<Func<TEntity, bool>> comparer, TEntity entity, bool persist = true, CancellationToken cancellationToken = default);
-    Task<int> DeleteAsync(TId id, bool persist = true, CancellationToken cancellationToken = default);
+    Task DeleteAsync(TId id, CancellationToken cancellationToken = default);
     Task<int> DeleteAsync(TEntity entity, bool persist = true, CancellationToken cancellationToken = default);
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

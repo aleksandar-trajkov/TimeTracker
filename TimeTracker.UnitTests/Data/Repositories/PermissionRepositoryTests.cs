@@ -19,6 +19,45 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
+    public async Task FindByIdAsync_ShouldReturnPermission_WhenPermissionExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
+
+        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(new[] { user });
+
+        var permission = new PermissionBuilder()
+            .WithUserId(user.Id)
+            .WithKey(PermissionEnum.CanEditOwnRecord)
+            .Build();
+        _fixture.Seed<Guid>(new[] { permission });
+
+        // Act
+        var result = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(permission.Id);
+        result.Key.Should().Be(PermissionEnum.CanEditOwnRecord);
+        result.UserId.Should().Be(user.Id);
+    }
+
+    [Fact]
+    public async Task FindByIdAsync_ShouldReturnNull_WhenPermissionDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.FindByIdAsync(nonExistentId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnPermission_WhenPermissionExists()
     {
         // Arrange
@@ -45,16 +84,14 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenPermissionDoesNotExist()
+    public async Task GetByIdAsync_ShouldThrowInvalidOperationException_WhenPermissionDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
-        // Act
-        var result = await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
+        // Act & Assert
+        var act = async () => await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
@@ -111,7 +148,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var insertedPermission = await _sut.GetByIdAsync(permission.Id, CancellationToken.None);
+        var insertedPermission = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
         insertedPermission.Should().NotBeNull();
         insertedPermission!.Key.Should().Be(PermissionEnum.CanEditOwnRecord);
         insertedPermission.UserId.Should().Be(user.Id);
@@ -134,7 +171,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDeletePermission_WhenValidPermissionProvided()
+    public async Task DeleteAsync_WithEntity_ShouldDeletePermission_WhenValidPermissionProvided()
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
@@ -152,16 +189,47 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var deletedPermission = await _sut.GetByIdAsync(permission.Id, CancellationToken.None);
+        var deletedPermission = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
         deletedPermission.Should().BeNull();
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenPermissionIsNull()
+    public async Task DeleteAsync_WithEntity_ShouldThrowArgumentNullException_WhenPermissionIsNull()
     {
         // Act & Assert
         var act = async () => await _sut.DeleteAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldDeletePermission_WhenPermissionExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
+
+        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(new[] { user });
+
+        var permission = new PermissionBuilder().WithUserId(user.Id).Build();
+        _fixture.Seed<Guid>(new[] { permission });
+
+        // Act
+        await _sut.DeleteAsync(permission.Id, CancellationToken.None);
+
+        // Assert
+        var deletedPermission = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
+        deletedPermission.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldReturnZero_WhenPermissionDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        await _sut.DeleteAsync(nonExistentId, CancellationToken.None);
     }
 
     [Fact]
@@ -182,7 +250,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().Be(0);
 
-        var insertedPermission = await _sut.GetByIdAsync(permission.Id, CancellationToken.None);
+        var insertedPermission = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
         insertedPermission.Should().BeNull();
     }
 
@@ -207,7 +275,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var savedPermission = await _sut.GetByIdAsync(permission.Id, CancellationToken.None);
+        var savedPermission = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
         savedPermission.Should().NotBeNull();
     }
 }

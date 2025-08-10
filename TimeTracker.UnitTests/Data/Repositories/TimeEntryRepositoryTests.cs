@@ -19,6 +19,49 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
+    public async Task FindByIdAsync_ShouldReturnTimeEntry_WhenTimeEntryExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
+        var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
+
+        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(new[] { category });
+
+        var timeEntry = new TimeEntryBuilder()
+            .WithUserId(user.Id)
+            .WithCategoryId(category.Id)
+            .WithDescription("Test Time Entry")
+            .Build();
+        _fixture.Seed<Guid>(new[] { timeEntry });
+
+        // Act
+        var result = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(timeEntry.Id);
+        result.Description.Should().Be("Test Time Entry");
+        result.UserId.Should().Be(user.Id);
+        result.CategoryId.Should().Be(category.Id);
+    }
+
+    [Fact]
+    public async Task FindByIdAsync_ShouldReturnNull_WhenTimeEntryDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.FindByIdAsync(nonExistentId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnTimeEntry_WhenTimeEntryExists()
     {
         // Arrange
@@ -49,16 +92,14 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenTimeEntryDoesNotExist()
+    public async Task GetByIdAsync_ShouldThrowInvalidOperationException_WhenTimeEntryDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
-        // Act
-        var result = await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
+        // Act & Assert
+        var act = async () => await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
@@ -120,7 +161,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var insertedTimeEntry = await _sut.GetByIdAsync(timeEntry.Id, CancellationToken.None);
+        var insertedTimeEntry = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
         insertedTimeEntry.Should().NotBeNull();
         insertedTimeEntry!.Description.Should().Be("New Time Entry");
     }
@@ -163,7 +204,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var updatedTimeEntry = await _sut.GetByIdAsync(timeEntry.Id, CancellationToken.None);
+        var updatedTimeEntry = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
         updatedTimeEntry.Should().NotBeNull();
         updatedTimeEntry!.Description.Should().Be("Updated Description");
         updatedTimeEntry.To.Should().BeCloseTo(newEndTime, TimeSpan.FromSeconds(1));
@@ -178,7 +219,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDeleteTimeEntry_WhenValidTimeEntryProvided()
+    public async Task DeleteAsync_WithEntity_ShouldDeleteTimeEntry_WhenValidTimeEntryProvided()
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
@@ -198,16 +239,49 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var deletedTimeEntry = await _sut.GetByIdAsync(timeEntry.Id, CancellationToken.None);
+        var deletedTimeEntry = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
         deletedTimeEntry.Should().BeNull();
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenTimeEntryIsNull()
+    public async Task DeleteAsync_WithEntity_ShouldThrowArgumentNullException_WhenTimeEntryIsNull()
     {
         // Act & Assert
         var act = async () => await _sut.DeleteAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldDeleteTimeEntry_WhenTimeEntryExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
+        var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
+
+        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(new[] { category });
+
+        var timeEntry = new TimeEntryBuilder().WithUserId(user.Id).WithCategoryId(category.Id).Build();
+        _fixture.Seed<Guid>(new[] { timeEntry });
+
+        // Act
+        await _sut.DeleteAsync(timeEntry.Id, CancellationToken.None);
+
+        // Assert
+        var deletedTimeEntry = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
+        deletedTimeEntry.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldReturnZero_WhenTimeEntryDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        await _sut.DeleteAsync(nonExistentId, CancellationToken.None);
     }
 
     [Fact]
@@ -230,7 +304,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().Be(0);
 
-        var insertedTimeEntry = await _sut.GetByIdAsync(timeEntry.Id, CancellationToken.None);
+        var insertedTimeEntry = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
         insertedTimeEntry.Should().BeNull();
     }
 
@@ -257,7 +331,7 @@ public class TimeEntryRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var savedTimeEntry = await _sut.GetByIdAsync(timeEntry.Id, CancellationToken.None);
+        var savedTimeEntry = await _sut.FindByIdAsync(timeEntry.Id, CancellationToken.None);
         savedTimeEntry.Should().NotBeNull();
     }
 }

@@ -64,16 +64,14 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     {
         Instance.DeleteAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
             .Returns(1);
-        Instance.DeleteAsync(Arg.Any<Guid>(), true, Arg.Any<CancellationToken>())
-            .Returns(1);
+        Instance.DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     public void GivenDeleteAsync(CancellationToken cancellationToken)
     {
         Instance.DeleteAsync(Arg.Any<Category>(), true, cancellationToken)
             .Returns(1);
-        Instance.DeleteAsync(Arg.Any<Guid>(), true, Arg.Any<CancellationToken>())
-            .Returns(1);
+        Instance.DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     public void GivenDeleteAsyncFails()
@@ -117,7 +115,6 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     {
         await Instance.Received(1).DeleteAsync(
             categoryId,
-            true,
             cancellationToken);
     }
 

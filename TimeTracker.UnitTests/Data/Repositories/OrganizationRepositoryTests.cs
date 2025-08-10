@@ -18,6 +18,39 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
+    public async Task FindByIdAsync_ShouldReturnOrganization_WhenOrganizationExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder()
+            .WithName("Test Organization 2")
+            .WithDescription("Test Description")
+            .Build();
+        _fixture.Seed<Guid>(new[] { organization });
+
+        // Act
+        var result = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(organization.Id);
+        result.Name.Should().Be("Test Organization 2");
+        result.Description.Should().Be("Test Description");
+    }
+
+    [Fact]
+    public async Task FindByIdAsync_ShouldReturnNull_WhenOrganizationDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.FindByIdAsync(nonExistentId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnOrganization_WhenOrganizationExists()
     {
         // Arrange
@@ -38,16 +71,14 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenOrganizationDoesNotExist()
+    public async Task GetByIdAsync_ShouldThrowInvalidOperationException_WhenOrganizationDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
-        // Act
-        var result = await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
+        // Act & Assert
+        var act = async () => await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
@@ -92,7 +123,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var insertedOrganization = await _sut.GetByIdAsync(organization.Id, CancellationToken.None);
+        var insertedOrganization = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
         insertedOrganization.Should().NotBeNull();
         insertedOrganization!.Name.Should().Be("New Organization");
         insertedOrganization.Description.Should().Be("New Description");
@@ -126,7 +157,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var updatedOrganization = await _sut.GetByIdAsync(organization.Id, CancellationToken.None);
+        var updatedOrganization = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
         updatedOrganization.Should().NotBeNull();
         updatedOrganization!.Name.Should().Be("Updated Name");
         updatedOrganization.Description.Should().Be("Updated Description");
@@ -141,7 +172,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDeleteOrganization_WhenValidOrganizationProvided()
+    public async Task DeleteAsync_WithEntity_ShouldDeleteOrganization_WhenValidOrganizationProvided()
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
@@ -153,16 +184,41 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var deletedOrganization = await _sut.GetByIdAsync(organization.Id, CancellationToken.None);
+        var deletedOrganization = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
         deletedOrganization.Should().BeNull();
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenOrganizationIsNull()
+    public async Task DeleteAsync_WithEntity_ShouldThrowArgumentNullException_WhenOrganizationIsNull()
     {
         // Act & Assert
         var act = async () => await _sut.DeleteAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldDeleteOrganization_WhenOrganizationExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(new[] { organization });
+
+        // Act
+        await _sut.DeleteAsync(organization.Id, CancellationToken.None);
+
+        // Assert
+        var deletedOrganization = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
+        deletedOrganization.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldReturnZero_WhenOrganizationDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        await _sut.DeleteAsync(nonExistentId, CancellationToken.None);
     }
 
     [Fact]
@@ -177,7 +233,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().Be(0);
 
-        var insertedOrganization = await _sut.GetByIdAsync(organization.Id, CancellationToken.None);
+        var insertedOrganization = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
         insertedOrganization.Should().BeNull();
     }
 
@@ -196,7 +252,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var savedOrganization = await _sut.GetByIdAsync(organization.Id, CancellationToken.None);
+        var savedOrganization = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
         savedOrganization.Should().NotBeNull();
     }
 }

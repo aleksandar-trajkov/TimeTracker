@@ -3,7 +3,7 @@ using TimeTracker.Application.Interfaces.Data;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
 
-public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryHandler.Command, bool>
+public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryHandler.Command>
 {
     private readonly ICategoryRepository _categoryRepository;
 
@@ -12,12 +12,10 @@ public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryHandler.Comma
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+    public async Task Handle(Command request, CancellationToken cancellationToken)
     {
-        var result = await _categoryRepository.DeleteAsync(request.Id, true, cancellationToken);
-        
-        return result > 0;
+        await _categoryRepository.DeleteAsync(request.Id, cancellationToken);
     }
 
-    public record Command(Guid Id) : IRequest<bool>;
+    public record Command(Guid Id) : IRequest;
 }

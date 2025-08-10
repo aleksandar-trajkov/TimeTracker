@@ -314,6 +314,46 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     #region BaseRepository inherited methods
 
     [Fact]
+    public async Task FindByIdAsync_ShouldReturnUser_WhenUserExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        var user = new UserBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithEmail("findbyid@example.com")
+            .WithFirstName("John")
+            .WithLastName("Doe")
+            .Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+
+        // Act
+        var result = await _sut.FindByIdAsync(user.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(user.Id);
+        result.Email.Should().Be(user.Email);
+        result.FirstName.Should().Be(user.FirstName);
+        result.LastName.Should().Be(user.LastName);
+        result.OrganizationId.Should().Be(organization.Id);
+    }
+
+    [Fact]
+    public async Task FindByIdAsync_ShouldReturnNull_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _sut.FindByIdAsync(nonExistentId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnUser_WhenUserExists()
     {
         // Arrange
@@ -341,16 +381,14 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenUserDoesNotExist()
+    public async Task GetByIdAsync_ShouldThrowInvalidOperationException_WhenUserDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
-        // Act
-        var result = await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
+        // Act & Assert
+        var act = async () => await _sut.GetByIdAsync(nonExistentId, CancellationToken.None);
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]
@@ -406,7 +444,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var insertedUser = await _sut.GetByIdAsync(newUser.Id, CancellationToken.None);
+        var insertedUser = await _sut.FindByIdAsync(newUser.Id, CancellationToken.None);
         insertedUser.Should().NotBeNull();
         insertedUser!.Email.Should().Be("newuser@test.com");
         insertedUser.FirstName.Should().Be("New");
@@ -454,7 +492,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var retrievedUser = await _sut.GetByIdAsync(userToUpdate.Id, CancellationToken.None);
+        var retrievedUser = await _sut.FindByIdAsync(userToUpdate.Id, CancellationToken.None);
         retrievedUser.Should().NotBeNull();
         retrievedUser!.FirstName.Should().Be("Updated");
         retrievedUser.LastName.Should().Be("UpdatedName");
@@ -471,7 +509,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDeleteUser_WhenValidUserProvided()
+    public async Task DeleteAsync_WithEntity_ShouldDeleteUser_WhenValidUserProvided()
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
@@ -489,16 +527,47 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var deletedUser = await _sut.GetByIdAsync(userToDelete.Id, CancellationToken.None);
+        var deletedUser = await _sut.FindByIdAsync(userToDelete.Id, CancellationToken.None);
         deletedUser.Should().BeNull();
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenUserIsNull()
+    public async Task DeleteAsync_WithEntity_ShouldThrowArgumentNullException_WhenUserIsNull()
     {
         // Act & Assert
         var act = async () => await _sut.DeleteAsync(null!, true, CancellationToken.None);
         await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldDeleteUser_WhenUserExists()
+    {
+        // Arrange
+        var organization = new OrganizationBuilder().Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+
+        var userToDelete = new UserBuilder()
+            .WithOrganizationId(organization.Id)
+            .WithEmail("deletewithid@test.com")
+            .Build();
+        _fixture.Seed<Guid>(ListHelper.CreateList(userToDelete));
+
+        // Act
+        await _sut.DeleteAsync(userToDelete.Id, CancellationToken.None);
+
+        // Assert
+        var deletedUser = await _sut.FindByIdAsync(userToDelete.Id, CancellationToken.None);
+        deletedUser.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithId_ShouldReturnZero_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        await _sut.DeleteAsync(nonExistentId, CancellationToken.None);
     }
 
     [Fact]
@@ -519,7 +588,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().Be(0);
 
-        var insertedUser = await _sut.GetByIdAsync(tempUser.Id, CancellationToken.None);
+        var insertedUser = await _sut.FindByIdAsync(tempUser.Id, CancellationToken.None);
         insertedUser.Should().BeNull();
     }
 
@@ -553,7 +622,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         result.Should().Be(0);
 
         // Verify the change wasn't persisted by checking the database
-        var userFromDb = await _sut.GetByIdAsync(userToUpdate.Id, CancellationToken.None);
+        var userFromDb = await _sut.FindByIdAsync(userToUpdate.Id, CancellationToken.None);
         userFromDb!.FirstName.Should().Be("Original");
     }
 
@@ -578,7 +647,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().BeGreaterThan(0);
 
-        var savedUser = await _sut.GetByIdAsync(pendingUser.Id, CancellationToken.None);
+        var savedUser = await _sut.FindByIdAsync(pendingUser.Id, CancellationToken.None);
         savedUser.Should().NotBeNull();
         savedUser!.Email.Should().Be("pending@test.com");
         savedUser.OrganizationId.Should().Be(organization.Id);

@@ -100,15 +100,9 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where 
         return 0;
     }
 
-    public virtual async Task<int> DeleteAsync(TId id, bool persist = true, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return await Entities.Where(x => x.Id.Equals(id)).ExecuteDeleteAsync(cancellationToken);
-
-        if (persist)
-        {
-            return await _context.SaveChangesAsync(cancellationToken);
-        }
-        return 0;
+        await Entities.Where(x => x.Id.Equals(id)).ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
