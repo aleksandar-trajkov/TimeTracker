@@ -1,0 +1,179 @@
+using FluentAssertions;
+using NSubstitute;
+using TimeTracker.Application.UseCases.Categories.Handlers;
+using TimeTracker.Domain;
+using TimeTracker.UnitTests.Common.Builders.Domain;
+using TimeTracker.UnitTests.Common.Mocks.Data;
+
+namespace TimeTracker.UnitTests.Application.UseCases.Categories.Handlers;
+
+public class UpdateCategoryHandlerTests
+{
+    private readonly CategoryRepositoryMockDouble _categoryRepository;
+    private readonly UpdateCategoryHandler _sut;
+
+    public UpdateCategoryHandlerTests()
+    {
+        _categoryRepository = new CategoryRepositoryMockDouble();
+        _sut = new UpdateCategoryHandler(_categoryRepository.Instance);
+    }
+
+    [Fact]
+    public async Task Handle_WhenCategoryExists_ShouldUpdateCategoryAndReturnTrue()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        var existingCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Original Name")
+            .WithDescription("Original Description")
+            .Build();
+
+        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+
+        _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
+        _categoryRepository.GivenUpdateAsync();
+
+        // Act
+        var result = await _sut.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.Should().BeTrue();
+        
+        var expectedCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription("Updated Description")
+            .Build();
+        
+        await _categoryRepository.VerifyUpdateAsyncWasCalledWith(expectedCategory, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task Handle_WhenCategoryDoesNotExist_ShouldReturnFalse()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+
+        _categoryRepository.GivenGetByIdAsync(categoryId, null);
+
+        // Act
+        var result = await _sut.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.Should().BeFalse();
+        
+        // Verify UpdateAsync was never called
+        await _categoryRepository.Instance.DidNotReceive().UpdateAsync(
+            Arg.Any<Category>(), 
+            Arg.Any<bool>(), 
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WhenUpdateWithNullDescription_ShouldUpdateCategoryWithNullDescription()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        var existingCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Original Name")
+            .WithDescription("Original Description")
+            .Build();
+
+        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", null);
+
+        _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
+        _categoryRepository.GivenUpdateAsync();
+
+        // Act
+        var result = await _sut.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.Should().BeTrue();
+        
+        var expectedCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription(null)
+            .Build();
+        
+        await _categoryRepository.VerifyUpdateAsyncWasCalledWith(expectedCategory, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task Handle_WhenRepositoryUpdateFails_ShouldReturnFalse()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        var existingCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Original Name")
+            .Build();
+
+        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+
+        _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
+        _categoryRepository.Instance.UpdateAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(0); // Simulate update failure
+
+        // Act
+        var result = await _sut.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Handle_WhenCancellationRequested_ShouldPassCancellationToken()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        var existingCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Original Name")
+            .Build();
+
+        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+        var cancellationToken = new CancellationToken(true);
+
+        _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
+        _categoryRepository.GivenUpdateAsync(cancellationToken);
+
+        // Act
+        var result = await _sut.Handle(command, cancellationToken);
+
+        // Assert
+        result.Should().BeTrue();
+        
+        var expectedCategory = new CategoryBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription("Updated Description")
+            .Build();
+        
+        await _categoryRepository.VerifyUpdateAsyncWasCalledWith(expectedCategory, cancellationToken);
+    }
+
+    [Fact]
+    public async Task Handle_WhenCancellationRequestedOnGetById_ShouldPassCancellationToken()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+        var cancellationToken = new CancellationToken(true);
+
+        _categoryRepository.Instance.GetByIdAsync(categoryId, cancellationToken)
+            .Returns((Category?)null);
+
+        // Act
+        var result = await _sut.Handle(command, cancellationToken);
+
+        // Assert
+        result.Should().BeFalse();
+        
+        // Verify GetByIdAsync was called with the cancellation token
+        await _categoryRepository.Instance.Received(1).GetByIdAsync(categoryId, cancellationToken);
+    }
+}

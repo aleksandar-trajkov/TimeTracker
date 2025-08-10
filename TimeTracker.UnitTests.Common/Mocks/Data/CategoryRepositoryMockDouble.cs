@@ -23,4 +23,71 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
         Instance.ExistsAsync(id, Arg.Any<CancellationToken>())
             .Returns(exists);
     }
+
+    public void GivenInsertAsync()
+    {
+        Instance.InsertAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(1);
+    }
+
+    public void GivenInsertAsync(CancellationToken cancellationToken)
+    {
+        Instance.InsertAsync(Arg.Any<Category>(), true, cancellationToken)
+            .Returns(1);
+    }
+
+    public void GivenUpdateAsync()
+    {
+        Instance.UpdateAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(1);
+    }
+
+    public void GivenUpdateAsync(CancellationToken cancellationToken)
+    {
+        Instance.UpdateAsync(Arg.Any<Category>(), true, cancellationToken)
+            .Returns(1);
+    }
+
+    public void GivenDeleteAsync()
+    {
+        Instance.DeleteAsync(Arg.Any<Category>(), true, Arg.Any<CancellationToken>())
+            .Returns(1);
+    }
+
+    public void GivenDeleteAsync(CancellationToken cancellationToken)
+    {
+        Instance.DeleteAsync(Arg.Any<Category>(), true, cancellationToken)
+            .Returns(1);
+    }
+
+    public async Task VerifyInsertAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
+    {
+        await Instance.Received(1).InsertAsync(
+            Arg.Is<Category>(c => 
+                c.Name == category.Name && 
+                c.Description == category.Description && 
+                c.OrganizationId == category.OrganizationId),
+            true,
+            cancellationToken);
+    }
+
+    public async Task VerifyUpdateAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
+    {
+        await Instance.Received(1).UpdateAsync(
+            Arg.Is<Category>(c => 
+                c.Id == category.Id && 
+                c.Name == category.Name && 
+                c.Description == category.Description),
+            true,
+            cancellationToken);
+    }
+
+    public async Task VerifyDeleteAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
+    {
+        await Instance.Received(1).DeleteAsync(
+            Arg.Is<Category>(c => 
+                c.Id == category.Id),
+            true,
+            cancellationToken);
+    }
 }
