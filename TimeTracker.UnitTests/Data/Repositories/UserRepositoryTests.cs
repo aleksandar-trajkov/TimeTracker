@@ -150,7 +150,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
-        
+
         var user = result.First();
         user.Email.Should().Be("nopermissions@test.com");
         user.Permissions.Should().NotBeNull();

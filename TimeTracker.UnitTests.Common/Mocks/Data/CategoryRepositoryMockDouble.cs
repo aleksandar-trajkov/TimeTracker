@@ -83,9 +83,9 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     public async Task VerifyInsertAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
     {
         await Instance.Received(1).InsertAsync(
-            Arg.Is<Category>(c => 
-                c.Name == category.Name && 
-                c.Description == category.Description && 
+            Arg.Is<Category>(c =>
+                c.Name == category.Name &&
+                c.Description == category.Description &&
                 c.OrganizationId == category.OrganizationId),
             true,
             cancellationToken);
@@ -94,9 +94,9 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     public async Task VerifyUpdateAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
     {
         await Instance.Received(1).UpdateAsync(
-            Arg.Is<Category>(c => 
-                c.Id == category.Id && 
-                c.Name == category.Name && 
+            Arg.Is<Category>(c =>
+                c.Id == category.Id &&
+                c.Name == category.Name &&
                 c.Description == category.Description),
             true,
             cancellationToken);
@@ -105,7 +105,7 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     public async Task VerifyDeleteAsyncWasCalledWith(Category category, CancellationToken cancellationToken)
     {
         await Instance.Received(1).DeleteAsync(
-            Arg.Is<Category>(c => 
+            Arg.Is<Category>(c =>
                 c.Id == category.Id),
             true,
             cancellationToken);
@@ -121,16 +121,16 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
     public async Task VerifyUpdateAsyncWasNotCalled()
     {
         await Instance.DidNotReceive().UpdateAsync(
-            Arg.Any<Category>(), 
-            Arg.Any<bool>(), 
+            Arg.Any<Category>(),
+            Arg.Any<bool>(),
             Arg.Any<CancellationToken>());
     }
 
     public async Task VerifyDeleteAsyncWasNotCalled()
     {
         await Instance.DidNotReceive().DeleteAsync(
-            Arg.Any<Category>(), 
-            Arg.Any<bool>(), 
+            Arg.Any<Category>(),
+            Arg.Any<bool>(),
             Arg.Any<CancellationToken>());
     }
 

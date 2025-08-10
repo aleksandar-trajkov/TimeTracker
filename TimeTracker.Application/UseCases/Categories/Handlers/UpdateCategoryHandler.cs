@@ -21,7 +21,7 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Comma
         existingCategory.Description = request.Description;
 
         var result = await _categoryRepository.UpdateAsync(existingCategory, true, cancellationToken);
-        
+
         return result > 0;
     }
 

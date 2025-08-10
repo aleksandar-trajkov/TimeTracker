@@ -30,7 +30,7 @@ public class DeleteCategoryHandlerTests
 
         // Act
         await _sut.Handle(command, CancellationToken.None);
-        
+
         await _categoryRepository.VerifyDeleteAsyncWasCalledWith(categoryId, CancellationToken.None);
     }
 
@@ -47,7 +47,7 @@ public class DeleteCategoryHandlerTests
 
         // Act
         await _sut.Handle(command, cancellationToken);
-        
+
         await _categoryRepository.VerifyDeleteAsyncWasCalledWith(categoryId, cancellationToken);
     }
 }

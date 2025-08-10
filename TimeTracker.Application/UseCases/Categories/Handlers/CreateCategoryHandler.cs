@@ -24,7 +24,7 @@ public class CreateCategoryHandler : IRequestHandler<CreateCategoryHandler.Comma
         };
 
         await _categoryRepository.InsertAsync(category, true, cancellationToken);
-        
+
         return category.Id;
     }
 

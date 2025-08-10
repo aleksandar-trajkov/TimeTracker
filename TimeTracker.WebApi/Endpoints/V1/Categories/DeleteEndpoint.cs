@@ -9,7 +9,7 @@ namespace TimeTracker.WebApi.Endpoints.V1.Categories;
 public class DeleteEndpoint : IEndpointDefinition
 {
     internal static readonly string EndpointUrl = "/categories/{id:guid}";
-    
+
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapDelete(EndpointUrl, async (

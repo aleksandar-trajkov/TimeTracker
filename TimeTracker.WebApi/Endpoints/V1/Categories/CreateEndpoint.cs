@@ -12,7 +12,7 @@ namespace TimeTracker.WebApi.Endpoints.V1.Categories;
 public class CreateEndpoint : IEndpointDefinition
 {
     internal static readonly string EndpointUrl = "/categories";
-    
+
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPost(EndpointUrl, async (

@@ -11,7 +11,7 @@ namespace TimeTracker.WebApi.Endpoints.V1.Categories;
 public class UpdateEndpoint : IEndpointDefinition
 {
     internal static readonly string EndpointUrl = "/categories/{id:guid}";
-    
+
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPut(EndpointUrl, async (
@@ -21,7 +21,7 @@ public class UpdateEndpoint : IEndpointDefinition
         {
             var command = new UpdateCategoryHandler.Command(id, request.Name, request.Description);
             var result = await mediator.Send(command);
-            
+
             return result ? Results.NoContent() : Results.NotFound();
         })
         .Produces(StatusCodes.Status204NoContent)

@@ -39,13 +39,13 @@ public class UpdateCategoryHandlerTests
 
         // Assert
         result.Should().BeTrue();
-        
+
         var expectedCategory = new CategoryBuilder()
             .WithId(categoryId)
             .WithName("Updated Name")
             .WithDescription("Updated Description")
             .Build();
-        
+
         await _categoryRepository.VerifyUpdateAsyncWasCalledWith(expectedCategory, CancellationToken.None);
     }
 
@@ -70,13 +70,13 @@ public class UpdateCategoryHandlerTests
 
         // Assert
         result.Should().BeTrue();
-        
+
         var expectedCategory = new CategoryBuilder()
             .WithId(categoryId)
             .WithName("Updated Name")
             .WithDescription(null)
             .Build();
-        
+
         await _categoryRepository.VerifyUpdateAsyncWasCalledWith(expectedCategory, CancellationToken.None);
     }
 
@@ -123,13 +123,13 @@ public class UpdateCategoryHandlerTests
 
         // Assert
         result.Should().BeTrue();
-        
+
         var expectedCategory = new CategoryBuilder()
             .WithId(categoryId)
             .WithName("Updated Name")
             .WithDescription("Updated Description")
             .Build();
-        
+
         await _categoryRepository.VerifyUpdateAsyncWasCalledWith(expectedCategory, cancellationToken);
     }
 
@@ -153,7 +153,7 @@ public class UpdateCategoryHandlerTests
 
         // Assert
         result.Should().BeFalse();
-        
+
         // Verify GetByIdAsync was called with the cancellation token
         await _categoryRepository.VerifyGetByIdAsyncWasCalledWith(categoryId, cancellationToken);
     }
