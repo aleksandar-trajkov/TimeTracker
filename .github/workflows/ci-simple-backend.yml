@@ -42,148 +42,55 @@ jobs:
           --verbosity normal \
           --logger trx \
           --collect:"XPlat Code Coverage" \
-          --results-directory ./TestResults \
           --settings coverlet.runsettings
       env:
         DOCKER_HOST: unix:///var/run/docker.sock
-        
-    - name: Install ReportGenerator
-      run: dotnet tool install --global dotnet-reportgenerator-globaltool
-      
-    - name: Debug Coverage Files
-      run: |
-        echo "Looking for coverage files..."
-        find . -name "*.cobertura.xml" -type f | head -10
-        find . -name "coverage.cobertura.xml" -type f | head -10
-        ls -la ./TestResults/ || echo "TestResults directory not found"
-        find ./TestResults -name "*coverage*" -type f 2>/dev/null || echo "No coverage files found in TestResults"
-        
-    - name: Generate Coverage Report
-      run: |
-        # Find all coverage files
-        COVERAGE_FILES=$(find ./TestResults -name "coverage.cobertura.xml" -type f | tr '\n' ';' | sed 's/;$//')
-        
-        if [ -z "$COVERAGE_FILES" ]; then
-          echo "No coverage files found. Looking for alternative patterns..."
-          COVERAGE_FILES=$(find ./TestResults -name "*.cobertura.xml" -type f | tr '\n' ';' | sed 's/;$//')
-        fi
-        
-        if [ -z "$COVERAGE_FILES" ]; then
-          echo "❌ No coverage files found!"
-          echo "Available files in TestResults:"
-          find ./TestResults -type f | head -20
-          exit 1
-        fi
-        
-        echo "Found coverage files: $COVERAGE_FILES"
-        
-        reportgenerator \
-          -reports:"$COVERAGE_FILES" \
-          -targetdir:"./coverage-report" \
-          -reporttypes:"Html;JsonSummary;Badges;TextSummary" \
-          -verbosity:Info
-          
-    - name: Coverage Summary
-      id: coverage
-      run: |
-        echo "## 📊 Code Coverage Report" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        
-        if [ -f "./coverage-report/Summary.txt" ]; then
-          echo "### Coverage Summary" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat "./coverage-report/Summary.txt" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-        fi
-        
-        if [ -f "./coverage-report/Summary.json" ]; then
-          # Extract coverage percentages using more robust parsing
-          LINE_COVERAGE=$(python3 -c "
-        import json
-        try:
-            with open('./coverage-report/Summary.json', 'r') as f:
-                data = json.load(f)
-                print(data.get('summary', {}).get('linecoverage', '0'))
-        except:
-            print('0')
-        " 2>/dev/null || echo "0")
-          
-          BRANCH_COVERAGE=$(python3 -c "
-        import json
-        try:
-            with open('./coverage-report/Summary.json', 'r') as f:
-                data = json.load(f)
-                print(data.get('summary', {}).get('branchcoverage', '0'))
-        except:
-            print('0')
-        " 2>/dev/null || echo "0")
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Line Coverage | ${LINE_COVERAGE}% |" >> $GITHUB_STEP_SUMMARY
-          echo "| Branch Coverage | ${BRANCH_COVERAGE}% |" >> $GITHUB_STEP_SUMMARY
-          
-          # Set coverage as output for quality gate
-          echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_OUTPUT
-          echo "branch_coverage=${BRANCH_COVERAGE}" >> $GITHUB_OUTPUT
-        else
-          echo "⚠️ Summary.json not found, setting default values" >> $GITHUB_STEP_SUMMARY
-          echo "line_coverage=0" >> $GITHUB_OUTPUT
-          echo "branch_coverage=0" >> $GITHUB_OUTPUT
-        fi
-        
-    - name: Coverage Quality Gate
-      run: |
-        LINE_COVERAGE="${{ steps.coverage.outputs.line_coverage }}"
-        BRANCH_COVERAGE="${{ steps.coverage.outputs.branch_coverage }}"
-        
-        # Remove % symbol if present
-        LINE_COVERAGE=${LINE_COVERAGE%\%}
-        BRANCH_COVERAGE=${BRANCH_COVERAGE%\%}
-        
-        echo "Line Coverage: ${LINE_COVERAGE}%"
-        echo "Branch Coverage: ${BRANCH_COVERAGE}%"
-        
-        # Quality gate thresholds (set to 0 initially to avoid blocking)
-        MIN_LINE_COVERAGE=0
-        MIN_BRANCH_COVERAGE=0
-        
-        # Convert to integers for comparison
-        LINE_INT=$(echo "$LINE_COVERAGE" | cut -d'.' -f1)
-        BRANCH_INT=$(echo "$BRANCH_COVERAGE" | cut -d'.' -f1)
-        
-        if [ "$LINE_INT" -lt "$MIN_LINE_COVERAGE" ]; then
-          echo "❌ Line coverage ${LINE_COVERAGE}% is below minimum threshold ${MIN_LINE_COVERAGE}%"
-          # exit 1  # Commented out to avoid blocking initially
-        fi
-        
-        if [ "$BRANCH_INT" -lt "$MIN_BRANCH_COVERAGE" ]; then
-          echo "❌ Branch coverage ${BRANCH_COVERAGE}% is below minimum threshold ${MIN_BRANCH_COVERAGE}%"
-          # exit 1  # Commented out to avoid blocking initially
-        fi
-        
-        echo "✅ Coverage analysis completed!"
-        echo "📊 Line Coverage: ${LINE_COVERAGE}%"
-        echo "🌿 Branch Coverage: ${BRANCH_COVERAGE}%"
-        
-    - name: Upload Coverage Reports
+
+    - name: Upload Test Result Files
       uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: ${{ github.workspace }}/**/TestResults/**/*
+        retention-days: 5
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2.16.1
       if: always()
       with:
-        name: coverage-reports
-        path: |
-          ./coverage-report/
-          ./TestResults/
-        retention-days: 30
+        trx_files: "${{ github.workspace }}/**/*.trx"
         
-    - name: Publish Test Results
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
+    - name: Combine Coverage Reports # This is because one report is produced per project, and we want one result for all of them.
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
       with:
-        name: Test Results
-        path: "**/TestResults/**/*.trx"
-        reporter: dotnet-trx
+        reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+        targetdir: "${{ github.workspace }}" # REQUIRED # The directory where the generated report should be saved.
+        reporttypes: "Cobertura" # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
+        verbosity: "Info" # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
+        title: "Code Coverage" # Optional title.
+        tag: "${{ github.run_number }}_${{ github.run_id }}" # Optional tag or build version.
+        customSettings: "" # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
+        toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
+
+    - name: Upload Combined Coverage XML
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage
+        path: ${{ github.workspace }}/Cobertura.xml
+        retention-days: 5
+
+    - name: Publish Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: "Cobertura.xml"
+        badge: true
+        fail_below_min: false # just informative for now
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: false
+        indicators: true
+        output: both
+        thresholds: "10 30"
+
 
   code-quality:
     name: Code Quality
