@@ -1,7 +1,7 @@
 ﻿using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.UnitTests.Common.Builders.Application.Auth;
 
-namespace TimeTracker.UnitTests.Application.UseCases.Validators.Auth.TheoryData
+namespace TimeTracker.UnitTests.Application.Validators.Auth.TheoryData
 {
     public class IsSignInRequestInvalidTheoryData : TheoryData<SignInHandler.Query, string>
     {

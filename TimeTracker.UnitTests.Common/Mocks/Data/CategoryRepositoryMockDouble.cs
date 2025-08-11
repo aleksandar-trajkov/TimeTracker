@@ -12,7 +12,7 @@ public class CategoryRepositoryMockDouble : MockDouble<ICategoryRepository>
             .Returns(categories);
     }
 
-    public void GivenGetByIdAsync(Guid id, Category? category)
+    public void GivenGetByIdAsync(Guid id, Category category)
     {
         Instance.GetByIdAsync(id, Arg.Any<CancellationToken>())
             .Returns(category);
