@@ -17,68 +17,15 @@ public class CreateCategoryValidatorTests
         _validator = new CreateCategoryValidator(_organizationRepository.Instance);
     }
 
-    [Fact]
-    public async Task ValidCommand_ShouldPassValidation()
+    [Theory]
+    [ClassData(typeof(ValidCreateCategoryCommandTheoryData))]
+    public async Task ValidCommand_ShouldPassValidation(CreateCategoryHandler.Command command)
     {
         // Arrange
-        var organizationId = Guid.NewGuid();
-        _organizationRepository.GivenExistsAsync(organizationId, true);
-        
-        var command = new CreateCategoryHandler.Command(
-            "Valid Category Name",
-            "Valid description",
-            organizationId);
-
-        // Act
-        var result = await _validator.ValidateAsync(command);
-
-        // Assert
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task ValidCommandWithNullDescription_ShouldPassValidation()
-    {
-        // Arrange
-        var organizationId = Guid.NewGuid();
-        _organizationRepository.GivenExistsAsync(organizationId, true);
-        
-        var command = new CreateCategoryHandler.Command(
-            "Valid Category Name",
-            null,
-            organizationId);
-
-        // Act
-        var result = await _validator.ValidateAsync(command);
-
-        // Assert
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task ValidCommandWithEmptyOrganizationId_ShouldPassValidation()
-    {
-        // Arrange
-        var command = new CreateCategoryHandler.Command(
-            "Valid Category Name",
-            "Valid description",
-            Guid.Empty);
-
-        // Act
-        var result = await _validator.ValidateAsync(command);
-
-        // Assert
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task ValidCommandWithNullOrganizationId_ShouldPassValidation()
-    {
-        // Arrange
-        var command = new CreateCategoryHandler.Command(
-            "Valid Category Name",
-            "Valid description",
-            null);
+        if (command.OrganizationId.HasValue && command.OrganizationId != Guid.Empty)
+        {
+            _organizationRepository.GivenExistsAsync(command.OrganizationId.Value, true);
+        }
 
         // Act
         var result = await _validator.ValidateAsync(command);

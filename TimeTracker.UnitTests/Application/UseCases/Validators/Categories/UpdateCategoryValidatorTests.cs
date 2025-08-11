@@ -17,36 +17,12 @@ public class UpdateCategoryValidatorTests
         _validator = new UpdateCategoryValidator(_categoryRepository.Instance);
     }
 
-    [Fact]
-    public async Task ValidCommand_ShouldPassValidation()
+    [Theory]
+    [ClassData(typeof(ValidUpdateCategoryCommandTheoryData))]
+    public async Task ValidCommand_ShouldPassValidation(UpdateCategoryHandler.Command command)
     {
         // Arrange
-        var categoryId = Guid.NewGuid();
-        _categoryRepository.GivenExistsAsync(categoryId, true);
-        
-        var command = new UpdateCategoryHandler.Command(
-            categoryId,
-            "Valid Category Name",
-            "Valid description");
-
-        // Act
-        var result = await _validator.ValidateAsync(command);
-
-        // Assert
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task ValidCommandWithNullDescription_ShouldPassValidation()
-    {
-        // Arrange
-        var categoryId = Guid.NewGuid();
-        _categoryRepository.GivenExistsAsync(categoryId, true);
-        
-        var command = new UpdateCategoryHandler.Command(
-            categoryId,
-            "Valid Category Name",
-            null);
+        _categoryRepository.GivenExistsAsync(command.Id, true);
 
         // Act
         var result = await _validator.ValidateAsync(command);
