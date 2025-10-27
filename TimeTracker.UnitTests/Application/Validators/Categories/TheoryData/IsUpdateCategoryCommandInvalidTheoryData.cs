@@ -1,6 +1,6 @@
 using TimeTracker.Application.UseCases.Categories.Handlers;
 
-namespace TimeTracker.UnitTests.Application.UseCases.Validators.Categories.TheoryData;
+namespace TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
 
 public class IsUpdateCategoryCommandInvalidTheoryData : TheoryData<UpdateCategoryHandler.Command, string>
 {

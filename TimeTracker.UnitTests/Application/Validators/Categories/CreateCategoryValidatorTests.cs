@@ -1,10 +1,10 @@
 using FluentAssertions;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Application.UseCases.Categories.Validators;
-using TimeTracker.UnitTests.Application.UseCases.Validators.Categories.TheoryData;
+using TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
-namespace TimeTracker.UnitTests.Application.UseCases.Validators.Categories;
+namespace TimeTracker.UnitTests.Application.Validators.Categories;
 
 public class CreateCategoryValidatorTests
 {

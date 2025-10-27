@@ -1,28 +1,30 @@
 using FluentAssertions;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Application.UseCases.Categories.Validators;
-using TimeTracker.UnitTests.Application.UseCases.Validators.Categories.TheoryData;
+using TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
-namespace TimeTracker.UnitTests.Application.UseCases.Validators.Categories;
+namespace TimeTracker.UnitTests.Application.Validators.Categories;
 
-public class UpdateCategoryValidatorTests
+public class DeleteCategoryValidatorTests
 {
     private readonly CategoryRepositoryMockDouble _categoryRepository;
-    private readonly UpdateCategoryValidator _validator;
+    private readonly DeleteCategoryValidator _validator;
 
-    public UpdateCategoryValidatorTests()
+    public DeleteCategoryValidatorTests()
     {
         _categoryRepository = new CategoryRepositoryMockDouble();
-        _validator = new UpdateCategoryValidator(_categoryRepository.Instance);
+        _validator = new DeleteCategoryValidator(_categoryRepository.Instance);
     }
 
-    [Theory]
-    [ClassData(typeof(ValidUpdateCategoryCommandTheoryData))]
-    public async Task ValidCommand_ShouldPassValidation(UpdateCategoryHandler.Command command)
+    [Fact]
+    public async Task ValidCommand_ShouldPassValidation()
     {
         // Arrange
-        _categoryRepository.GivenExistsAsync(command.Id, true);
+        var categoryId = Guid.NewGuid();
+        _categoryRepository.GivenExistsAsync(categoryId, true);
+        
+        var command = new DeleteCategoryHandler.Command(categoryId);
 
         // Act
         var result = await _validator.ValidateAsync(command);
@@ -32,8 +34,8 @@ public class UpdateCategoryValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(IsUpdateCategoryCommandInvalidTheoryData))]
-    public async Task InvalidCommand_ShouldFailValidation(UpdateCategoryHandler.Command command, string expectedErrorMessage)
+    [ClassData(typeof(IsDeleteCategoryCommandInvalidTheoryData))]
+    public async Task InvalidCommand_ShouldFailValidation(DeleteCategoryHandler.Command command, string expectedErrorMessage)
     {
         // Arrange
         if (command.Id != Guid.Empty)

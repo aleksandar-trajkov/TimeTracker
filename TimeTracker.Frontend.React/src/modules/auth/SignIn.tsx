@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { useMutation } from '@tanstack/react-query';
 import { Input, Checkbox, Button } from '../../components/common';
-// @ts-ignore
-import { executePost } from '../../helpers/fetch';
 import isTokenValid from '../../helpers/tokenCheck';
-import { calculateTokenExpiry, getRememberMeExpiry } from '../../helpers/tokenExpiry'; 
+import { useSignInMutation, useRememberMeSignInMutation } from '../../apiCalls/auth'; 
 
 interface SignInProps {
     setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,31 +14,7 @@ const SignIn: React.FC<SignInProps> = ({ setIsSignedIn }) => {
     const [rememberMe, setRememberMe] = useState(false);
 
     // React Query mutation for remember me sign in
-    const rememberMeSignInMutation = useMutation({
-        mutationFn: async (rememberMeToken: string) => {
-            return await executePost(`${import.meta.env.VITE_BASE_URL}/auth/remember-me-signin`, { rememberMeToken });
-        },
-        onSuccess: (tokenResponse) => {
-            if (tokenResponse && tokenResponse.token) {
-                // Use utility function to calculate token expiry
-                const tokenExpiryDays = calculateTokenExpiry();
-                
-                Cookies.set('token', tokenResponse.token, { expires: tokenExpiryDays });
-                if (tokenResponse.rememberMeToken) {
-                    Cookies.set('rememberMe', tokenResponse.rememberMeToken, { expires: getRememberMeExpiry() });
-                }
-                setIsSignedIn(true);
-            }
-        },
-        onError: (error) => {
-            console.error('Remember me sign in failed:', error);
-            // Clear invalid remember me token
-            Cookies.remove('rememberMe');
-        },
-        // Disable caching for remember me requests
-        gcTime: 0,
-        retry: false
-    });
+    const rememberMeSignInMutation = useRememberMeSignInMutation({ setIsSignedIn });
 
     // Check for existing valid token on mount
     useEffect(() => {
@@ -83,30 +56,7 @@ const SignIn: React.FC<SignInProps> = ({ setIsSignedIn }) => {
     }, [setIsSignedIn, rememberMeSignInMutation]);
 
     // React Query mutation for sign in
-    const signInMutation = useMutation({
-        mutationFn: async (credentials: { email: string; password: string; rememberMe: boolean }) => {
-            return await executePost(`${import.meta.env.VITE_BASE_URL}/auth/signin`, credentials);
-        },
-        onSuccess: (tokenResponse) => {
-            if (tokenResponse && tokenResponse.token) {
-                // Use utility function to calculate token expiry
-                const tokenExpiryDays = calculateTokenExpiry();
-                
-                Cookies.set('token', tokenResponse.token, { expires: tokenExpiryDays });
-                if (rememberMe && tokenResponse.rememberMeToken) {
-                    // Remember me tokens can have longer expiry
-                    Cookies.set('rememberMe', tokenResponse.rememberMeToken, { expires: getRememberMeExpiry() });
-                }
-                setIsSignedIn(true);
-            }
-        },
-        onError: (error) => {
-            console.error('Sign in failed:', error);
-        },
-        // Disable caching for sign in requests
-        gcTime: 0,
-        retry: false
-    });
+    const signInMutation = useSignInMutation({ setIsSignedIn });
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

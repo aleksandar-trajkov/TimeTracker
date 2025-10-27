@@ -1,4 +1,4 @@
-import jwtDecode, { type JwtPayload } from 'jwt-decode';
+import { jwtDecode, type JwtPayload } from 'jwt-decode';
 
 const isTokenValid = (token : string) => {
     if (typeof(token) !== 'string' || !token) throw new Error('Invalid token provided');

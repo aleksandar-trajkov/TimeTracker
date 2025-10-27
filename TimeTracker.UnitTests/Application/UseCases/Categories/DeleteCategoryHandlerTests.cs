@@ -5,7 +5,7 @@ using TimeTracker.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
-namespace TimeTracker.UnitTests.Application.UseCases.Categories.Handlers;
+namespace TimeTracker.UnitTests.Application.UseCases.Categories;
 
 public class DeleteCategoryHandlerTests
 {
