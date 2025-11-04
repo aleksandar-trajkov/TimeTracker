@@ -9,12 +9,12 @@ vi.mock('../modules/auth/SignIn', () => ({
 }))
 
 describe('App', () => {
-  it('renders without crashing', () => {
+  it('renders login when starting', () => {
     render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     )
-    expect(screen.getByText(/SignIn Component|TimeTracker/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Sign In/i })).toBeInTheDocument()
   })
 })
