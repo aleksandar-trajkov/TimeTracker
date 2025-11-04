@@ -35,6 +35,12 @@ jobs:
       run: npm run build
       env:
         NODE_ENV: production
+
+    - name: Run tests
+      working-directory: ${{ env.WORKING_DIRECTORY}}
+      run: npm run test:coverage
+      env:
+        CI: true
         
     - name: Check build output
       run: |
