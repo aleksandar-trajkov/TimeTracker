@@ -19,9 +19,7 @@ const useTimeEntriesQuery = (params: TimeEntriesQueryParams = {}) => {
             
             var response =  await executeGet(url, token) as unknown as TimeEntry[]
             return response;
-        },
-        staleTime: 1000 * 60 * 5, // Consider data stale after 5 minutes
-        gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
+        }
     });
 };
 

@@ -12,7 +12,6 @@ export const useRememberMeSignInMutation = ({ setIsSignedIn }: UseRememberMeSign
         },
         onSuccess: (tokenResponse: TokenResponse) => {
             if (tokenResponse && tokenResponse.token) {
-                // Use utility function to calculate token expiry
                 const tokenExpiryDays = calculateTokenExpiry();
                 
                 Cookies.set('token', tokenResponse.token, { expires: tokenExpiryDays });
@@ -24,10 +23,8 @@ export const useRememberMeSignInMutation = ({ setIsSignedIn }: UseRememberMeSign
         },
         onError: (error) => {
             console.error('Remember me sign in failed:', error);
-            // Clear invalid remember me token
             Cookies.remove('rememberMe');
         },
-        // Disable caching for remember me requests
         gcTime: 0,
         retry: false
     });

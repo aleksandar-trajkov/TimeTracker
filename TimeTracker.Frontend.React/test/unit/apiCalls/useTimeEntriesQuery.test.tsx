@@ -108,7 +108,7 @@ describe('useTimeEntriesQuery', () => {
     })
 
     expect(fetchHelpers.executeGet).toHaveBeenCalledWith(
-      'http://localhost:3000/v1/time-entries?page=2&limit=10&startDate=2023-12-01&endDate=2023-12-31&categoryId=1&search=test',
+      'http://localhost:3000/v1/time-entries?from=2023-12-01&to=2023-12-31',
       'mock-token'
     )
   })
