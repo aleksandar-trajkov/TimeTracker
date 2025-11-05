@@ -8,6 +8,7 @@ import Loading from './Loading';
 // Lazy load modules for better performance
 const SignIn = lazy(() => import('./modules/auth/SignIn'));
 const TimeEntriesModule = lazy(() => import('./modules/timeEntries/TimeEntriesModule'));
+const ReportsModule = lazy(() => import('./modules/reports/ReportsModule'));
 const CategoriesModule = lazy(() => import('./modules/categories/CategoriesModule'));
 const SettingsModule = lazy(() => import('./modules/settings/SettingsModule'));
 
@@ -34,34 +35,12 @@ const App: React.FC = () => {
         ) : (
           <BrowserRouter>
             <Layout>
-              <Suspense fallback={<Loading />}>
                 <Routes>
-                  <Route 
-                    path="/categories" 
-                    element={
-                      <Suspense fallback={<Loading />}>
-                        <CategoriesModule />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="/settings" 
-                    element={
-                      <Suspense fallback={<Loading />}>
-                        <SettingsModule />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="*" 
-                    element={
-                      <Suspense fallback={<Loading />}>
-                        <TimeEntriesModule />
-                      </Suspense>
-                    } 
-                  />
+                  <Route path="/categories" element={ <CategoriesModule /> } />
+                  <Route path="/settings" element={ <SettingsModule /> } />
+                  <Route path="/reports" element={ <ReportsModule /> } />
+                  <Route path="*" element={ <TimeEntriesModule /> } />
                 </Routes>
-              </Suspense>
             </Layout>
           </BrowserRouter>
         )}

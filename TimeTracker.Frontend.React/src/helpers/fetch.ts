@@ -20,7 +20,7 @@ const executeGet = async function (url: string, token: string | null = null): Pr
   return executeFetch(url, 'GET', null, token).then((response) => response.json());
 }
 
-const executePost = function (url: string, body: object, token: string | null = null): Promise<Response> {
+const executePost = function<T>(url: string, body: object, token: string | null = null): Promise<T> {
   return executeFetch(url, 'POST', body, token).then((response) => response.json());
 }
 

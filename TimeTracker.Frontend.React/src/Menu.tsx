@@ -1,10 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Menu: React.FC = () => (
-    <nav>
+    <nav className='main-menu'>
         <ul>
-            <li>Home</li>
-            <li>About</li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/reports">Reports</Link></li>
+            <li><Link to="/categories">Categories</Link></li>
+            <li><Link to="/settings">Settings</Link></li>
         </ul>
     </nav>
 );

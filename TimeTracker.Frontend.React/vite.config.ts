@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    port: 9621,
+  },
   define: {
     BUILD_DATE: JSON.stringify(new Date().valueOf()),
   },

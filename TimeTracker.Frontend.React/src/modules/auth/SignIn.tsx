@@ -77,7 +77,7 @@ const SignIn: React.FC<SignInProps> = ({ setIsSignedIn }) => {
                         <Input
                             id="email"
                             name="email"
-                            type="email"
+                            type="text"
                             label="Email"
                             value={email}
                             onChange={setEmail}

@@ -7,23 +7,18 @@ body {
 
 .body-container {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    grid-template-rows: 100px 1fr 50px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 4.5rem 1fr 3rem;
     gap: 0px 0px;
     grid-template-areas:
-        "Header Header"
-        "Sidebar Main"
-        "Footer Footer";
+        "Header"
+        "Main"
+        "Footer";
     min-height: 100vh;
 }
 
 .header {
     grid-area: Header;
-    border: 1px solid #999;
-}
-
-.sidebar {
-    grid-area: Sidebar;
     border: 1px solid #999;
 }
 

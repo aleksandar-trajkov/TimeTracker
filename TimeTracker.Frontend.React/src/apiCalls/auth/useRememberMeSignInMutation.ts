@@ -8,7 +8,7 @@ import type { TokenResponse, UseRememberMeSignInMutationProps } from './types';
 export const useRememberMeSignInMutation = ({ setIsSignedIn }: UseRememberMeSignInMutationProps) => {
     return useMutation({
         mutationFn: async (rememberMeToken: string) => {
-            return await executePost(`${import.meta.env.VITE_BASE_URL}/auth/remember-me-signin`, { rememberMeToken });
+            return await executePost<TokenResponse>(`${import.meta.env.VITE_BASE_URL}/v1/auth/remember-me-signin`, { rememberMeToken });
         },
         onSuccess: (tokenResponse: TokenResponse) => {
             if (tokenResponse && tokenResponse.token) {

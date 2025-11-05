@@ -8,7 +8,7 @@ import type { SignInCredentials, TokenResponse, UseSignInMutationProps } from '.
 export const useSignInMutation = ({ setIsSignedIn }: UseSignInMutationProps) => {
     return useMutation({
         mutationFn: async (credentials: SignInCredentials) => {
-            return await executePost(`${import.meta.env.VITE_BASE_URL}/auth/signin`, credentials);
+            return await executePost<TokenResponse>(`${import.meta.env.VITE_BASE_URL}/v1/auth/signin`, credentials);
         },
         onSuccess: (tokenResponse: TokenResponse, variables: SignInCredentials) => {
             if (tokenResponse && tokenResponse.token) {
