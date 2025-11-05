@@ -8,7 +8,7 @@ namespace TimeTracker.Application.UseCases.TimeEntries.Handlers;
 public class GetAllTimeEntriesHandler : IRequestHandler<GetAllTimeEntriesHandler.Query, List<TimeEntry>>
 {
     private readonly IUserContext _userContext;
-    private readonly ITimeEntryRepository _timeEntryRepository; 
+    private readonly ITimeEntryRepository _timeEntryRepository;
 
     public GetAllTimeEntriesHandler(IUserContext userContext, ITimeEntryRepository timeEntryRepository)
     {

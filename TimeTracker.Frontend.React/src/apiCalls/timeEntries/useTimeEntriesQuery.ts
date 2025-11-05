@@ -17,8 +17,7 @@ const useTimeEntriesQuery = (params: TimeEntriesQueryParams = {}) => {
             const queryString = searchParams.toString();
             const url = `${import.meta.env.VITE_BASE_URL}/v1/time-entries${queryString ? `?${queryString}` : ''}`;
             
-            var response =  await executeGet(url, token) as unknown as TimeEntry[]
-            return response;
+            return await executeGet(url, token) as unknown as TimeEntry[]
         }
     });
 };

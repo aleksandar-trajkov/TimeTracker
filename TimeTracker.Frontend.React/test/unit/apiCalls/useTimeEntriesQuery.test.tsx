@@ -3,7 +3,6 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useTimeEntriesQuery } from '../../../src/apiCalls/timeEntries'
 import * as fetchHelpers from '../../../src/helpers/fetch'
-import Cookies from 'js-cookie'
 
 // Mock the fetch helpers
 vi.mock('../../../src/helpers/fetch', () => ({
@@ -34,47 +33,35 @@ const createWrapper = () => {
 }
 
 describe('useTimeEntriesQuery', () => {
-  const mockTimeEntriesResponse = {
-    timeEntries: [
-      {
+  const mockTimeEntriesResponse = [
+    {
+      id: 1,
+      description: 'Test entry 1',
+      from: '2023-12-25T09:00:00Z',
+      to: '2023-12-25T10:00:00Z',
+      category: {
         id: 1,
-        description: 'Test entry 1',
-        startTime: '2023-12-25T09:00:00Z',
-        endTime: '2023-12-25T10:00:00Z',
-        duration: 60,
-        date: '2023-12-25',
-        categoryId: 1,
-        categoryName: 'Development',
-        projectId: 1,
-        projectName: 'Test Project',
-        userId: 1,
-        createdAt: '2023-12-25T09:00:00Z',
-        updatedAt: '2023-12-25T09:00:00Z'
-      },
-      {
-        id: 2,
-        description: 'Test entry 2',
-        startTime: '2023-12-25T11:00:00Z',
-        endTime: '2023-12-25T12:30:00Z',
-        duration: 90,
-        date: '2023-12-25',
-        categoryId: 2,
-        categoryName: 'Meeting',
-        userId: 1,
-        createdAt: '2023-12-25T11:00:00Z',
-        updatedAt: '2023-12-25T11:00:00Z'
+        name: 'Development'
       }
-    ],
-    totalCount: 2,
-    totalDuration: 150
-  }
+    },
+    {
+      id: 2,
+      description: 'Test entry 2',
+      from: '2023-12-25T11:00:00Z',
+      to: '2023-12-25T12:30:00Z',
+      category: {
+        id: 2,
+        name: 'Meeting'
+      }
+    }
+  ]
 
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('should fetch time entries successfully', async () => {
-    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as any)
+    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
     const { result } = renderHook(() => useTimeEntriesQuery(), {
       wrapper: createWrapper(),
@@ -92,7 +79,7 @@ describe('useTimeEntriesQuery', () => {
   })
 
   it('should handle query parameters correctly', async () => {
-    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as any)
+    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
     const queryParams = {
       from: '2023-12-01',
@@ -114,7 +101,7 @@ describe('useTimeEntriesQuery', () => {
   })
 
   it('should handle empty query parameters', async () => {
-    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as any)
+    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
     const queryParams = {}
 
@@ -149,7 +136,7 @@ describe('useTimeEntriesQuery', () => {
   })
 
   it('should use correct query key with parameters', async () => {
-    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as any)
+    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
     const queryParams = { from: '2023-12-01', to: '2023-12-31' }
 
