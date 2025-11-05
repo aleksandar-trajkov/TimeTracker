@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain;
 using TimeTracker.Infrastructure.Data.SqlServer.Base;
@@ -9,5 +10,15 @@ public class TimeEntryRepository : BaseRepository<TimeEntry, Guid>, ITimeEntryRe
 {
     public TimeEntryRepository(IDatabaseContext context) : base(context)
     {
+    }
+
+    public Task<List<TimeEntry>> GetAllAsync(Guid userId, DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken)
+    {
+        return Select()
+            .Include(te => te.Category)
+            .Include(te => te.User)
+            .Where(te => te.UserId == userId && te.From >= from && te.To <= to)
+            .OrderBy(te => te.From)
+            .ToListAsync(cancellationToken);
     }
 }

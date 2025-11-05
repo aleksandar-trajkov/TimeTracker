@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom'
-import Input from '../../../src/components/common/Input'
+import Input from '../../../../src/components/common/Input'
 
 describe('Input Component', () => {
   const defaultProps = {

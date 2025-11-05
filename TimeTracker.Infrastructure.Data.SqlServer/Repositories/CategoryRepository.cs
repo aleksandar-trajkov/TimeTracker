@@ -14,7 +14,7 @@ public class CategoryRepository : BaseRepository<Category, Guid>, ICategoryRepos
 
     public async Task<IEnumerable<Category>> GetAllAsync(Guid organizationId, CancellationToken cancellationToken)
     {
-        return await Entities
+        return await Select()
             .Where(c => c.OrganizationId == organizationId || c.OrganizationId == null)
             .ToListAsync(cancellationToken);
     }

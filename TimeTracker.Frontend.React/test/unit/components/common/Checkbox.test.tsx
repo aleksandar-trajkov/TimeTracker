@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
-import Checkbox from '../../../src/components/common/Checkbox'
+import Checkbox from '../../../../src/components/common/Checkbox'
 
 describe('Checkbox Component', () => {
   it('renders checkbox with label', () => {

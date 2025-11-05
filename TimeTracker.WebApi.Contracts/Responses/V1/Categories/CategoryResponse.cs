@@ -1,6 +1,6 @@
 ﻿namespace TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
 
-public class CategoriesResponse
+public class CategoryResponse
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

@@ -3,7 +3,7 @@ import React from 'react';
 const TimeEntriesModule: React.FC = () => {
     return (
         <div>
-            {/* TimeEntriesModule content goes here */}
+            a
         </div>
     );
 };
