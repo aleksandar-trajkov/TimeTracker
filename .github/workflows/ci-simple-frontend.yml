@@ -47,6 +47,7 @@ jobs:
       uses:  davelosert/vitest-coverage-report-action@v2
       with:        
         working-directory: ${{ env.WORKING_DIRECTORY}}
+        comment-on: "none"
         
     - name: Check build output
       run: |

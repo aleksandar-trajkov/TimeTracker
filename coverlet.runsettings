@@ -5,6 +5,9 @@
       <DataCollector friendlyName="XPlat code coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.CodeCoverage.CoreLib.Collectors.DotNetCoreCodeCoverageCollector, Microsoft.CodeCoverage.CoreLib, Version=17.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
         <Configuration>
           <Format>cobertura</Format>
+		  <Include>
+            <ModulePath>.*TimeTracker.*</ModulePath>
+          </Include>
           <ExcludeByFile>
             <Exclude>**/Migrations/**</Exclude>
             <Exclude>**/Program.cs</Exclude>
