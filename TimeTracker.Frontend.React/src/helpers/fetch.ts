@@ -1,34 +1,34 @@
-const executeFetch = async function (url: string, method: string, body: any | null = null, token: string | null = null): Promise<any> {
+const executeFetch = async function (url: string, method: string, body: object | null = null, token: string | null = null): Promise<Response> {
   const params = {
     method,
     headers: {
       'Content-Type': 'application/json'
-    } as any,
-    body: null as any
-  }
+    } as Record<string, string>,
+    body: null as object | null
+  } as RequestInit;
   if (body) {
     params.body = JSON.stringify(body);
   }
   if(token) {
-    params.headers['Authorization'] = 'Bearer ' + token;
+    (params.headers as Record<string, string>)['Authorization'] = 'Bearer ' + token;
   }
-  var response = await fetch(url, params);
+  const response = await fetch(url, params);
   return response;
 };
 
-const executeGet = async function (url: string, token: string | null = null): Promise<any> {
+const executeGet = async function (url: string, token: string | null = null): Promise<Response> {
   return executeFetch(url, 'GET', null, token).then((response) => response.json());
 }
 
-const executePost = function (url: string, body: any, token: string | null = null): Promise<any> {
+const executePost = function (url: string, body: object, token: string | null = null): Promise<Response> {
   return executeFetch(url, 'POST', body, token).then((response) => response.json());
 }
 
-const executePut = function (url: string, body: any, token: string | null = null): Promise<any> {
+const executePut = function (url: string, body: object, token: string | null = null): Promise<Response> {
   return executeFetch(url, 'PUT', body, token).then((response) => response.json());
 }
 
-const executeDelete = function (url: string, token: string | null = null): Promise<any> {
+const executeDelete = function (url: string, token: string | null = null): Promise<Response> {
   return executeFetch(url, 'DELETE', null, token);
 }
 

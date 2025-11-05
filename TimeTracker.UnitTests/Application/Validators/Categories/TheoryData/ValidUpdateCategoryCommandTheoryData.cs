@@ -8,7 +8,7 @@ public class ValidUpdateCategoryCommandTheoryData : TheoryData<UpdateCategoryHan
     {
         // Valid command with description
         Add(new UpdateCategoryHandler.Command(Guid.NewGuid(), "Valid Category Name", "Valid description"));
-        
+
         // Valid command with null description
         Add(new UpdateCategoryHandler.Command(Guid.NewGuid(), "Valid Category Name", null));
 

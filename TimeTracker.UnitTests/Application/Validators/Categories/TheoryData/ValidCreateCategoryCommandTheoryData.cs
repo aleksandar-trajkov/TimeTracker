@@ -8,13 +8,13 @@ public class ValidCreateCategoryCommandTheoryData : TheoryData<CreateCategoryHan
     {
         // Valid command with organization ID
         Add(new CreateCategoryHandler.Command("Valid Category Name", "Valid description", Guid.NewGuid()));
-        
+
         // Valid command with null description
         Add(new CreateCategoryHandler.Command("Valid Category Name", null, Guid.NewGuid()));
-        
+
         // Valid command with empty organization ID (bypasses organization validation)
         Add(new CreateCategoryHandler.Command("Valid Category Name", "Valid description", Guid.Empty));
-        
+
         // Valid command with null organization ID (bypasses organization validation)
         Add(new CreateCategoryHandler.Command("Valid Category Name", "Valid description", null));
 

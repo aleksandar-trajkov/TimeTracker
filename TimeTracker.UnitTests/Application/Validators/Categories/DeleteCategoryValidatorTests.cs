@@ -23,7 +23,7 @@ public class DeleteCategoryValidatorTests
         // Arrange
         var categoryId = Guid.NewGuid();
         _categoryRepository.GivenExistsAsync(categoryId, true);
-        
+
         var command = new DeleteCategoryHandler.Command(categoryId);
 
         // Act
