@@ -2,27 +2,23 @@
 <RunSettings>
   <DataCollectionRunSettings>
     <DataCollectors>
-      <DataCollector friendlyName="XPlat code coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.CodeCoverage.CoreLib.Collectors.DotNetCoreCodeCoverageCollector, Microsoft.CodeCoverage.CoreLib, Version=17.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
           <Format>cobertura</Format>
-		  <Include>
-            <ModulePath>.*TimeTracker.*</ModulePath>
-          </Include>
           <ExcludeByFile>
             <Exclude>**/Migrations/**</Exclude>
             <Exclude>**/Program.cs</Exclude>
             <Exclude>**/*Tests/**</Exclude>
             <Exclude>**/*UnitTests/**</Exclude>
+            <Exclude>**/*UnitTests.Common/**</Exclude>
           </ExcludeByFile>
-          <ExcludeByAttribute>
+		  <ExcludeByAttribute>
             <Exclude>Obsolete</Exclude>
             <Exclude>GeneratedCodeAttribute</Exclude>
             <Exclude>CompilerGeneratedAttribute</Exclude>
             <Exclude>ExcludeFromCodeCoverageAttribute</Exclude>
           </ExcludeByAttribute>
-          <UseSourceLink>true</UseSourceLink>
-          <IncludeTestAssembly>false</IncludeTestAssembly>
-          <SkipAutoProps>true</SkipAutoProps>
+		  <IncludeTestAssembly>false</IncludeTestAssembly>
         </Configuration>
       </DataCollector>
     </DataCollectors>
