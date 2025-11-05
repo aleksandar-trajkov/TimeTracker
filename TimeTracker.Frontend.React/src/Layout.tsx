@@ -1,7 +1,7 @@
 import React from 'react';
 import Menu from './Menu';
 
-const Layout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+const Layout: React.FC<React.PropsWithChildren<object>> = ({ children }) => {
     return (
         <div className='body-container'>
             <div className='header'></div>

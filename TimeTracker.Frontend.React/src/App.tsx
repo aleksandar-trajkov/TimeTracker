@@ -1,10 +1,15 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useState, lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Layout from './Layout';
 import Loading from './Loading';
-import { SignIn } from './modules/auth';
+
+// Lazy load modules for better performance
+const SignIn = lazy(() => import('./modules/auth/SignIn'));
+const TimeEntriesModule = lazy(() => import('./modules/timeEntries/TimeEntriesModule'));
+const CategoriesModule = lazy(() => import('./modules/categories/CategoriesModule'));
+const SettingsModule = lazy(() => import('./modules/settings/SettingsModule'));
 
 // Create a client
 const queryClient = new QueryClient({
@@ -22,15 +27,44 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<Loading />}>
-        {!signedIn ? <SignIn setIsSignedIn={setSignedIn}></SignIn> : 
-        <BrowserRouter>
-          <Layout>
-              <Routes>
-                <Route path="/" element={<div>Home</div>} />
-              </Routes>
+        {!signedIn ? (
+          <Suspense fallback={<Loading />}>
+            <SignIn setIsSignedIn={setSignedIn} />
+          </Suspense>
+        ) : (
+          <BrowserRouter>
+            <Layout>
+              <Suspense fallback={<Loading />}>
+                <Routes>
+                  <Route 
+                    path="/categories" 
+                    element={
+                      <Suspense fallback={<Loading />}>
+                        <CategoriesModule />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="/settings" 
+                    element={
+                      <Suspense fallback={<Loading />}>
+                        <SettingsModule />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="*" 
+                    element={
+                      <Suspense fallback={<Loading />}>
+                        <TimeEntriesModule />
+                      </Suspense>
+                    } 
+                  />
+                </Routes>
+              </Suspense>
             </Layout>
-        </BrowserRouter>
-    }
+          </BrowserRouter>
+        )}
       </Suspense>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
