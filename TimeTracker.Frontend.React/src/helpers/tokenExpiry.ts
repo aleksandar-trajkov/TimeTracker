@@ -4,7 +4,8 @@
  * @returns Token expiry in days for js-cookie
  */
 export const calculateTokenExpiry = (defaultHours: number = 2): number => {
-    const tokenExpiryHours = Number(import.meta.env.VITE_TOKEN_EXPIRY_HOURS) || defaultHours;
+    var expiryHours = import.meta.env.VITE_TOKEN_EXPIRY_HOURS;
+    const tokenExpiryHours = expiryHours === '' || isNaN(expiryHours) ? defaultHours : Number(expiryHours);
     return tokenExpiryHours / 24; // Convert hours to days for js-cookie
 };
 

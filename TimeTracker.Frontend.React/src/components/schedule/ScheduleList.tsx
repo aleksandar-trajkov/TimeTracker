@@ -1,5 +1,6 @@
 import React from 'react';
 import { formatDate, formatTime } from '../../helpers/dateTimeHelper';
+import { groupBy } from '../../helpers/arrayHelper';
 import type { TimeEntry } from '../../apiCalls/timeEntries';
 
 interface ScheduleListProps {
@@ -44,14 +45,7 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
         );
     }
 
-    const groupedData = timeEntries.reduce((acc, entry) => {
-        const date = formatDate(entry.from);
-        if (!acc[date]) {
-            acc[date] = [];
-        }
-        acc[date].push(entry);
-        return acc;
-    }, {} as Record<string, TimeEntry[]>);
+    const groupedData = groupBy(timeEntries, (entry) => formatDate(new Date(entry.from)));
 
     return (
         <div className="table-responsive">
