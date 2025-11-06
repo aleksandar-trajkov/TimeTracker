@@ -44,35 +44,46 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
         );
     }
 
+    const groupedData = timeEntries.reduce((acc, entry) => {
+        const date = formatDate(entry.from);
+        if (!acc[date]) {
+            acc[date] = [];
+        }
+        acc[date].push(entry);
+        return acc;
+    }, {} as Record<string, TimeEntry[]>);
+
     return (
         <div className="table-responsive">
-            <table className="table table-striped table-hover">
-                <thead className="table-dark">
-                    <tr>
-                        <th colSpan={3}>{formatDate(timeEntries[0].from)}</th>
-                    </tr>
-                    <tr>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Category</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {timeEntries.map((entry) => (
-                        <tr key={entry.id}>
-                            <td>{formatTime(entry.from)}</td>
-                            <td>{entry.to ? formatTime(entry.to) : 'Ongoing'}</td>
-                            <td>
-                                {entry.category && (
-                                    <span className="badge bg-primary">
-                                        {entry.category.name}
-                                    </span>
-                                )}
-                            </td>
+            {Object.entries(groupedData).map(([date, entries]) => (
+                <table key={date} className="table table-striped table-hover mb-4">
+                    <thead className="table-dark">
+                        <tr>
+                            <th colSpan={3}>{date}</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                        <tr>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {entries.map((entry) => (
+                            <tr key={entry.id}>
+                                <td>{formatTime(entry.from)}</td>
+                                <td>{entry.to ? formatTime(entry.to) : 'Ongoing'}</td>
+                                <td>
+                                    {entry.category && (
+                                        <span className="badge bg-primary">
+                                            {entry.category.name}
+                                        </span>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ))}
         </div>
     );
 };

@@ -3,7 +3,7 @@ import { useTimeEntriesQuery } from '../../apiCalls/timeEntries';
 import type { TimeEntriesQueryParams } from '../../apiCalls/timeEntries';
 import { ScheduleList } from '../../components/schedule';
 import { DatePicker } from '../../components/common';
-import { formatDate, getToday, getTomorrow } from '../../helpers/dateTimeHelper';
+import { addDays, getToday, getTomorrow } from '../../helpers/dateTimeHelper';
 
 const TimeEntriesModule: React.FC = () => {
     const [queryParams, setQueryParams] = useState<TimeEntriesQueryParams>({
@@ -17,6 +17,14 @@ const TimeEntriesModule: React.FC = () => {
         isError, 
         error 
     } = useTimeEntriesQuery(queryParams);
+
+    const setFromDate = (date: Date) => {
+        if(queryParams.to && date >= queryParams.to) {
+            setQueryParams({ from: date, to: addDays(date, 1) });
+            return;
+        }
+        setQueryParams(prev => ({ ...prev, from: date }));
+    }
 
     const timeEntries = data || [];
 
@@ -34,7 +42,7 @@ const TimeEntriesModule: React.FC = () => {
                         name="date-picker-from"
                         label="Start Date"
                         value={queryParams.from}
-                        onChange={(value) => setQueryParams({ ...queryParams, from: value })} ></DatePicker>
+                        onChange={setFromDate} ></DatePicker>
                 </div>
                 <div className="col-2">
                     <DatePicker 
@@ -42,7 +50,7 @@ const TimeEntriesModule: React.FC = () => {
                         name="date-picker-to"
                         label="End Date"
                         value={queryParams.to}
-                        min={queryParams.from}
+                        min={addDays(queryParams.from, 1)}
                         onChange={(value) => setQueryParams({ ...queryParams, to: value })} ></DatePicker>
                 </div>
             </div>

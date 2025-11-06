@@ -73,7 +73,7 @@ describe('useTimeEntriesQuery', () => {
 
     expect(result.current.data).toEqual(mockTimeEntriesResponse)
     expect(fetchHelpers.executeGet).toHaveBeenCalledWith(
-      'http://localhost:3000/v1/time-entries',
+      'http://localhost:3000/v1/time-entries?from=2023-12-01&to=2023-12-31',
       'mock-token'
     )
   })

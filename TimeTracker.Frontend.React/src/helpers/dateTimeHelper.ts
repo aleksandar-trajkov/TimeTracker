@@ -1,4 +1,4 @@
-import { format, startOfDay, startOfWeek, endOfWeek, addDays } from 'date-fns';
+import { format, startOfDay, startOfWeek, endOfWeek, addDays as dateFnsAddDays } from 'date-fns';
 
 const dateFormat = 'yyyy-MM-dd';
 const timeFormat = 'HH:mm';
@@ -12,13 +12,10 @@ const formatDate = (date: Date): string => {
 const getToday = (): Date => {
     return new Date();
 }
-
 const getTomorrow = (): Date => {
     const tomorrow = new Date();
-    addDays(tomorrow, 1);
-    return tomorrow;
+    return dateFnsAddDays(tomorrow, 1);
 }
-
 const getStartOfDay = (date: Date): Date => {
     return startOfDay(date);
 }
@@ -28,5 +25,7 @@ const getStartOfWeek = (date: Date): Date => {
 const getEndOfWeek = (date: Date): Date => {
     return endOfWeek(date, { weekStartsOn: 1 });
 }
-
-export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek };
+const addDays = (date: Date, days: number): Date => {
+    return dateFnsAddDays(date, days);
+}
+export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek, addDays };

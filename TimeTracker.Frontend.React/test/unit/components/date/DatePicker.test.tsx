@@ -105,8 +105,8 @@ describe('DatePicker Component', () => {
       expect(input).toHaveAttribute('max', '2023-12-31')
     })
 
-    it('sets max to today when no max is provided', () => {
-      const today = new Date().toISOString().split('T')[0]
+    it('sets max to end of days when no max is provided', () => {
+      const today = new Date('2099-12-31').toISOString().split('T')[0]
       
       render(<DatePicker {...defaultProps} />)
       
