@@ -1,4 +1,6 @@
-﻿namespace TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
+﻿using TimeTracker.WebApi.Contracts.Responses.V1.Categories;
+
+namespace TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
 
 public class TimeEntryResponse
 {

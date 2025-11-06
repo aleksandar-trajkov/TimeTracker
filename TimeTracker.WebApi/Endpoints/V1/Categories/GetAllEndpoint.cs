@@ -6,7 +6,7 @@ using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain.Options;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
 using TimeTracker.WebApi.Contracts.Responses.V1.Auth;
-using TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
+using TimeTracker.WebApi.Contracts.Responses.V1.Categories;
 using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Helpers;
 using TimeTracker.WebApi.Interfaces;
