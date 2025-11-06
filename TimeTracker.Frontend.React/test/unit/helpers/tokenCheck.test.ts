@@ -21,22 +21,22 @@ describe('tokenCheck', () => {
   describe('isTokenValid', () => {
     describe('with invalid token types', () => {
       it('should throw error for null token', () => {
-        expect(() => isTokenValid(null as any)).toThrow('Invalid token provided')
+        expect(() => isTokenValid(null as unknown as string)).toThrow('Invalid token provided')
         expect(mockJwtDecode).not.toHaveBeenCalled()
       })
 
       it('should throw error for undefined token', () => {
-        expect(() => isTokenValid(undefined as any)).toThrow('Invalid token provided')
+        expect(() => isTokenValid(undefined as unknown as string)).toThrow('Invalid token provided')
         expect(mockJwtDecode).not.toHaveBeenCalled()
       })
 
       it('should throw error for number token', () => {
-        expect(() => isTokenValid(123 as any)).toThrow('Invalid token provided')
+        expect(() => isTokenValid(123 as unknown as string)).toThrow('Invalid token provided')
         expect(mockJwtDecode).not.toHaveBeenCalled()
       })
 
       it('should throw error for object token', () => {
-        expect(() => isTokenValid({} as any)).toThrow('Invalid token provided')
+        expect(() => isTokenValid({} as unknown as string)).toThrow('Invalid token provided')
         expect(mockJwtDecode).not.toHaveBeenCalled()
       })
     })
@@ -154,7 +154,7 @@ describe('tokenCheck', () => {
 
       it('should return false (not expired) for token with non-numeric exp claim', () => {
         const tokenWithStringExp = 'token.with.string.exp'
-        mockJwtDecode.mockReturnValue({ exp: 'not-a-number' as any })
+        mockJwtDecode.mockReturnValue({ exp: 'not-a-number' as unknown as number })
 
         const result = isTokenValid(tokenWithStringExp)
         

@@ -120,10 +120,10 @@ describe('arrayHelper', () => {
     })
 
     it('should handle undefined/null values in grouping key', () => {
-      const dataWithNulls = [
+      const dataWithNulls: { id: number; category: string | null | undefined }[] = [
         { id: 1, category: 'A' },
-        { id: 2, category: null as any },
-        { id: 3, category: undefined as any },
+        { id: 2, category: null },
+        { id: 3, category: undefined },
         { id: 4, category: 'A' },
       ]
 

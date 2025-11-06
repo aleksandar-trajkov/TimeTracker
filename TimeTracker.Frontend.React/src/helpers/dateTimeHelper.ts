@@ -1,4 +1,4 @@
-const { DateTime } = require("luxon");
+import { DateTime } from "luxon";
 
 const dateFormat = 'yyyy-MM-dd';
 const timeFormat = 'HH:mm';
