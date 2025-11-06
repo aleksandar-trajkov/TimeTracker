@@ -4,6 +4,7 @@ namespace TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
 
 public class TimeEntryResponse
 {
+    public Guid Id { get; set; }
     public DateTimeOffset From { get; set; }
     public DateTimeOffset To { get; set; }
     public string Description { get; set; } = string.Empty;

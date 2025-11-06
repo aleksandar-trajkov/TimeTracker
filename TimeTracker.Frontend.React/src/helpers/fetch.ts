@@ -1,3 +1,5 @@
+import { fixDateTimeForResponse } from "./dateTimeHelper";
+
 const executeFetch = async function (url: string, method: string, body: object | null = null, token: string | null = null): Promise<Response> {
   const params = {
     method,
@@ -17,15 +19,15 @@ const executeFetch = async function (url: string, method: string, body: object |
 };
 
 const executeGet = async function (url: string, token: string | null = null): Promise<Response> {
-  return executeFetch(url, 'GET', null, token).then((response) => response.json());
+  return executeFetch(url, 'GET', null, token).then((response) => response.json()).then((data) => fixDateTimeForResponse(data));
 }
 
 const executePost = function<T>(url: string, body: object, token: string | null = null): Promise<T> {
-  return executeFetch(url, 'POST', body, token).then((response) => response.json());
+  return executeFetch(url, 'POST', body, token).then((response) => response.json()).then((data) => fixDateTimeForResponse(data));
 }
 
 const executePut = function (url: string, body: object, token: string | null = null): Promise<Response> {
-  return executeFetch(url, 'PUT', body, token).then((response) => response.json());
+  return executeFetch(url, 'PUT', body, token).then((response) => response.json()).then((data) => fixDateTimeForResponse(data));
 }
 
 const executeDelete = function (url: string, token: string | null = null): Promise<Response> {

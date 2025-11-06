@@ -27,4 +27,29 @@ const getEndOfWeek = (date: Date): Date => {
 const addDays = (date: Date, days: number): Date => {
     return DateTime.fromJSDate(date).setZone('UTC').plus({ days }).toJSDate();
 }
-export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek, addDays };
+
+/// Fixes date strings in the response data to be Date objects
+const fixDateTimeForResponse = <T>(data: T): T => {
+    const isoDateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
+
+    function isIsoDateString(value: unknown): value is string {
+        return typeof value === "string" && isoDateFormat.test(value);
+    }
+
+    if (data === null || data === undefined || typeof data !== "object")
+        return data;
+    
+    const dataObject = data as Record<string, unknown>;
+    for (const key of Object.keys(dataObject)) {
+        const value = dataObject[key];
+        if (isIsoDateString(value)) {
+            dataObject[key] = new Date(value);
+        }
+        else if (typeof value === "object" && value !== null) {
+            fixDateTimeForResponse(value);
+        }
+    }
+    return data;
+}
+
+export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek, addDays, fixDateTimeForResponse };

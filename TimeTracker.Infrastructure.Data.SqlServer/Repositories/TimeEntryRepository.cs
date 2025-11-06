@@ -12,6 +12,13 @@ public class TimeEntryRepository : BaseRepository<TimeEntry, Guid>, ITimeEntryRe
     {
     }
 
+    public override async Task<TimeEntry> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await Select()
+            .Include(x=> x.Category)
+            .SingleAsync(x => x.Id.Equals(id), cancellationToken);
+    }
+
     public Task<List<TimeEntry>> GetAllAsync(Guid userId, DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken)
     {
         return Select()
