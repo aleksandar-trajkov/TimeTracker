@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDate } from '../../helpers/dateTimeHelper';
 
 interface DatePickerProps {
     id: string;
@@ -22,7 +23,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     value,
     onChange,
     min,
-    max,
+    max = formatDate(new Date('2099-12-31')),
     required = false,
     disabled = false,
     className = '',
@@ -32,12 +33,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
     // Internal onChange handler that extracts the value
     const handleInternalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
-    };
-
-    // Helper function to format today's date as YYYY-MM-DD
-    const getTodayString = (): string => {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
     };
 
     return (
@@ -54,7 +49,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 value={value}
                 onChange={handleInternalChange}
                 min={min}
-                max={max || getTodayString()} // Default max to today if not specified
+                max={max}
                 required={required}
                 disabled={disabled}
                 placeholder={placeholder}

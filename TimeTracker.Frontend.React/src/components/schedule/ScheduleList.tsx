@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDate, formatTime } from '../../helpers/dateTimeHelper';
 import type { TimeEntry } from '../../apiCalls/timeEntries';
 
 interface ScheduleListProps {
@@ -13,20 +14,7 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
     isLoading, 
     isError, 
     error 
-}) => {
-    const formatTime = (dateTimeString: string): string => {
-        return new Date(dateTimeString).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
-    const formatDate = (dateTimeString: string): string => {
-        return new Date(dateTimeString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    }
+}) => {   
 
     if (isLoading) {
         return (

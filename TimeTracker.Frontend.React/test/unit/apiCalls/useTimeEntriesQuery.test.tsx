@@ -37,8 +37,8 @@ describe('useTimeEntriesQuery', () => {
     {
       id: 1,
       description: 'Test entry 1',
-      from: '2023-12-25T09:00:00Z',
-      to: '2023-12-25T10:00:00Z',
+      from: new Date('2023-12-25T09:00:00Z'),
+      to: new Date('2023-12-25T10:00:00Z'),
       category: {
         id: 1,
         name: 'Development'
@@ -47,8 +47,8 @@ describe('useTimeEntriesQuery', () => {
     {
       id: 2,
       description: 'Test entry 2',
-      from: '2023-12-25T11:00:00Z',
-      to: '2023-12-25T12:30:00Z',
+      from: new Date('2023-12-25T11:00:00Z'),
+      to: new Date('2023-12-25T12:30:00Z'),
       category: {
         id: 2,
         name: 'Meeting'
@@ -63,7 +63,7 @@ describe('useTimeEntriesQuery', () => {
   it('should fetch time entries successfully', async () => {
     vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
-    const { result } = renderHook(() => useTimeEntriesQuery(), {
+    const { result } = renderHook(() => useTimeEntriesQuery({ from: new Date('2023-12-01'), to: new Date('2023-12-31') }), {
       wrapper: createWrapper(),
     })
 
@@ -82,8 +82,8 @@ describe('useTimeEntriesQuery', () => {
     vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
     const queryParams = {
-      from: '2023-12-01',
-      to: '2023-12-31',
+      from: new Date('2023-12-01'),
+      to: new Date('2023-12-31'),
     }
 
     const { result } = renderHook(() => useTimeEntriesQuery(queryParams), {
@@ -100,30 +100,11 @@ describe('useTimeEntriesQuery', () => {
     )
   })
 
-  it('should handle empty query parameters', async () => {
-    vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
-
-    const queryParams = {}
-
-    const { result } = renderHook(() => useTimeEntriesQuery(queryParams), {
-      wrapper: createWrapper(),
-    })
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true)
-    })
-
-    expect(fetchHelpers.executeGet).toHaveBeenCalledWith(
-      'http://localhost:3000/v1/time-entries',
-      'mock-token'
-    )
-  })
-
   it('should handle API errors', async () => {
     const errorMessage = 'Failed to fetch time entries'
     vi.mocked(fetchHelpers.executeGet).mockRejectedValue(new Error(errorMessage))
 
-    const { result } = renderHook(() => useTimeEntriesQuery(), {
+    const { result } = renderHook(() => useTimeEntriesQuery({ from: new Date('2023-12-01'), to: new Date('2023-12-31') }), {
       wrapper: createWrapper(),
     })
 
@@ -138,7 +119,7 @@ describe('useTimeEntriesQuery', () => {
   it('should use correct query key with parameters', async () => {
     vi.mocked(fetchHelpers.executeGet).mockResolvedValue(mockTimeEntriesResponse as unknown as Response)
 
-    const queryParams = { from: '2023-12-01', to: '2023-12-31' }
+    const queryParams = { from: new Date('2023-12-01'), to: new Date('2023-12-31') }
 
     const { result } = renderHook(() => useTimeEntriesQuery(queryParams), {
       wrapper: createWrapper(),
