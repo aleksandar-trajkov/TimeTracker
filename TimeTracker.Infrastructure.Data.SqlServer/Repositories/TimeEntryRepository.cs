@@ -15,7 +15,7 @@ public class TimeEntryRepository : BaseRepository<TimeEntry, Guid>, ITimeEntryRe
     public override async Task<TimeEntry> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await Select()
-            .Include(x=> x.Category)
+            .Include(x => x.Category)
             .SingleAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
