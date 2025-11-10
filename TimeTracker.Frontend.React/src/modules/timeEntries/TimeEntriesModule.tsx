@@ -18,7 +18,8 @@ const TimeEntriesModule: React.FC = () => {
         error 
     } = useTimeEntriesQuery(queryParams);
 
-    const setFromDate = (date: Date) => {
+    const setFromDate = (date: Date | null) => {
+        if(date === null) return;
         if(queryParams.to && date >= queryParams.to) {
             setQueryParams({ from: date, to: addDays(date, 1) });
             return;

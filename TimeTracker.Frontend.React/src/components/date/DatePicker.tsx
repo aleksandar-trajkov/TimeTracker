@@ -1,12 +1,12 @@
 import React from 'react';
-import { formatDate } from '../../helpers/dateTime';
+import { formatDate, isIsoDateString } from '../../helpers/dateTime';
 
 interface DatePickerProps {
     id: string;
     name: string;
     label: string;
     value: Date; // Date object (YYYY-MM-DD)
-    onChange: (value: Date) => void;
+    onChange: (value: Date | null) => void;
     min?: Date; // Date object for minimum date
     max?: Date; // Date object for maximum date
     required?: boolean;
@@ -32,7 +32,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 }) => {
     // Internal onChange handler that extracts the value
     const handleInternalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(new Date(e.target.value));
+        onChange(isIsoDateString(e.target.value) ? new Date(e.target.value) : null);
     };
 
     return (

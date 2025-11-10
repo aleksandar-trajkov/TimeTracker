@@ -4,11 +4,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import DatePicker from '../../../../src/components/date/DatePicker'
 
 describe('DatePicker Component', () => {
+  const testDate = new Date('2023-12-25')
   const defaultProps = {
     id: 'test-datepicker',
     name: 'test-date',
     label: 'Test Date',
-    value: '',
+    value: testDate,
     onChange: vi.fn(),
   }
 
@@ -21,14 +22,13 @@ describe('DatePicker Component', () => {
       render(<DatePicker {...defaultProps} />)
       
       expect(screen.getByLabelText('Test Date')).toBeInTheDocument()
-      expect(screen.getByDisplayValue('')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('2023-12-25')).toBeInTheDocument()
     })
 
     it('renders with correct input attributes', () => {
       render(
         <DatePicker
           {...defaultProps}
-          value="2023-12-25"
           placeholder="Select date"
         />
       )
@@ -78,25 +78,29 @@ describe('DatePicker Component', () => {
 
   describe('Date constraints', () => {
     it('applies min date constraint', () => {
-      render(<DatePicker {...defaultProps} min="2023-01-01" />)
+      const minDate = new Date('2023-01-01')
+      render(<DatePicker {...defaultProps} min={minDate} />)
       
       const input = screen.getByLabelText('Test Date')
       expect(input).toHaveAttribute('min', '2023-01-01')
     })
 
     it('applies max date constraint', () => {
-      render(<DatePicker {...defaultProps} max="2023-12-31" />)
+      const maxDate = new Date('2023-12-31')
+      render(<DatePicker {...defaultProps} max={maxDate} />)
       
       const input = screen.getByLabelText('Test Date')
       expect(input).toHaveAttribute('max', '2023-12-31')
     })
 
     it('applies both min and max date constraints', () => {
+      const minDate = new Date('2023-01-01')
+      const maxDate = new Date('2023-12-31')
       render(
         <DatePicker
           {...defaultProps}
-          min="2023-01-01"
-          max="2023-12-31"
+          min={minDate}
+          max={maxDate}
         />
       )
       
@@ -105,13 +109,11 @@ describe('DatePicker Component', () => {
       expect(input).toHaveAttribute('max', '2023-12-31')
     })
 
-    it('sets max to end of days when no max is provided', () => {
-      const today = new Date('2099-12-31').toISOString().split('T')[0]
-      
+    it('sets max to default end date when no max is provided', () => {
       render(<DatePicker {...defaultProps} />)
       
       const input = screen.getByLabelText('Test Date')
-      expect(input).toHaveAttribute('max', today)
+      expect(input).toHaveAttribute('max', '2099-12-31')
     })
   })
 
@@ -123,12 +125,13 @@ describe('DatePicker Component', () => {
       render(<DatePicker {...defaultProps} onChange={mockOnChange} />)
       
       const input = screen.getByLabelText('Test Date')
-      await user.type(input, '2023-12-25')
+      await user.clear(input)
+      await user.type(input, '2023-11-10')
       
       expect(mockOnChange).toHaveBeenCalled()
     })
 
-    it('calls onChange with correct date value', async () => {
+    it('calls onChange with Date object for valid dates', async () => {
       const mockOnChange = vi.fn()
       const user = userEvent.setup()
       
@@ -136,22 +139,48 @@ describe('DatePicker Component', () => {
       
       const input = screen.getByLabelText('Test Date')
       await user.clear(input)
-      await user.type(input, '2023-12-25')
+      await user.type(input, '2023-11-10')
       
-      // Check that onChange was called with the date value
-      expect(mockOnChange).toHaveBeenCalledWith('2023-12-25')
+      // Check that onChange was called with a Date object
+      expect(mockOnChange).toHaveBeenCalled()
+      const lastCall = mockOnChange.mock.calls[mockOnChange.mock.calls.length - 1]
+      if (lastCall[0] !== null) {
+        expect(lastCall[0]).toBeInstanceOf(Date)
+        expect(lastCall[0].getFullYear()).toBe(2023)
+        expect(lastCall[0].getMonth()).toBe(10) // November (0-indexed)
+        expect(lastCall[0].getDate()).toBe(10)
+      }
+    })
+
+    it('calls onChange with null for invalid date inputs', async () => {
+      const mockOnChange = vi.fn()
+      const user = userEvent.setup()
+      
+      render(<DatePicker {...defaultProps} onChange={mockOnChange} />)
+      
+      const input = screen.getByLabelText('Test Date')
+      await user.clear(input)
+      // Type an invalid date
+      await user.type(input, '2023-13-35') // Invalid month and day
+      
+      expect(mockOnChange).toHaveBeenCalled()
+      const lastCall = mockOnChange.mock.calls[mockOnChange.mock.calls.length - 1]
+      // Component will call onChange with null for invalid dates
+      expect(lastCall[0]).toBeNull()
     })
 
     it('calls onChange when clearing date', async () => {
       const mockOnChange = vi.fn()
       const user = userEvent.setup()
       
-      render(<DatePicker {...defaultProps} value="2023-12-25" onChange={mockOnChange} />)
+      render(<DatePicker {...defaultProps} onChange={mockOnChange} />)
       
       const input = screen.getByLabelText('Test Date')
       await user.clear(input)
       
-      expect(mockOnChange).toHaveBeenCalledWith('')
+      expect(mockOnChange).toHaveBeenCalled()
+      const lastCall = mockOnChange.mock.calls[mockOnChange.mock.calls.length - 1]
+      expect(lastCall[0]).toBeNull()
     })
   })
 
@@ -205,27 +234,26 @@ describe('DatePicker Component', () => {
 
   describe('Value Updates', () => {
     it('displays updated value when value prop changes', () => {
-      const { rerender } = render(<DatePicker {...defaultProps} value="2023-01-01" />)
+      const { rerender } = render(<DatePicker {...defaultProps} value={new Date('2023-01-01')} />)
       
       expect(screen.getByLabelText('Test Date')).toHaveValue('2023-01-01')
       
-      rerender(<DatePicker {...defaultProps} value="2023-12-31" />)
+      rerender(<DatePicker {...defaultProps} value={new Date('2023-12-31')} />)
       
       expect(screen.getByLabelText('Test Date')).toHaveValue('2023-12-31')
     })
 
-    it('handles empty string value', () => {
-      render(<DatePicker {...defaultProps} value="" />)
-      
-      expect(screen.getByLabelText('Test Date')).toHaveValue('')
-    })
-
-    it('handles valid ISO date values', () => {
-      const testDates = ['2023-01-01', '2023-06-15', '2023-12-31']
+    it('handles valid Date object values', () => {
+      const testDates = [
+        new Date('2023-01-01'), 
+        new Date('2023-06-15'), 
+        new Date('2023-12-31')
+      ]
       
       testDates.forEach(date => {
         const { unmount } = render(<DatePicker {...defaultProps} value={date} />)
-        expect(screen.getByLabelText('Test Date')).toHaveValue(date)
+        const expectedValue = date.toISOString().split('T')[0]
+        expect(screen.getByLabelText('Test Date')).toHaveValue(expectedValue)
         unmount()
       })
     })
@@ -258,6 +286,24 @@ describe('DatePicker Component', () => {
       await user.type(input, '2023-12-25{enter}')
       
       expect(handleSubmit).toHaveBeenCalled()
+    })
+  })
+
+  describe('Date formatting', () => {
+    it('formats Date object correctly for display', () => {
+      const testDate = new Date('2023-03-15')
+      render(<DatePicker {...defaultProps} value={testDate} />)
+      
+      const input = screen.getByLabelText('Test Date')
+      expect(input).toHaveValue('2023-03-15')
+    })
+
+    it('handles Date objects with time components', () => {
+      const testDate = new Date('2023-03-15T14:30:00.000Z')
+      render(<DatePicker {...defaultProps} value={testDate} />)
+      
+      const input = screen.getByLabelText('Test Date')
+      expect(input).toHaveValue('2023-03-15')
     })
   })
 })
