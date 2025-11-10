@@ -27,6 +27,11 @@ const TimeEntriesModule: React.FC = () => {
         setQueryParams(prev => ({ ...prev, from: date }));
     }
 
+    const setToDate = (date: Date | null) => {
+        if(date === null) return;
+        setQueryParams(prev => ({ ...prev, to: date }));
+    }
+
     const timeEntries = data || [];
 
     return (
@@ -52,7 +57,7 @@ const TimeEntriesModule: React.FC = () => {
                         label="End Date"
                         value={queryParams.to}
                         min={addDays(queryParams.from, 1)}
-                        onChange={(value) => setQueryParams({ ...queryParams, to: value })} ></DatePicker>
+                        onChange={setToDate} ></DatePicker>
                 </div>
             </div>
             <div className="row">
