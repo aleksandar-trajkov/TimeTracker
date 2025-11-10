@@ -1,6 +1,6 @@
 import React from 'react';
-import { formatDate, formatTime } from '../../helpers/dateTimeHelper';
-import { groupBy } from '../../helpers/arrayHelper';
+import { formatDate, formatTime } from '../../helpers/dateTime';
+import { groupBy } from '../../helpers/array';
 import type { TimeEntry } from '../../apiCalls/timeEntries';
 
 interface ScheduleListProps {

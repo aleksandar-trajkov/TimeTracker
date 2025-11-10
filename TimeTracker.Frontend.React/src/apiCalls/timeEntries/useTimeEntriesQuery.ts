@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executeGet } from '../../helpers/fetch';
 import type { TimeEntry, TimeEntriesQueryParams } from './types';
-import { formatDate } from '../../helpers/dateTimeHelper';
+import { formatDate } from '../../helpers/dateTime';
 
 const useTimeEntriesQuery = (params: TimeEntriesQueryParams) => {
     return useQuery({
@@ -18,7 +18,7 @@ const useTimeEntriesQuery = (params: TimeEntriesQueryParams) => {
             const queryString = searchParams.toString();
             const url = `${import.meta.env.VITE_BASE_URL}/v1/time-entries${queryString ? `?${queryString}` : ''}`;
             
-            return await executeGet(url, token) as unknown as TimeEntry[]
+            return await executeGet<TimeEntry[]>(url, token);
         }
     });
 };

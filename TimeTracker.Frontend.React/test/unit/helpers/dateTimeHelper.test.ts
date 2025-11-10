@@ -11,7 +11,7 @@ import {
   dateFormat,
   timeFormat,
   fixDateTimeForResponse
-} from '../../../src/helpers/dateTimeHelper'
+} from '../../../src/helpers/dateTime'
 
 describe('dateTimeHelper', () => {
   // Fixed date for consistent testing

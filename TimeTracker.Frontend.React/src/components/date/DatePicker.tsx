@@ -1,14 +1,14 @@
 import React from 'react';
-import { formatDate } from '../../helpers/dateTimeHelper';
+import { formatDate } from '../../helpers/dateTime';
 
 interface DatePickerProps {
     id: string;
     name: string;
     label: string;
-    value: string; // ISO date string (YYYY-MM-DD)
-    onChange: (value: string) => void;
-    min?: string; // ISO date string for minimum date
-    max?: string; // ISO date string for maximum date
+    value: Date; // Date object (YYYY-MM-DD)
+    onChange: (value: Date) => void;
+    min?: Date; // Date object for minimum date
+    max?: Date; // Date object for maximum date
     required?: boolean;
     disabled?: boolean;
     className?: string;
@@ -23,7 +23,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     value,
     onChange,
     min,
-    max = formatDate(new Date('2099-12-31')),
+    max = new Date('2099-12-31'),
     required = false,
     disabled = false,
     className = '',
@@ -32,7 +32,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 }) => {
     // Internal onChange handler that extracts the value
     const handleInternalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(e.target.value);
+        onChange(new Date(e.target.value));
     };
 
     return (
@@ -46,10 +46,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 id={id}
                 name={name}
                 className={`form-control ${className}`}
-                value={value}
+                value={formatDate(value)}
                 onChange={handleInternalChange}
-                min={min}
-                max={max}
+                min={min ? formatDate(min) : undefined}
+                max={max ? formatDate(max) : undefined}
                 required={required}
                 disabled={disabled}
                 placeholder={placeholder}

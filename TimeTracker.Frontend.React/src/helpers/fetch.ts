@@ -1,4 +1,4 @@
-import { fixDateTimeForResponse } from "./dateTimeHelper";
+import { fixDateTimeForResponse } from "./dateTime";
 
 const executeFetch = async function (url: string, method: string, body: object | null = null, token: string | null = null): Promise<Response> {
   const params = {
@@ -18,16 +18,16 @@ const executeFetch = async function (url: string, method: string, body: object |
   return response;
 };
 
-const executeGet = async function (url: string, token: string | null = null): Promise<Response> {
-  return executeFetch(url, 'GET', null, token).then((response) => response.json()).then((data) => fixDateTimeForResponse(data));
+const executeGet = async function<T>(url: string, token: string | null = null): Promise<T> {
+  return executeFetch(url, 'GET', null, token).then((response) => response.json()).then((data) => fixDateTimeForResponse<T>(data));
 }
 
 const executePost = function<T>(url: string, body: object, token: string | null = null): Promise<T> {
-  return executeFetch(url, 'POST', body, token).then((response) => response.json()).then((data) => fixDateTimeForResponse(data));
+  return executeFetch(url, 'POST', body, token).then((response) => response.json()).then((data) => fixDateTimeForResponse<T>(data));
 }
 
-const executePut = function (url: string, body: object, token: string | null = null): Promise<Response> {
-  return executeFetch(url, 'PUT', body, token).then((response) => response.json()).then((data) => fixDateTimeForResponse(data));
+const executePut = function<T>(url: string, body: object, token: string | null = null): Promise<T> {
+  return executeFetch(url, 'PUT', body, token).then((response) => response.json()).then((data) => fixDateTimeForResponse<T>(data));
 }
 
 const executeDelete = function (url: string, token: string | null = null): Promise<Response> {
