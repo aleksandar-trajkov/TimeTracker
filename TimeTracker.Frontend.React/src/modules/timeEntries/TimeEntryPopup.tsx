@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { TimeEntry, Category } from '../../apiCalls/timeEntries';
-import { formatDate, formatTime } from '../../helpers/dateTime';
+import { formatDateTime } from '../../helpers/dateTime';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
 import { Input, Button } from '../../components/common';
 
@@ -13,7 +13,6 @@ interface TimeEntryPopupProps {
 
 interface FormData {
     description: string;
-    date: string;
     startTime: string;
     endTime: string;
     categoryName: string;
@@ -22,7 +21,6 @@ interface FormData {
 const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave, timeEntry = null }) => {
     const [formData, setFormData] = useState<FormData>({
         description: '',
-        date: formatDate(new Date()),
         startTime: '',
         endTime: '',
         categoryName: '',
@@ -30,22 +28,17 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
 
     // Update form data when timeEntry prop changes
     useEffect(() => {
-        if (timeEntry) {
-            const fromDate = new Date(timeEntry.from);
-            const toDate = timeEntry.to ? new Date(timeEntry.to) : null;
-            
+        if (timeEntry) {            
             setFormData({
                 description: timeEntry.description,
-                date: formatDate(fromDate),
-                startTime: formatTime(timeEntry.from).slice(0, 5), // Convert to HH:MM format
-                endTime: toDate ? formatTime(timeEntry.to!).slice(0, 5) : '',
+                startTime: formatDateTime(timeEntry.from),
+                endTime: timeEntry.to ? formatDateTime(timeEntry.to) : '',
                 categoryName: timeEntry.category?.name || '',
             });
         } else {
             // Reset form for new entry
             setFormData({
                 description: '',
-                date: formatDate(new Date()),
                 startTime: '',
                 endTime: '',
                 categoryName: '',
@@ -66,10 +59,6 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
             e.preventDefault();
         }
         
-        // Combine date and time to create Date objects
-        const fromDateTime = new Date(`${formData.date}T${formData.startTime}`);
-        const toDateTime = formData.endTime ? new Date(`${formData.date}T${formData.endTime}`) : undefined;
-        
         // Create category object if category name is provided
         const category: Category | null = formData.categoryName 
             ? { id: timeEntry?.category?.id || 0, name: formData.categoryName }
@@ -78,8 +67,8 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
         const timeEntryData: Partial<TimeEntry> = {
             id: timeEntry?.id,
             description: formData.description,
-            from: fromDateTime,
-            to: toDateTime,
+            from: new Date(`${formData.startTime}`),
+            to: new Date(`${formData.endTime}`),
             category,
         };
 
@@ -131,7 +120,7 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
                                     Start Time <span className="text-danger ms-1">*</span>
                                 </label>
                                 <input
-                                    type="time"
+                                    type="text"
                                     id="startTime"
                                     name="startTime"
                                     className="form-control"
@@ -146,7 +135,7 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
                             <div className="mb-3">
                                 <label htmlFor="endTime" className="form-label">End Time</label>
                                 <input
-                                    type="time"
+                                    type="text"
                                     id="endTime"
                                     name="endTime"
                                     className="form-control"

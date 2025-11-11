@@ -72,7 +72,7 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
                                 title={onRowDoubleClick ? "Double-click to view details" : undefined}
                             >
                                 <td>{formatTime(entry.from)}</td>
-                                <td>{entry.to ? formatTime(entry.to) : 'Ongoing'}</td>
+                                <td>{formatTime(entry.to)}</td>
                                 <td>
                                     {entry.category && (
                                         <span className="badge bg-primary">

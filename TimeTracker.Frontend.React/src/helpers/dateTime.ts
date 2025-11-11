@@ -1,8 +1,12 @@
 import { DateTime } from "luxon";
 
+const dateTimeFormat = 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\'';
 const dateFormat = 'yyyy-MM-dd';
 const timeFormat = 'HH:mm';
 
+const formatDateTime = (date: Date): string => {
+    return DateTime.fromJSDate(date).setZone('UTC').toFormat(dateTimeFormat);
+};
 const formatTime = (date: Date): string => {
     return DateTime.fromJSDate(date).setZone('UTC').toFormat(timeFormat);
 };
@@ -42,7 +46,7 @@ const fixDateTimeForResponse = <T>(data: T): T => {
 
     if (data === null || data === undefined || typeof data !== "object")
         return data;
-    
+
     const dataObject = data as Record<string, unknown>;
     for (const key of Object.keys(dataObject)) {
         const value = dataObject[key];
@@ -56,4 +60,20 @@ const fixDateTimeForResponse = <T>(data: T): T => {
     return data;
 }
 
-export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek, addDays, isIsoDateString, isIsoDateOnlyString, fixDateTimeForResponse };
+export {
+    dateTimeFormat,
+    dateFormat,
+    timeFormat,
+    formatDateTime,
+    formatTime,
+    formatDate,
+    getToday,
+    getTomorrow,
+    getStartOfDay,
+    getStartOfWeek,
+    getEndOfWeek,
+    addDays,
+    isIsoDateString,
+    isIsoDateOnlyString,
+    fixDateTimeForResponse
+};
