@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { useTimeEntriesQuery } from '../../apiCalls/timeEntries';
-import type { TimeEntriesQueryParams } from '../../apiCalls/timeEntries';
+import type { TimeEntriesQueryParams, TimeEntry } from '../../apiCalls/timeEntries';
 import { ScheduleList } from '../../components/schedule';
 import { DatePicker } from '../../components/date';
 import { addDays, getToday, getTomorrow } from '../../helpers/dateTime';
+import TimeEntryPopup from './TimeEntryPopup';
 
 const TimeEntriesModule: React.FC = () => {
     const [queryParams, setQueryParams] = useState<TimeEntriesQueryParams>({
         from: getToday(),
         to: getTomorrow(),
     });
+    
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [selectedTimeEntry, setSelectedTimeEntry] = useState<TimeEntry | null>(null);
 
     const { 
         data, 
@@ -32,9 +36,26 @@ const TimeEntriesModule: React.FC = () => {
         setQueryParams(prev => ({ ...prev, to: date }));
     }
 
+    const handleRowDoubleClick = (timeEntry: TimeEntry) => {
+        setSelectedTimeEntry(timeEntry);
+        setIsPopupOpen(true);
+    };
+
+    const handlePopupClose = () => {
+        setIsPopupOpen(false);
+        setSelectedTimeEntry(null);
+    };
+
+    const handlePopupSave = (timeEntryData: Partial<TimeEntry>) => {
+        // TODO: Implement save functionality
+        console.log('Saving time entry:', timeEntryData);
+        // Here you would typically call an API to save the time entry
+    };
+
     const timeEntries = data || [];
 
     return (
+        <React.Fragment>
         <div className="container-fluid">
             <div className="row">
                 <div className="col-12">
@@ -67,10 +88,18 @@ const TimeEntriesModule: React.FC = () => {
                         isLoading={isLoading}
                         isError={isError}
                         error={error}
+                        onRowDoubleClick={handleRowDoubleClick}
                     />
                 </div>
             </div>
         </div>
+        <TimeEntryPopup 
+            isOpen={isPopupOpen}
+            onClose={handlePopupClose}
+            onSave={handlePopupSave}
+            timeEntry={selectedTimeEntry}
+        />
+        </React.Fragment>
     );
 };
 

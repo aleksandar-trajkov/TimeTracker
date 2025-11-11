@@ -30,7 +30,10 @@ const addDays = (date: Date, days: number): Date => {
 
 /// Fixes date strings in the response data to be Date objects
 
-
+const isIsoDateOnlyString = (value: unknown): value is string => {
+    const isoDateFormat = /^\d{4}-\d{2}-\d{2}$/;
+    return typeof value === "string" && isoDateFormat.test(value);
+}
 const isIsoDateString = (value: unknown): value is string => {
     const isoDateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
     return typeof value === "string" && isoDateFormat.test(value);
@@ -53,4 +56,4 @@ const fixDateTimeForResponse = <T>(data: T): T => {
     return data;
 }
 
-export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek, addDays, isIsoDateString, fixDateTimeForResponse };
+export { dateFormat, timeFormat, formatTime, formatDate, getToday, getTomorrow, getStartOfDay, getStartOfWeek, getEndOfWeek, addDays, isIsoDateString, isIsoDateOnlyString, fixDateTimeForResponse };

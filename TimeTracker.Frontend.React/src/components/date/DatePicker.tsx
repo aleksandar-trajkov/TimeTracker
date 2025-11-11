@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDate, isIsoDateString } from '../../helpers/dateTime';
+import { formatDate, isIsoDateOnlyString } from '../../helpers/dateTime';
 
 interface DatePickerProps {
     id: string;
@@ -32,7 +32,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 }) => {
     // Internal onChange handler that extracts the value
     const handleInternalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(isIsoDateString(e.target.value) ? new Date(e.target.value) : null);
+        onChange(isIsoDateOnlyString(e.target.value) ? new Date(e.target.value) : null);
     };
 
     return (

@@ -8,13 +8,15 @@ interface ScheduleListProps {
     isLoading: boolean;
     isError: boolean;
     error?: Error | null;
+    onRowDoubleClick?: (timeEntry: TimeEntry) => void;
 }
 
 const ScheduleList: React.FC<ScheduleListProps> = ({ 
     timeEntries, 
     isLoading, 
     isError, 
-    error 
+    error,
+    onRowDoubleClick
 }) => {   
 
     if (isLoading) {
@@ -63,7 +65,12 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
                     </thead>
                     <tbody>
                         {entries.map((entry) => (
-                            <tr key={entry.id}>
+                            <tr 
+                                key={entry.id}
+                                onDoubleClick={() => onRowDoubleClick?.(entry)}
+                                style={{ cursor: onRowDoubleClick ? 'pointer' : 'default' }}
+                                title={onRowDoubleClick ? "Double-click to view details" : undefined}
+                            >
                                 <td>{formatTime(entry.from)}</td>
                                 <td>{entry.to ? formatTime(entry.to) : 'Ongoing'}</td>
                                 <td>
