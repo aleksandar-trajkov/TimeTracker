@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import type { TimeEntry, Category } from '../../apiCalls/timeEntries';
 import { formatDate, formatTime } from '../../helpers/dateTime';
-import './TimeEntryPopup.css';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
+import { Input, Button } from '../../components/common';
 
 interface TimeEntryPopupProps {
     isOpen: boolean;
@@ -60,8 +61,10 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = (e?: React.FormEvent) => {
+        if (e) {
+            e.preventDefault();
+        }
         
         // Combine date and time to create Date objects
         const fromDateTime = new Date(`${formData.date}T${formData.startTime}`);
@@ -87,89 +90,92 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
     if (!isOpen) return null;
 
     return (
-        <div className="popup-overlay">
-            <div className="popup-container">
-                <div className="popup-header">
-                    <h3>{timeEntry ? 'Edit Time Entry' : 'Add Time Entry'}</h3>
-                    <button className="close-btn" onClick={onClose}>×</button>
-                </div>
-                
-                <form onSubmit={handleSubmit} className="popup-form">
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <input
-                            type="text"
-                            id="description"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleInputChange}
-                            placeholder="Enter task description"
-                            required
-                        />
-                    </div>
+        <Modal isOpen={isOpen} onClose={onClose} size="md">
+            <ModalHeader 
+                title={timeEntry ? 'Edit Time Entry' : 'Add Time Entry'} 
+                onClose={onClose} 
+            />
+            
+            <ModalBody>
+                <form onSubmit={handleSubmit}>
+                    <Input
+                        id="description"
+                        name="description"
+                        type="text"
+                        label="Description"
+                        value={formData.description}
+                        onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+                        placeholder="Enter task description"
+                        required
+                    />
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="date">Date</label>
-                            <input
-                                type="date"
-                                id="date"
-                                name="date"
-                                value={formData.date}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        
-                        <div className="form-group">
-                            <label htmlFor="categoryName">Category</label>
-                            <input
-                                type="text"
+                    <div className="row">                        
+                        <div className="col-md-6">
+                            <Input
                                 id="categoryName"
                                 name="categoryName"
+                                type="text"
+                                label="Category"
                                 value={formData.categoryName}
-                                onChange={handleInputChange}
+                                onChange={(value) => setFormData(prev => ({ ...prev, categoryName: value }))}
                                 placeholder="Category name"
+                                containerClassName="mb-3"
                             />
                         </div>
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="startTime">Start Time</label>
-                            <input
-                                type="time"
-                                id="startTime"
-                                name="startTime"
-                                value={formData.startTime}
-                                onChange={handleInputChange}
-                                required
-                            />
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="mb-3">
+                                <label htmlFor="startTime" className="form-label">
+                                    Start Time <span className="text-danger ms-1">*</span>
+                                </label>
+                                <input
+                                    type="time"
+                                    id="startTime"
+                                    name="startTime"
+                                    className="form-control"
+                                    value={formData.startTime}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
                         </div>
                         
-                        <div className="form-group">
-                            <label htmlFor="endTime">End Time</label>
-                            <input
-                                type="time"
-                                id="endTime"
-                                name="endTime"
-                                value={formData.endTime}
-                                onChange={handleInputChange}
-                            />
+                        <div className="col-md-6">
+                            <div className="mb-3">
+                                <label htmlFor="endTime" className="form-label">End Time</label>
+                                <input
+                                    type="time"
+                                    id="endTime"
+                                    name="endTime"
+                                    className="form-control"
+                                    value={formData.endTime}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
                         </div>
                     </div>
-
-                    <div className="popup-actions">
-                        <button type="button" className="btn-cancel" onClick={onClose}>
-                            Cancel
-                        </button>
-                        <button type="submit" className="btn-save">
-                            {timeEntry ? 'Update' : 'Save'}
-                        </button>
-                    </div>
                 </form>
-            </div>
-        </div>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button 
+                    type="button" 
+                    variant="secondary" 
+                    onClick={onClose}
+                >
+                    Cancel
+                </Button>
+                <Button 
+                    type="submit" 
+                    variant="primary" 
+                    onClick={handleSubmit}
+                >
+                    {timeEntry ? 'Update' : 'Save'}
+                </Button>
+            </ModalFooter>
+        </Modal>
     );
 };
 
