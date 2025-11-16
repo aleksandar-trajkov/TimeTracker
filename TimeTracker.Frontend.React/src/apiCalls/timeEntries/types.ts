@@ -15,3 +15,11 @@ export interface TimeEntriesQueryParams {
     from: Date; // ISO date string
     to: Date; // ISO date string
 }
+
+export const createBlankTimeEntry = (): TimeEntry => ({
+    id: 0,
+    description: '',
+    from: new Date(),
+    to: new Date(),
+    category: null
+});

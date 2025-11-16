@@ -2,15 +2,15 @@ import { useMutation } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executePost } from '../../helpers/fetch';
 import { calculateTokenExpiry, getRememberMeExpiry } from '../../helpers/tokenExpiry';
-import type { SignInCredentials, TokenResponse, UseSignInMutationProps } from './types';
+import type { SignInRequest, TokenResponse, UseSignInMutationProps } from './types';
 
 // Hook for sign in mutation
 export const useSignInMutation = ({ setIsSignedIn }: UseSignInMutationProps) => {
     return useMutation({
-        mutationFn: async (credentials: SignInCredentials) => {
+        mutationFn: async (credentials: SignInRequest) => {
             return await executePost<TokenResponse>(`${import.meta.env.VITE_BASE_URL}/v1/auth/signin`, credentials);
         },
-        onSuccess: (tokenResponse: TokenResponse, variables: SignInCredentials) => {
+        onSuccess: (tokenResponse: TokenResponse, variables: SignInRequest) => {
             if (tokenResponse && tokenResponse.token) {
                 const tokenExpiryDays = calculateTokenExpiry();
                 

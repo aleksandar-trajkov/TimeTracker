@@ -2,7 +2,7 @@
 export { useSignInMutation } from './useSignInMutation';
 export { useRememberMeSignInMutation } from './useRememberMeSignInMutation';
 export type { 
-    SignInCredentials, 
+    SignInRequest as SignInCredentials, 
     TokenResponse, 
     UseSignInMutationProps, 
     UseRememberMeSignInMutationProps 

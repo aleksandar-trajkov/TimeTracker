@@ -1,4 +1,4 @@
-export interface SignInCredentials {
+export interface SignInRequest {
     email: string;
     password: string;
     rememberMe: boolean;

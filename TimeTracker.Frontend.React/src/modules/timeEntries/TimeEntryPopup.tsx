@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { TimeEntry, Category } from '../../apiCalls/timeEntries';
 import { formatDateTime } from '../../helpers/dateTime';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
 import { Input, Button } from '../../components/common';
 
 interface TimeEntryPopupProps {
-    isOpen: boolean;
     onClose: () => void;
     onSave: (timeEntry: Partial<TimeEntry>) => void;
     timeEntry?: TimeEntry | null;
@@ -18,33 +17,13 @@ interface FormData {
     categoryName: string;
 }
 
-const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave, timeEntry = null }) => {
-    const [formData, setFormData] = useState<FormData>({
-        description: '',
-        startTime: '',
-        endTime: '',
-        categoryName: '',
-    });
-
-    // Update form data when timeEntry prop changes
-    useEffect(() => {
-        if (timeEntry) {            
-            setFormData({
-                description: timeEntry.description,
-                startTime: formatDateTime(timeEntry.from),
-                endTime: timeEntry.to ? formatDateTime(timeEntry.to) : '',
-                categoryName: timeEntry.category?.name || '',
-            });
-        } else {
-            // Reset form for new entry
-            setFormData({
-                description: '',
-                startTime: '',
-                endTime: '',
-                categoryName: '',
-            });
-        }
-    }, [timeEntry, isOpen]);
+const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, onSave, timeEntry = null }) => {
+    const [formData, setFormData] = useState<FormData>(() => ({
+        description: timeEntry?.description || '',
+        startTime: timeEntry ? formatDateTime(timeEntry.from) : '',
+        endTime: timeEntry?.to ? formatDateTime(timeEntry.to) : '',
+        categoryName: timeEntry?.category?.name || '',
+    }));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -58,9 +37,9 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
         if (e) {
             e.preventDefault();
         }
-        
+
         // Create category object if category name is provided
-        const category: Category | null = formData.categoryName 
+        const category: Category | null = formData.categoryName
             ? { id: timeEntry?.category?.id || 0, name: formData.categoryName }
             : null;
 
@@ -76,15 +55,19 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
         onClose();
     };
 
-    if (!isOpen) return null;
+    if (!timeEntry) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="md">
-            <ModalHeader 
-                title={timeEntry ? 'Edit Time Entry' : 'Add Time Entry'} 
-                onClose={onClose} 
+        <Modal 
+            isOpen={true} 
+            onClose={onClose} 
+            size="md"
+        >
+            <ModalHeader
+                title={timeEntry ? 'Edit Time Entry' : 'Add Time Entry'}
+                onClose={onClose}
             />
-            
+
             <ModalBody>
                 <form onSubmit={handleSubmit}>
                     <Input
@@ -98,7 +81,7 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
                         required
                     />
 
-                    <div className="row">                        
+                    <div className="row">
                         <div className="col-md-6">
                             <Input
                                 id="categoryName"
@@ -130,7 +113,7 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
                                 />
                             </div>
                         </div>
-                        
+
                         <div className="col-md-6">
                             <div className="mb-3">
                                 <label htmlFor="endTime" className="form-label">End Time</label>
@@ -149,16 +132,16 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ isOpen, onClose, onSave
             </ModalBody>
 
             <ModalFooter>
-                <Button 
-                    type="button" 
-                    variant="secondary" 
+                <Button
+                    type="button"
+                    variant="secondary"
                     onClick={onClose}
                 >
                     Cancel
                 </Button>
-                <Button 
-                    type="submit" 
-                    variant="primary" 
+                <Button
+                    type="submit"
+                    variant="primary"
                     onClick={handleSubmit}
                 >
                     {timeEntry ? 'Update' : 'Save'}

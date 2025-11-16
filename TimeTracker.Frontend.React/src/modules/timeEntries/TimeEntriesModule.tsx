@@ -12,7 +12,6 @@ const TimeEntriesModule: React.FC = () => {
         to: getTomorrow(),
     });
     
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedTimeEntry, setSelectedTimeEntry] = useState<TimeEntry | null>(null);
 
     const { 
@@ -38,11 +37,9 @@ const TimeEntriesModule: React.FC = () => {
 
     const handleRowDoubleClick = (timeEntry: TimeEntry) => {
         setSelectedTimeEntry(timeEntry);
-        setIsPopupOpen(true);
     };
 
     const handlePopupClose = () => {
-        setIsPopupOpen(false);
         setSelectedTimeEntry(null);
     };
 
@@ -94,7 +91,6 @@ const TimeEntriesModule: React.FC = () => {
             </div>
         </div>
         <TimeEntryPopup 
-            isOpen={isPopupOpen}
             onClose={handlePopupClose}
             onSave={handlePopupSave}
             timeEntry={selectedTimeEntry}

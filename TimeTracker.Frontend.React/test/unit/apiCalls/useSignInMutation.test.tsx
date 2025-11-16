@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useSignInMutation } from '../../../src/apiCalls/auth/useSignInMutation'
-import type { SignInCredentials, TokenResponse } from '../../../src/apiCalls/auth/types'
+import type { SignInRequest, TokenResponse } from '../../../src/apiCalls/auth/types'
 import * as fetchHelpers from '../../../src/helpers/fetch'
 import * as tokenExpiry from '../../../src/helpers/tokenExpiry'
 import Cookies from 'js-cookie'
@@ -50,7 +50,7 @@ describe('useSignInMutation', () => {
     rememberMeToken: 'mock-remember-me-token'
   }
 
-  const mockCredentials: SignInCredentials = {
+  const mockCredentials: SignInRequest = {
     email: 'test@example.com',
     password: 'password123',
     rememberMe: true
