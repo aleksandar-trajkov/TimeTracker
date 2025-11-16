@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { TimeEntry, Category } from '../../apiCalls/timeEntries';
 import { formatDateTime } from '../../helpers/dateTime';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
@@ -24,6 +24,18 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, onSave, timeEn
         endTime: timeEntry?.to ? formatDateTime(timeEntry.to) : '',
         categoryName: timeEntry?.category?.name || '',
     }));
+
+    // Update form data when timeEntry prop changes
+    useEffect(() => {
+        if (timeEntry) {
+            setFormData({
+                description: timeEntry.description || '',
+                startTime: formatDateTime(timeEntry.from),
+                endTime: timeEntry.to ? formatDateTime(timeEntry.to) : '',
+                categoryName: timeEntry.category?.name || '',
+            });
+        }
+    }, [timeEntry]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
