@@ -1,49 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { TimeEntry, Category } from '../../apiCalls/timeEntries';
-import { formatDateTime } from '../../helpers/dateTime';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
 import { Input, Button } from '../../components/common';
+import { DateTimePicker } from '../../components/date';
 
 interface TimeEntryPopupProps {
     onClose: () => void;
-    onSave: (timeEntry: Partial<TimeEntry>) => void;
     timeEntry?: TimeEntry | null;
 }
 
 interface FormData {
     description: string;
-    startTime: string;
-    endTime: string;
+    from: Date | null;
+    to: Date | null;
     categoryName: string;
 }
 
-const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, onSave, timeEntry = null }) => {
+const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = null }) => {
     const [formData, setFormData] = useState<FormData>(() => ({
         description: timeEntry?.description || '',
-        startTime: timeEntry ? formatDateTime(timeEntry.from) : '',
-        endTime: timeEntry?.to ? formatDateTime(timeEntry.to) : '',
+        from: timeEntry?.from || null,
+        to: timeEntry?.to || null,
         categoryName: timeEntry?.category?.name || '',
     }));
-
-    // Update form data when timeEntry prop changes
-    useEffect(() => {
-        if (timeEntry) {
-            setFormData({
-                description: timeEntry.description || '',
-                startTime: formatDateTime(timeEntry.from),
-                endTime: timeEntry.to ? formatDateTime(timeEntry.to) : '',
-                categoryName: timeEntry.category?.name || '',
-            });
-        }
-    }, [timeEntry]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
 
     const handleSubmit = (e?: React.FormEvent) => {
         if (e) {
@@ -58,12 +37,14 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, onSave, timeEn
         const timeEntryData: Partial<TimeEntry> = {
             id: timeEntry?.id,
             description: formData.description,
-            from: new Date(`${formData.startTime}`),
-            to: new Date(`${formData.endTime}`),
+            from: formData.from || new Date(),
+            to: formData.to || new Date(),
             category,
         };
 
-        onSave(timeEntryData);
+        // TODO: Implement save functionality
+        console.log('Saving time entry:', timeEntryData);
+
         onClose();
     };
 
@@ -109,35 +90,29 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, onSave, timeEn
                     </div>
 
                     <div className="row">
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label htmlFor="startTime" className="form-label">
-                                    Start Time <span className="text-danger ms-1">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="startTime"
-                                    name="startTime"
-                                    className="form-control"
-                                    value={formData.startTime}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
+                        <div className="col-md">
+                            <DateTimePicker
+                                id="from"
+                                name="from"
+                                label="Start Time"
+                                value={formData.from}
+                                onChange={(date) => setFormData(prev => ({ ...prev, from: date }))}
+                                required
+                                containerClassName="mb-3"
+                            />
                         </div>
+                        </div>
+                        <div className="row">
 
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label htmlFor="endTime" className="form-label">End Time</label>
-                                <input
-                                    type="text"
-                                    id="endTime"
-                                    name="endTime"
-                                    className="form-control"
-                                    value={formData.endTime}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
+                        <div className="col-md">
+                            <DateTimePicker
+                                id="to"
+                                name="to"
+                                label="End Time"
+                                value={formData.to}
+                                onChange={(date) => setFormData(prev => ({ ...prev, to: date }))}
+                                containerClassName="mb-3"
+                            />
                         </div>
                     </div>
                 </form>

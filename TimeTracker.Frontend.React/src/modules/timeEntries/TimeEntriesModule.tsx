@@ -43,12 +43,6 @@ const TimeEntriesModule: React.FC = () => {
         setSelectedTimeEntry(null);
     };
 
-    const handlePopupSave = (timeEntryData: Partial<TimeEntry>) => {
-        // TODO: Implement save functionality
-        console.log('Saving time entry:', timeEntryData);
-        // Here you would typically call an API to save the time entry
-    };
-
     const timeEntries = data || [];
 
     return (
@@ -91,8 +85,8 @@ const TimeEntriesModule: React.FC = () => {
             </div>
         </div>
         <TimeEntryPopup 
+            key={selectedTimeEntry?.id || 'new'}
             onClose={handlePopupClose}
-            onSave={handlePopupSave}
             timeEntry={selectedTimeEntry}
         />
         </React.Fragment>
