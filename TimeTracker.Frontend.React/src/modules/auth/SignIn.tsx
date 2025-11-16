@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { Input, Checkbox, Button } from '../../components/common';
-import isTokenValid from '../../helpers/tokenCheck';
+import isTokenValid from '../../helpers/token';
 import { useSignInMutation, useRememberMeSignInMutation } from '../../apiCalls/auth'; 
 
 interface SignInProps {

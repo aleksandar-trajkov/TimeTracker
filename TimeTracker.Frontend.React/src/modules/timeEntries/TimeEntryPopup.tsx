@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import type { TimeEntry, Category } from '../../apiCalls/timeEntries';
+import type { TimeEntry } from '../../apiCalls/timeEntries';
+import type { Category } from '../../apiCalls/categories';
+import { useCategoriesQuery } from '../../apiCalls/categories';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
-import { Input, Button } from '../../components/common';
+import { Input, Button, Dropdown } from '../../components/common';
 import { DateTimePicker } from '../../components/date';
 
 interface TimeEntryPopupProps {
@@ -13,15 +15,17 @@ interface FormData {
     description: string;
     from: Date | null;
     to: Date | null;
-    categoryName: string;
+    categoryId: string;
 }
 
 const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = null }) => {
+    const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery();
+    
     const [formData, setFormData] = useState<FormData>(() => ({
         description: timeEntry?.description || '',
         from: timeEntry?.from || null,
         to: timeEntry?.to || null,
-        categoryName: timeEntry?.category?.name || '',
+        categoryId: timeEntry?.category?.id || '',
     }));
 
     const handleSubmit = (e?: React.FormEvent) => {
@@ -29,9 +33,9 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
             e.preventDefault();
         }
 
-        // Create category object if category name is provided
-        const category: Category | null = formData.categoryName
-            ? { id: timeEntry?.category?.id || 0, name: formData.categoryName }
+        // Find the complete category object from the loaded categories
+        const category: Category | null = formData.categoryId
+            ? categories.find(cat => cat.id === formData.categoryId) || null
             : null;
 
         const timeEntryData: Partial<TimeEntry> = {
@@ -76,16 +80,26 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
 
                     <div className="row">
                         <div className="col-md-6">
-                            <Input
-                                id="categoryName"
-                                name="categoryName"
-                                type="text"
+                            <Dropdown
+                                id="categoryId"
+                                name="categoryId"
                                 label="Category"
-                                value={formData.categoryName}
-                                onChange={(value) => setFormData(prev => ({ ...prev, categoryName: value }))}
-                                placeholder="Category name"
+                                value={formData.categoryId}
+                                options={categories.map(category => ({
+                                    value: category.id,
+                                    label: category.name
+                                }))}
+                                onChange={(value) => setFormData(prev => ({ ...prev, categoryId: String(value) }))}
+                                placeholder="Select a category"
+                                disabled={categoriesLoading}
+                                allowEmpty={true}
                                 containerClassName="mb-3"
                             />
+                            {categoriesError && (
+                                <div className="text-danger small">
+                                    Failed to load categories
+                                </div>
+                            )}
                         </div>
                     </div>
 

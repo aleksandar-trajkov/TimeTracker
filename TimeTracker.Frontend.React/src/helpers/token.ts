@@ -1,3 +1,25 @@
+import { jwtDecode, type JwtPayload } from 'jwt-decode';
+
+/**
+ * Check if a JWT token is expired
+ * @param token - JWT token string to validate
+ * @returns true if token is expired, false if valid
+ * @throws Error if invalid token provided
+ */
+const isTokenValid = (token : string) => {
+    if (typeof(token) !== 'string' || !token || !token.trim()) throw new Error('Invalid token provided');
+
+  let isJwtExpired = false;
+  const { exp } = jwtDecode<JwtPayload>(token);
+  const currentTime = new Date().getTime() / 1000;
+
+  if (typeof exp === 'number' && currentTime >= exp) {
+    isJwtExpired = true;
+  }
+
+  return isJwtExpired;
+};
+
 /**
  * Calculate token expiry in days based on environment variable
  * @param defaultHours - Default expiry hours if environment variable is not set
@@ -16,3 +38,5 @@ export const calculateTokenExpiry = (defaultHours: number = 2): number => {
 export const getRememberMeExpiry = (): number => {
     return 14; // 14 days for remember me tokens
 };
+
+export default isTokenValid;

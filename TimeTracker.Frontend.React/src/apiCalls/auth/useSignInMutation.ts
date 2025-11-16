@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executePost } from '../../helpers/fetch';
-import { calculateTokenExpiry, getRememberMeExpiry } from '../../helpers/tokenExpiry';
+import { calculateTokenExpiry, getRememberMeExpiry } from '../../helpers/token';
 import type { SignInRequest, TokenResponse, UseSignInMutationProps } from './types';
 
 // Hook for sign in mutation

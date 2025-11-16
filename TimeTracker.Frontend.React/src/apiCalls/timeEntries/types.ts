@@ -1,14 +1,11 @@
+import type { Category } from '../categories';
+
 export interface TimeEntry {
-    id: number;
+    id: string;
     description: string;
     from: Date; // ISO date string
     to: Date; // ISO date string
     category: Category | null;
-}
-
-export interface Category {
-    id: number;
-    name: string;
 }
 
 export interface TimeEntriesQueryParams {
@@ -17,7 +14,7 @@ export interface TimeEntriesQueryParams {
 }
 
 export const createBlankTimeEntry = (): TimeEntry => ({
-    id: 0,
+    id: '',
     description: '',
     from: new Date(),
     to: new Date(),

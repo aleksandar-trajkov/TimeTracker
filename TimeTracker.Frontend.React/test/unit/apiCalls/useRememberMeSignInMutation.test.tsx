@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useRememberMeSignInMutation } from '../../../src/apiCalls/auth/useRememberMeSignInMutation'
 import type { TokenResponse } from '../../../src/apiCalls/auth/types'
 import * as fetchHelpers from '../../../src/helpers/fetch'
-import * as tokenExpiry from '../../../src/helpers/tokenExpiry'
+import * as tokenExpiry from '../../../src/helpers/token'
 import Cookies from 'js-cookie'
 
 // Mock the dependencies
@@ -12,9 +12,10 @@ vi.mock('../../../src/helpers/fetch', () => ({
   executePost: vi.fn()
 }))
 
-vi.mock('../../../src/helpers/tokenExpiry', () => ({
+vi.mock('../../../src/helpers/tokenCheck', () => ({
   calculateTokenExpiry: vi.fn(),
-  getRememberMeExpiry: vi.fn()
+  getRememberMeExpiry: vi.fn(),
+  default: vi.fn()
 }))
 
 vi.mock('js-cookie', () => ({
