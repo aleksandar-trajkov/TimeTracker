@@ -3,15 +3,16 @@ import Cookies from 'js-cookie';
 import { executeGet } from '../../helpers/fetch';
 import type { Category } from './types';
 
-const useCategoriesQuery = () => {
+const useCategoriesQuery = (organizationId: string) => {
     return useQuery({
-        queryKey: ['categories'],
+        queryKey: ['categories', organizationId],
         queryFn: async (): Promise<Category[]> => {
             const token = Cookies.get('token');
-            const url = `${import.meta.env.VITE_BASE_URL}/v1/categories?organizationId=F5D9445E-1C65-4CD9-8B95-44F886049FE5`;
+            const url = `${import.meta.env.VITE_BASE_URL}/v1/categories?organizationId=${organizationId}`;
             
             return await executeGet<Category[]>(url, token);
-        }
+        },
+        enabled: !!organizationId, // Only run query if organizationId is provided
     });
 };
 

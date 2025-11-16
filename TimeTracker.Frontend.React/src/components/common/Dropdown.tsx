@@ -35,7 +35,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     className = '',
     containerClassName = 'mb-3',
     allowEmpty = false,
-    emptyOptionLabel = 'Select an option...'
+    emptyOptionLabel = '- Select an option -'
 }) => {
     // Internal onChange handler that extracts the value
     const handleInternalChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

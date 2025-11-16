@@ -23,8 +23,8 @@ describe('TimePicker Component', () => {
       render(<TimePicker {...defaultProps} />)
       
       expect(screen.getByText('Test Time')).toBeInTheDocument()
-      expect(screen.getByText('Hours')).toBeInTheDocument()
-      expect(screen.getByText('Minutes')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('14')).toBeInTheDocument() // Hour select (14 = 2 PM)
+      expect(screen.getByDisplayValue('30')).toBeInTheDocument() // Minute select
     })
 
     it('renders hour and minute dropdowns with correct attributes', () => {
@@ -313,15 +313,18 @@ describe('TimePicker Component', () => {
     it('provides descriptive text for hour and minute selects', () => {
       render(<TimePicker {...defaultProps} />)
       
-      expect(screen.getByText('Hours')).toBeInTheDocument()
-      expect(screen.getByText('Minutes')).toBeInTheDocument()
+      const hourSelect = screen.getByDisplayValue('14')
+      const minuteSelect = screen.getByDisplayValue('30')
+      
+      expect(hourSelect).toBeInTheDocument()
+      expect(minuteSelect).toBeInTheDocument()
     })
 
     it('uses proper Bootstrap grid layout for responsive design', () => {
       render(<TimePicker {...defaultProps} />)
       
-      const hourContainer = screen.getByText('Hours').closest('.col-6')
-      const minuteContainer = screen.getByText('Minutes').closest('.col-6')
+      const hourContainer = screen.getByDisplayValue('14').closest('.col-6')
+      const minuteContainer = screen.getByDisplayValue('30').closest('.col-6')
       
       expect(hourContainer).toBeInTheDocument()
       expect(minuteContainer).toBeInTheDocument()

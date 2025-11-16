@@ -101,7 +101,6 @@ const TimePicker: React.FC<TimePickerProps> = ({
                             </option>
                         ))}
                     </select>
-                    <small className="text-muted">Hours</small>
                 </div>
                 <div className="col-6">
                     <select
@@ -119,7 +118,6 @@ const TimePicker: React.FC<TimePickerProps> = ({
                             </option>
                         ))}
                     </select>
-                    <small className="text-muted">Minutes</small>
                 </div>
             </div>
         </div>

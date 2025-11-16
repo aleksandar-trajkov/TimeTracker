@@ -12,7 +12,7 @@ vi.mock('../../../src/helpers/fetch', () => ({
   executePost: vi.fn()
 }))
 
-vi.mock('../../../src/helpers/tokenCheck', () => ({
+vi.mock('../../../src/helpers/token', () => ({
   calculateTokenExpiry: vi.fn(),
   getRememberMeExpiry: vi.fn(),
   default: vi.fn()

@@ -68,7 +68,7 @@ describe('Dropdown Component', () => {
     it('renders empty option when allowEmpty is true', () => {
       render(<Dropdown {...defaultProps} allowEmpty />)
       
-      expect(screen.getByText('Select an option...')).toBeInTheDocument()
+      expect(screen.getByText('- Select an option -')).toBeInTheDocument()
     })
 
     it('renders custom empty option label', () => {

@@ -19,7 +19,7 @@ interface FormData {
 }
 
 const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = null }) => {
-    const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery();
+    const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery("F5D9445E-1C65-4CD9-8B95-44F886049FE5");
     
     const [formData, setFormData] = useState<FormData>(() => ({
         description: timeEntry?.description || '',
@@ -75,7 +75,6 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                         value={formData.description}
                         onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
                         placeholder="Enter task description"
-                        required
                     />
 
                     <div className="row">
@@ -90,9 +89,10 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                                     label: category.name
                                 }))}
                                 onChange={(value) => setFormData(prev => ({ ...prev, categoryId: String(value) }))}
-                                placeholder="Select a category"
+                                placeholder="- Select a category -"
                                 disabled={categoriesLoading}
                                 allowEmpty={true}
+                                required
                                 containerClassName="mb-3"
                             />
                             {categoriesError && (
@@ -125,6 +125,7 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                                 label="End Time"
                                 value={formData.to}
                                 onChange={(date) => setFormData(prev => ({ ...prev, to: date }))}
+                                required
                                 containerClassName="mb-3"
                             />
                         </div>
