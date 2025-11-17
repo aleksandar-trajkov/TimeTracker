@@ -5,6 +5,7 @@ import { useCategoriesQuery } from '../../apiCalls/categories';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
 import { Input, Button, Dropdown } from '../../components/common';
 import { DateTimePicker } from '../../components/date';
+import useUserStore from '../../stores/userStore';
 
 interface TimeEntryPopupProps {
     onClose: () => void;
@@ -19,7 +20,8 @@ interface FormData {
 }
 
 const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = null }) => {
-    const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery("F5D9445E-1C65-4CD9-8B95-44F886049FE5");
+    const organizationId = useUserStore(state => state.user?.organizationId);
+    const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery(organizationId || '');
     
     const [formData, setFormData] = useState<FormData>(() => ({
         description: timeEntry?.description || '',

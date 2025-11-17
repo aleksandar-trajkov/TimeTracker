@@ -1,4 +1,5 @@
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
+import type { User } from '../types/User';
 
 /**
  * Check if a JWT token is expired
@@ -18,6 +19,28 @@ const isTokenValid = (token : string) => {
   }
 
   return isJwtExpired;
+};
+
+interface UserJwtPayload {
+  sub: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  organizationId: string;
+}
+export const getTokenUserDetails = (token: string): User | null => {
+    try {
+        const decoded = jwtDecode<UserJwtPayload>(token);
+        return {
+          id: decoded.sub,
+          email: decoded.email,
+          firstName: decoded.firstName,
+          lastName: decoded.lastName,
+          organizationId: decoded.organizationId
+        };
+    } catch (error) {
+        return null;
+    }
 };
 
 /**
