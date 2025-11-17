@@ -38,7 +38,7 @@ export const getTokenUserDetails = (token: string): User | null => {
           lastName: decoded.lastName,
           organizationId: decoded.organizationId
         };
-    } catch (error) {
+    } catch {
         return null;
     }
 };

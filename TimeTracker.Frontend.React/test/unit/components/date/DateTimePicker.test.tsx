@@ -134,8 +134,9 @@ describe('DateTimePicker Component', () => {
       
       render(<DateTimePicker {...defaultProps} value={null} onChange={mockOnChange} />)
       
-      // Find the date input by type attribute
-      const dateInput = screen.getByDisplayValue('2025-11-16') // Today's date
+      // Find the date input by type attribute - use current date
+      const today = new Date().toISOString().split('T')[0]
+      const dateInput = screen.getByDisplayValue(today)
       await user.clear(dateInput)
       await user.type(dateInput, '2023-11-10')
       
@@ -335,7 +336,8 @@ describe('DateTimePicker Component', () => {
       render(<DateTimePicker {...defaultProps} value={null} />)
       
       // Date picker shows today's date when value is null (due to fallback in DatePicker)
-      const dateInput = screen.getByDisplayValue('2025-11-16') // Today's date
+      const today = new Date().toISOString().split('T')[0]
+      const dateInput = screen.getByDisplayValue(today)
       expect(dateInput).toBeInTheDocument()
       
       // Time picker should show default values
@@ -349,8 +351,8 @@ describe('DateTimePicker Component', () => {
       render(<DateTimePicker {...defaultProps} value={null} />)
       
       // DatePicker component uses current date as fallback when value is null
-      const dateInput = screen.getByDisplayValue('2025-11-16') // Today's date
       const today = new Date().toISOString().split('T')[0]
+      const dateInput = screen.getByDisplayValue(today)
       expect(dateInput).toHaveValue(today)
     })
   })

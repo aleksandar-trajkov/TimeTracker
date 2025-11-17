@@ -15,6 +15,7 @@ vi.mock('../../../src/helpers/fetch', () => ({
 vi.mock('../../../src/helpers/token', () => ({
   calculateTokenExpiry: vi.fn(),
   getRememberMeExpiry: vi.fn(),
+  getTokenUserDetails: vi.fn(),
   default: vi.fn()
 }))
 
@@ -22,6 +23,15 @@ vi.mock('js-cookie', () => ({
   default: {
     set: vi.fn(),
     remove: vi.fn()
+  }
+}))
+
+// Mock user store
+vi.mock('../../../src/stores/userStore', () => ({
+  default: {
+    getState: () => ({
+      setUser: vi.fn()
+    })
   }
 }))
 
