@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useSignInMutation } from '../../../src/apiCalls/auth/useSignInMutation'
-import type { SignInRequest, TokenResponse } from '../../../src/apiCalls/auth/types'
-import * as fetchHelpers from '../../../src/helpers/fetch'
-import * as tokenExpiry from '../../../src/helpers/token'
+import { useSignInMutation } from '../../../../src/apiCalls/auth/useSignInMutation'
+import type { SignInRequest, TokenResponse } from '../../../../src/apiCalls/auth/types'
+import * as fetchHelpers from '../../../../src/helpers/fetch'
+import * as tokenExpiry from '../../../../src/helpers/token'
 import Cookies from 'js-cookie'
 
 // Mock the dependencies
-vi.mock('../../../src/helpers/fetch', () => ({
+vi.mock('../../../../src/helpers/fetch', () => ({
   executePost: vi.fn()
 }))
 
-vi.mock('../../../src/helpers/token', () => ({
+vi.mock('../../../../src/helpers/token', () => ({
   calculateTokenExpiry: vi.fn(),
   getRememberMeExpiry: vi.fn(),
   getTokenUserDetails: vi.fn(),
@@ -27,7 +27,7 @@ vi.mock('js-cookie', () => ({
 }))
 
 // Mock user store
-vi.mock('../../../src/stores/userStore', () => ({
+vi.mock('../../../../src/stores/userStore', () => ({
   default: {
     getState: () => ({
       setUser: vi.fn()

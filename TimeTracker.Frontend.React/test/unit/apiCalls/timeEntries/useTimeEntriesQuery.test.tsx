@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useTimeEntriesQuery } from '../../../src/apiCalls/timeEntries'
-import * as fetchHelpers from '../../../src/helpers/fetch'
+import { useTimeEntriesQuery } from '../../../../src/apiCalls/timeEntries'
+import * as fetchHelpers from '../../../../src/helpers/fetch'
 
 // Mock the fetch helpers
-vi.mock('../../../src/helpers/fetch', () => ({
+vi.mock('../../../../src/helpers/fetch', () => ({
   executeGet: vi.fn()
 }))
 

@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useRememberMeSignInMutation } from '../../../src/apiCalls/auth/useRememberMeSignInMutation'
-import type { TokenResponse } from '../../../src/apiCalls/auth/types'
-import * as fetchHelpers from '../../../src/helpers/fetch'
-import * as tokenExpiry from '../../../src/helpers/token'
+import { useRememberMeSignInMutation } from '../../../../src/apiCalls/auth/useRememberMeSignInMutation'
+import type { TokenResponse } from '../../../../src/apiCalls/auth/types'
+import * as fetchHelpers from '../../../../src/helpers/fetch'
+import * as token from '../../../../src/helpers/token'
 import Cookies from 'js-cookie'
 
 // Mock the dependencies
-vi.mock('../../../src/helpers/fetch', () => ({
+vi.mock('../../../../src/helpers/fetch', () => ({
   executePost: vi.fn()
 }))
 
-vi.mock('../../../src/helpers/token', () => ({
+vi.mock('../../../../src/helpers/token', () => ({
   calculateTokenExpiry: vi.fn(),
   getRememberMeExpiry: vi.fn(),
   default: vi.fn()
@@ -55,8 +55,8 @@ describe('useRememberMeSignInMutation', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(tokenExpiry.calculateTokenExpiry).mockReturnValue(7)
-    vi.mocked(tokenExpiry.getRememberMeExpiry).mockReturnValue(30)
+    vi.mocked(token.calculateTokenExpiry).mockReturnValue(7)
+    vi.mocked(token.getRememberMeExpiry).mockReturnValue(30)
   })
 
   it('should call executePost with correct parameters', async () => {
@@ -155,7 +155,7 @@ describe('useRememberMeSignInMutation', () => {
 
   it('should use calculated token expiry', async () => {
     const customTokenExpiry = 14
-    vi.mocked(tokenExpiry.calculateTokenExpiry).mockReturnValue(customTokenExpiry)
+    vi.mocked(token.calculateTokenExpiry).mockReturnValue(customTokenExpiry)
     vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
 
     const { result } = renderHook(() => useRememberMeSignInMutation({ setIsSignedIn: mockSetIsSignedIn }), {
@@ -168,13 +168,13 @@ describe('useRememberMeSignInMutation', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(tokenExpiry.calculateTokenExpiry).toHaveBeenCalled()
+    expect(token.calculateTokenExpiry).toHaveBeenCalled()
     expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: customTokenExpiry })
   })
 
   it('should use calculated remember me expiry', async () => {
     const customRememberMeExpiry = 60
-    vi.mocked(tokenExpiry.getRememberMeExpiry).mockReturnValue(customRememberMeExpiry)
+    vi.mocked(token.getRememberMeExpiry).mockReturnValue(customRememberMeExpiry)
     vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
 
     const { result } = renderHook(() => useRememberMeSignInMutation({ setIsSignedIn: mockSetIsSignedIn }), {
@@ -187,7 +187,7 @@ describe('useRememberMeSignInMutation', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(tokenExpiry.getRememberMeExpiry).toHaveBeenCalled()
+    expect(token.getRememberMeExpiry).toHaveBeenCalled()
     expect(Cookies.set).toHaveBeenCalledWith('rememberMe', 'new-remember-me-token', { expires: customRememberMeExpiry })
   })
 
