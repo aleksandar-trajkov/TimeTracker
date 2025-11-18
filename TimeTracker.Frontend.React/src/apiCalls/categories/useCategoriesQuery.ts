@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executeGet } from '../../helpers/fetch';
-import type { Category } from './types';
+import type { Category } from '../../types/Category';
 
 const useCategoriesQuery = (organizationId: string) => {
     return useQuery({

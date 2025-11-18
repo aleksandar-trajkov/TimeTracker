@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executeGet } from '../../helpers/fetch';
-import type { TimeEntry, TimeEntriesQueryParams } from './types';
+import type { TimeEntriesQueryParams } from './types';
 import { formatDate } from '../../helpers/dateTime';
+import type { TimeEntry } from '../../types/TimeEntry';
 
 const useTimeEntriesQuery = (params: TimeEntriesQueryParams) => {
     return useQuery({

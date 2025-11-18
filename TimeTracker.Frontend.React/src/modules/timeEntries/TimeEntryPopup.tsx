@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import type { TimeEntry } from '../../apiCalls/timeEntries';
-import type { Category } from '../../apiCalls/categories';
+import type { TimeEntry } from '../../types/TimeEntry';
+import type { Category } from '../../types/Category';
 import { useCategoriesQuery } from '../../apiCalls/categories';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
 import { Input, Button, Dropdown } from '../../components/common';

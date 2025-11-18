@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useTimeEntriesQuery } from '../../apiCalls/timeEntries';
-import type { TimeEntriesQueryParams, TimeEntry } from '../../apiCalls/timeEntries';
+import type { TimeEntriesQueryParams } from '../../apiCalls/timeEntries';
 import { ScheduleList } from '../../components/schedule';
 import { DatePicker } from '../../components/date';
 import { addDays, getToday, getTomorrow } from '../../helpers/dateTime';
 import TimeEntryPopup from './TimeEntryPopup';
+import type { TimeEntry } from '../../types/TimeEntry';
 
 const TimeEntriesModule: React.FC = () => {
     const [queryParams, setQueryParams] = useState<TimeEntriesQueryParams>({
