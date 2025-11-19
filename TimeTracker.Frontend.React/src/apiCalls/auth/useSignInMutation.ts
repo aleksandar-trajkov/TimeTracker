@@ -16,9 +16,9 @@ export const useSignInMutation = ({ setIsSignedIn }: UseSignInMutationProps) => 
                 const tokenExpiryDays = calculateTokenExpiry();
                 
                 Cookies.set('token', tokenResponse.token, { expires: tokenExpiryDays });
-                const decoded = getTokenUserDetails(tokenResponse.token);
-                if (decoded) {
-                    useUserStore.getState().setUser(decoded);
+                const decodedUser = getTokenUserDetails(tokenResponse.token);
+                if (decodedUser) {
+                    useUserStore.getState().setUser(decodedUser);
                 }
                 if (variables.rememberMe && tokenResponse.rememberMeToken) {
                     Cookies.set('rememberMe', tokenResponse.rememberMeToken, { expires: getRememberMeExpiry() });

@@ -5,6 +5,7 @@ import { useRememberMeSignInMutation } from '../../../../src/apiCalls/auth/useRe
 import type { TokenResponse } from '../../../../src/apiCalls/auth/types'
 import * as fetchHelpers from '../../../../src/helpers/fetch'
 import * as token from '../../../../src/helpers/token'
+import useUserStore from '../../../../src/stores/userStore'
 import Cookies from 'js-cookie'
 
 // Mock the dependencies
@@ -15,6 +16,7 @@ vi.mock('../../../../src/helpers/fetch', () => ({
 vi.mock('../../../../src/helpers/token', () => ({
   calculateTokenExpiry: vi.fn(),
   getRememberMeExpiry: vi.fn(),
+  getTokenUserDetails: vi.fn(),
   default: vi.fn()
 }))
 
@@ -22,6 +24,14 @@ vi.mock('js-cookie', () => ({
   default: {
     set: vi.fn(),
     remove: vi.fn()
+  }
+}))
+
+vi.mock('../../../../src/stores/userStore', () => ({
+  default: {
+    getState: vi.fn(() => ({
+      setUser: vi.fn()
+    }))
   }
 }))
 
@@ -46,9 +56,18 @@ const createWrapper = () => {
 
 describe('useRememberMeSignInMutation', () => {
   const mockSetIsSignedIn = vi.fn()
+  const mockSetUser = vi.fn()
   const mockTokenResponse: TokenResponse = {
     token: 'mock-jwt-token',
     rememberMeToken: 'new-remember-me-token'
+  }
+
+  const mockUser = {
+    id: 'user-id',
+    email: 'test@example.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    organizationId: 'org-id'
   }
 
   const mockRememberMeToken = 'existing-remember-me-token'
@@ -57,6 +76,10 @@ describe('useRememberMeSignInMutation', () => {
     vi.clearAllMocks()
     vi.mocked(token.calculateTokenExpiry).mockReturnValue(7)
     vi.mocked(token.getRememberMeExpiry).mockReturnValue(30)
+    vi.mocked(token.getTokenUserDetails).mockReturnValue(mockUser)
+    vi.mocked(useUserStore.getState).mockReturnValue({
+      setUser: mockSetUser
+    } as any)
   })
 
   it('should call executePost with correct parameters', async () => {
@@ -91,6 +114,8 @@ describe('useRememberMeSignInMutation', () => {
 
     expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: 7 })
     expect(Cookies.set).toHaveBeenCalledWith('rememberMe', 'new-remember-me-token', { expires: 30 })
+    expect(token.getTokenUserDetails).toHaveBeenCalledWith('mock-jwt-token')
+    expect(mockSetUser).toHaveBeenCalledWith(mockUser)
     expect(mockSetIsSignedIn).toHaveBeenCalledWith(true)
   })
 
@@ -110,6 +135,8 @@ describe('useRememberMeSignInMutation', () => {
 
     expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: 7 })
     expect(Cookies.set).not.toHaveBeenCalledWith('rememberMe', expect.any(String), expect.any(Object))
+    expect(token.getTokenUserDetails).toHaveBeenCalledWith('mock-jwt-token')
+    expect(mockSetUser).toHaveBeenCalledWith(mockUser)
     expect(mockSetIsSignedIn).toHaveBeenCalledWith(true)
   })
 
@@ -150,6 +177,8 @@ describe('useRememberMeSignInMutation', () => {
     })
 
     expect(Cookies.set).not.toHaveBeenCalled()
+    expect(token.getTokenUserDetails).not.toHaveBeenCalled()
+    expect(mockSetUser).not.toHaveBeenCalled()
     expect(mockSetIsSignedIn).not.toHaveBeenCalled()
   })
 
@@ -236,6 +265,29 @@ describe('useRememberMeSignInMutation', () => {
 
     // Should not set cookies or call setIsSignedIn when token is empty
     expect(Cookies.set).not.toHaveBeenCalled()
+    expect(token.getTokenUserDetails).not.toHaveBeenCalled()
+    expect(mockSetUser).not.toHaveBeenCalled()
     expect(mockSetIsSignedIn).not.toHaveBeenCalled()
+  })
+
+  it('should handle token that cannot be decoded', async () => {
+    vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
+    vi.mocked(token.getTokenUserDetails).mockReturnValue(null) // Token cannot be decoded
+
+    const { result } = renderHook(() => useRememberMeSignInMutation({ setIsSignedIn: mockSetIsSignedIn }), {
+      wrapper: createWrapper(),
+    })
+
+    result.current.mutate(mockRememberMeToken)
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
+    })
+
+    expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: 7 })
+    expect(Cookies.set).toHaveBeenCalledWith('rememberMe', 'new-remember-me-token', { expires: 30 })
+    expect(token.getTokenUserDetails).toHaveBeenCalledWith('mock-jwt-token')
+    expect(mockSetUser).not.toHaveBeenCalled() // Should not be called if token cannot be decoded
+    expect(mockSetIsSignedIn).toHaveBeenCalledWith(true)
   })
 })
