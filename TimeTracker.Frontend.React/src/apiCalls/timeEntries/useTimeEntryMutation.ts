@@ -67,7 +67,7 @@ export const useTimeEntryMutation = ({ onSuccess, onError }: UseTimeEntryMutatio
             const isUpdate = !!variables.id;
             showNotification.error(
                 isUpdate ? 'Failed to update time entry' : 'Failed to create time entry',
-                'Please try again. If the problem persists, contact support.'
+                error.message
             );
             
             if (onError) {

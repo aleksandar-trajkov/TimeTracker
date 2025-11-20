@@ -57,6 +57,62 @@ describe('fetch helpers', () => {
         await expect(executeFetch(TEST_URL, 'GET'))
           .rejects.toThrow('Network error')
       })
+
+      it('should throw error for HTTP status 400 and above', async () => {
+        const mockResponse = { 
+          status: 400, 
+          statusText: 'Bad Request',
+          clone: vi.fn().mockReturnValue({
+            json: vi.fn().mockRejectedValue(new Error('Invalid JSON'))
+          })
+        }
+        mockFetch.mockResolvedValue(mockResponse)
+
+        await expect(executeFetch(TEST_URL, 'GET'))
+          .rejects.toThrow('HTTP Error 400: Bad Request')
+      })
+
+      it('should throw error with custom message from response body', async () => {
+        const mockResponse = { 
+          status: 422, 
+          statusText: 'Unprocessable Entity',
+          clone: vi.fn().mockReturnValue({
+            json: vi.fn().mockResolvedValue({ message: 'Invalid data provided' })
+          })
+        }
+        mockFetch.mockResolvedValue(mockResponse)
+
+        await expect(executeFetch(TEST_URL, 'POST', {}))
+          .rejects.toThrow('Invalid data provided')
+      })
+
+      it('should throw error with error field from response body', async () => {
+        const mockResponse = { 
+          status: 500, 
+          statusText: 'Internal Server Error',
+          clone: vi.fn().mockReturnValue({
+            json: vi.fn().mockResolvedValue({ error: 'Database connection failed' })
+          })
+        }
+        mockFetch.mockResolvedValue(mockResponse)
+
+        const error = await executeFetch(TEST_URL, 'GET').catch(e => e)
+        expect(error.message).toBe('Database connection failed')
+        expect(error.status).toBe(500)
+        expect(error.statusText).toBe('Internal Server Error')
+      })
+
+      it('should not throw error for HTTP status below 400', async () => {
+        const mockResponse = { 
+          status: 200, 
+          statusText: 'OK',
+          ok: true
+        }
+        mockFetch.mockResolvedValue(mockResponse)
+
+        const result = await executeFetch(TEST_URL, 'GET')
+        expect(result).toBe(mockResponse)
+      })
     })
 
     describe('authentication', () => {

@@ -26,9 +26,6 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
     const timeEntryMutation = useTimeEntryMutation({
         onSuccess: () => {
             onClose();
-        },
-        onError: (error) => {
-            console.error('Failed to save time entry:', error);
         }
     });
     
@@ -139,12 +136,6 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                         </div>
                     </div>
                 </form>
-                
-                {timeEntryMutation.error && (
-                    <div className="alert alert-danger mt-3">
-                        Failed to save time entry. Please try again.
-                    </div>
-                )}
             </ModalBody>
 
             <ModalFooter>
