@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Layout from './Layout';
 import Loading from './Loading';
+import { ToastContainer } from './components/notifications';
 import React from 'react';
 
 // Lazy load modules for better performance
@@ -44,6 +45,7 @@ const App: React.FC = () => {
             </Layout>
         )}
       </Suspense>
+      <ToastContainer />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )

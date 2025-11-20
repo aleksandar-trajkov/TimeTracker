@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executePost, executePut } from '../../helpers/fetch';
+import { showNotification } from '../../stores/notificationStore';
 import type { TimeEntry } from '../../types/TimeEntry';
 
 export interface TimeEntryMutationData {
@@ -49,14 +50,26 @@ export const useTimeEntryMutation = ({ onSuccess, onError }: UseTimeEntryMutatio
                 );
             }
         },
-        onSuccess: (data: TimeEntry) => {
+        onSuccess: (data: TimeEntry, variables: TimeEntryMutationData) => {
             queryClient.invalidateQueries({ queryKey: ['timeEntries'] });
+            
+            const isUpdate = !!variables.id;
+            showNotification.success(
+                isUpdate ? 'Time entry updated' : 'Time entry created',
+                isUpdate ? 'Your time entry has been successfully updated.' : 'Your time entry has been successfully created.'
+            );
             
             if (onSuccess) {
                 onSuccess(data);
             }
         },
-        onError: (error: Error) => {
+        onError: (error: Error, variables: TimeEntryMutationData) => {
+            const isUpdate = !!variables.id;
+            showNotification.error(
+                isUpdate ? 'Failed to update time entry' : 'Failed to create time entry',
+                'Please try again. If the problem persists, contact support.'
+            );
+            
             if (onError) {
                 onError(error);
             }

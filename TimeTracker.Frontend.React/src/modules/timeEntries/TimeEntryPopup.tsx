@@ -33,7 +33,6 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
     });
     
     const [formData, setFormData] = useState<FormData>(() => ({
-        id: timeEntry?.id || '',
         description: timeEntry?.description || '',
         from: timeEntry?.from || null,
         to: timeEntry?.to || null,
