@@ -34,8 +34,6 @@ public class UpdateTimeEntryValidator : AbstractValidator<UpdateTimeEntryHandler
             .WithMessage("End time must be later than start time.");
 
         RuleFor(x => x.Description)
-            .NotEmpty()
-            .WithMessage("Description is required.")
             .MaximumLength(1000)
             .WithMessage("Description cannot exceed 1000 characters.");
 

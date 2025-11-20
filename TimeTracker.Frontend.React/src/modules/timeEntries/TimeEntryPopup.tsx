@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { TimeEntry } from '../../types/TimeEntry';
-import type { Category } from '../../types/Category';
 import { useCategoriesQuery } from '../../apiCalls/categories';
+import { useTimeEntryMutation } from '../../apiCalls/timeEntries';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/modal';
 import { Input, Button, Dropdown } from '../../components/common';
 import { DateTimePicker } from '../../components/date';
@@ -23,7 +23,17 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
     const organizationId = useUserStore(state => state.user?.organizationId);
     const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery(organizationId || '');
     
+    const timeEntryMutation = useTimeEntryMutation({
+        onSuccess: () => {
+            onClose();
+        },
+        onError: (error) => {
+            console.error('Failed to save time entry:', error);
+        }
+    });
+    
     const [formData, setFormData] = useState<FormData>(() => ({
+        id: timeEntry?.id || '',
         description: timeEntry?.description || '',
         from: timeEntry?.from || null,
         to: timeEntry?.to || null,
@@ -35,26 +45,23 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
             e.preventDefault();
         }
 
-        // Find the complete category object from the loaded categories
-        const category: Category | null = formData.categoryId
-            ? categories.find(cat => cat.id === formData.categoryId) || null
-            : null;
+        // Validation
+        if (!formData.from || !formData.to || !formData.categoryId) {
+            console.error('All fields are required');
+            return;
+        }
 
-        const timeEntryData: Partial<TimeEntry> = {
+        // Prepare mutation data
+        const mutationData = {
             id: timeEntry?.id,
             description: formData.description,
-            from: formData.from || new Date(),
-            to: formData.to || new Date(),
-            category,
+            from: formData.from,
+            to: formData.to,
+            categoryId: formData.categoryId,
         };
 
-        // TODO: Implement save functionality
-        console.log('Saving time entry:', timeEntryData);
-
-        onClose();
-    };
-
-    if (!timeEntry) return null;
+        timeEntryMutation.mutate(mutationData);
+    };    if (!timeEntry) return null;
 
     return (
         <Modal 
@@ -133,6 +140,12 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                         </div>
                     </div>
                 </form>
+                
+                {timeEntryMutation.error && (
+                    <div className="alert alert-danger mt-3">
+                        Failed to save time entry. Please try again.
+                    </div>
+                )}
             </ModalBody>
 
             <ModalFooter>
@@ -147,8 +160,12 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                     type="submit"
                     variant="primary"
                     onClick={handleSubmit}
+                    disabled={timeEntryMutation.isPending}
                 >
-                    {timeEntry ? 'Update' : 'Save'}
+                    {timeEntryMutation.isPending 
+                        ? 'Saving...' 
+                        : (timeEntry ? 'Update' : 'Save')
+                    }
                 </Button>
             </ModalFooter>
         </Modal>

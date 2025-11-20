@@ -2,7 +2,7 @@
 
 public enum PermissionEnum
 {
-    // Record Permissions 10001 - 10099
-    CanEditOwnRecord = 10001,
-    CanEditAnyRecord = 10002,
+    CanEditOwnTimeEntry = 10001,
+    CanEditAnyTimeEntryd = 10002,
+    CanEditOrganizationTimeEntries = 10003
 }
