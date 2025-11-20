@@ -76,6 +76,21 @@
   color: #4a5568;
 }
 
+.toast-message-multiline {
+  .toast-message-line {
+    margin-bottom: 4px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    // Add slight indentation for numbered list items
+    &:not(:first-child) {
+      padding-left: 4px;
+    }
+  }
+}
+
 .toast-close {
   background: none;
   border: none;

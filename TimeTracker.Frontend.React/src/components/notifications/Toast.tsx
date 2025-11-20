@@ -58,6 +58,26 @@ const Toast: React.FC<ToastProps> = ({ notification, onClose }) => {
     }
   };
 
+  const renderMessage = () => {
+    if (!notification.message) return null;
+    
+    // Check if message contains newlines (multiple errors)
+    if (notification.message.includes('\n')) {
+      const lines = notification.message.split('\n');
+      return (
+        <div className="toast-message toast-message-multiline">
+          {lines.map((line, index) => (
+            <div key={index} className="toast-message-line">
+              {line}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
+    return <div className="toast-message">{notification.message}</div>;
+  };
+
   return (
     <div className={getToastClasses()}>
       <div className="toast-content">
@@ -66,9 +86,7 @@ const Toast: React.FC<ToastProps> = ({ notification, onClose }) => {
         </div>
         <div className="toast-text">
           <div className="toast-title">{notification.title}</div>
-          {notification.message && (
-            <div className="toast-message">{notification.message}</div>
-          )}
+          {renderMessage()}
         </div>
         <button
           className="toast-close"

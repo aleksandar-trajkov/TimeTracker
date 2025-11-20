@@ -68,7 +68,41 @@ export const showNotification = {
     useNotificationStore.getState().addNotification({ type: 'warning', title, message, duration }),
   
   info: (title: string, message?: string, duration?: number) =>
-    useNotificationStore.getState().addNotification({ type: 'info', title, message, duration })
+    useNotificationStore.getState().addNotification({ type: 'info', title, message, duration }),
+
+  // Show multiple errors with the same title
+  errorList: (title: string, errors: string[], duration?: number) => {
+    const store = useNotificationStore.getState();
+    
+    if (!errors || errors.length === 0) {
+      // Fallback to single error if no errors provided
+      return store.addNotification({ type: 'error', title, message: 'An error occurred', duration });
+    }
+    
+    if (errors.length === 1) {
+      // Single error, show as regular error notification
+      return store.addNotification({ type: 'error', title, message: errors[0], duration });
+    }
+    
+    // Multiple errors, show as a single notification with formatted message
+    const formattedMessage = errors.map((error) => `${error}`).join('\n');
+    return store.addNotification({ 
+      type: 'error', 
+      title, 
+      message: formattedMessage, 
+      duration: duration ?? 7000 // Longer duration for multiple errors
+    });
+  },
+
+  // Helper to handle API errors automatically
+  apiError: (title: string, error: any, fallbackMessage: string = 'An error occurred') => {
+    if (error?.errors && Array.isArray(error.errors) && error.errors.length > 0) {
+      return showNotification.errorList(title, error.errors.map((e: any) => e.message), 7000);
+    } else {
+      const message = error?.message || fallbackMessage;
+      return showNotification.error(title, message);
+    }
+  }
 };
 
 export default useNotificationStore;

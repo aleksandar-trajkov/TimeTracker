@@ -65,10 +65,10 @@ export const useTimeEntryMutation = ({ onSuccess, onError }: UseTimeEntryMutatio
         },
         onError: (error: Error, variables: TimeEntryMutationData) => {
             const isUpdate = !!variables.id;
-            showNotification.error(
-                isUpdate ? 'Failed to update time entry' : 'Failed to create time entry',
-                error.message
-            );
+            const title = isUpdate ? 'Failed to update time entry' : 'Failed to create time entry';
+            const fallbackMessage = 'Please try again. If the problem persists, contact support.';
+            
+            showNotification.apiError(title, error, fallbackMessage);
             
             if (onError) {
                 onError(error);

@@ -2,14 +2,20 @@ import { fixDateTimeForResponse } from "./dateTime";
 
 const checkResponseStatus = async (response: Response): Promise<Response> => {
   if (response.status >= 400) {
-    let errorMessage;
-    var errorList = [];
+    let errorMessage = `HTTP Error ${response.status}: ${response.statusText}`;
+    let errorList: string[] = [];
     
     // Try to get error details from response body
     try {
       const errorData = await response.clone().json();
-      errorList = errorData.errors;
-      if(errorData.permission) {
+      
+      // Extract error list if it exists
+      if (Array.isArray(errorData.errors)) {
+        errorList = errorData.errors;
+      }
+      
+      // Extract primary error message
+      if (errorData.permission) {
         errorMessage = errorData.permission;
       } else if (errorData.message) {
         errorMessage = errorData.message;
@@ -23,6 +29,7 @@ const checkResponseStatus = async (response: Response): Promise<Response> => {
     const error = new Error(errorMessage);
     (error as any).status = response.status;
     (error as any).statusText = response.statusText;
+    (error as any).errors = errorList;
     throw error;
   }
   return response;
