@@ -30,7 +30,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
 
         var permission = new PermissionBuilder()
             .WithUserId(user.Id)
-            .WithKey(PermissionEnum.CanEditOwnRecord)
+            .WithKey(PermissionEnum.CanEditOwnTimeEntry)
             .Build();
         _fixture.Seed<Guid>(new[] { permission });
 
@@ -40,7 +40,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().NotBeNull();
         result!.Id.Should().Be(permission.Id);
-        result.Key.Should().Be(PermissionEnum.CanEditOwnRecord);
+        result.Key.Should().Be(PermissionEnum.CanEditOwnTimeEntry);
         result.UserId.Should().Be(user.Id);
     }
 
@@ -69,7 +69,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
 
         var permission = new PermissionBuilder()
             .WithUserId(user.Id)
-            .WithKey(PermissionEnum.CanEditOwnRecord)
+            .WithKey(PermissionEnum.CanEditOwnTimeEntry)
             .Build();
         _fixture.Seed<Guid>(new[] { permission });
 
@@ -79,7 +79,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         // Assert
         result.Should().NotBeNull();
         result!.Id.Should().Be(permission.Id);
-        result.Key.Should().Be(PermissionEnum.CanEditOwnRecord);
+        result.Key.Should().Be(PermissionEnum.CanEditOwnTimeEntry);
         result.UserId.Should().Be(user.Id);
     }
 
@@ -139,7 +139,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
 
         var permission = new PermissionBuilder()
             .WithUserId(user.Id)
-            .WithKey(PermissionEnum.CanEditOwnRecord)
+            .WithKey(PermissionEnum.CanEditOwnTimeEntry)
             .Build();
 
         // Act
@@ -150,7 +150,7 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
 
         var insertedPermission = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
         insertedPermission.Should().NotBeNull();
-        insertedPermission!.Key.Should().Be(PermissionEnum.CanEditOwnRecord);
+        insertedPermission!.Key.Should().Be(PermissionEnum.CanEditOwnTimeEntry);
         insertedPermission.UserId.Should().Be(user.Id);
     }
 

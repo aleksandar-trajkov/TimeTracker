@@ -87,7 +87,18 @@ export const useNotificationTest = () => {
 
 // Global functions for browser console testing
 if (typeof window !== 'undefined') {
-  (window as any).testNotifications = {
+  const globalWindow = window as typeof window & {
+    testNotifications?: {
+      success: () => string;
+      error: () => string;
+      warning: () => string;
+      info: () => string;
+      errorList: () => string;
+      apiError: () => string;
+    };
+  };
+  
+  globalWindow.testNotifications = {
     success: () => showNotification.success('Console Success', 'Called from browser console!'),
     error: () => showNotification.error('Console Error', 'Called from browser console!'),
     warning: () => showNotification.warning('Console Warning', 'Called from browser console!'),

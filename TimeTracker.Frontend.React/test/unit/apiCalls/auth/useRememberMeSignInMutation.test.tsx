@@ -78,8 +78,9 @@ describe('useRememberMeSignInMutation', () => {
     vi.mocked(token.getRememberMeExpiry).mockReturnValue(30)
     vi.mocked(token.getTokenUserDetails).mockReturnValue(mockUser)
     vi.mocked(useUserStore.getState).mockReturnValue({
-      setUser: mockSetUser
-    } as any)
+      setUser: mockSetUser,
+      user: null
+    })
   })
 
   it('should call executePost with correct parameters', async () => {

@@ -41,7 +41,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithFirstName("User")
             .WithLastName("One")
             .WithPermissions(ListHelper.CreateList<Domain.Auth.Permission>(
-                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(user1Id).Build())
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnTimeEntry).WithUserId(user1Id).Build())
             .AsEnumerable())
             .Build();
 
@@ -53,8 +53,8 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithFirstName("User")
             .WithLastName("Two")
             .WithPermissions(ListHelper.CreateList<Domain.Auth.Permission>(
-                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(user2Id).Build(),
-                new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyRecord).WithUserId(user2Id).Build())
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnTimeEntry).WithUserId(user2Id).Build(),
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyTimeEntry).WithUserId(user2Id).Build())
             .AsEnumerable())
             .Build();
 
@@ -92,12 +92,12 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         var user1Result = resultList.First(u => u.Email == "user1@org1.com");
         user1Result.Permissions.Should().NotBeNullOrEmpty();
         user1Result.Permissions.Should().HaveCount(1);
-        user1Result.Permissions.First().Key.Should().Be(PermissionEnum.CanEditOwnRecord);
+        user1Result.Permissions.First().Key.Should().Be(PermissionEnum.CanEditOwnTimeEntry);
 
         var user2Result = resultList.First(u => u.Email == "user2@org1.com");
         user2Result.Permissions.Should().NotBeNullOrEmpty();
         user2Result.Permissions.Should().HaveCount(2);
-        user2Result.Permissions.Should().Contain(p => p.Key == PermissionEnum.CanEditAnyRecord);
+        user2Result.Permissions.Should().Contain(p => p.Key == PermissionEnum.CanEditAnyTimeEntry);
     }
 
     [Fact]
@@ -191,8 +191,8 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithOrganizationId(organization.Id)
             .WithEmail("test@example.com")
             .WithPermissions(ListHelper.CreateList<Domain.Auth.Permission>(
-                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnRecord).WithUserId(userId).Build(),
-                new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyRecord).WithUserId(userId).Build())
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditOwnTimeEntry).WithUserId(userId).Build(),
+                new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyTimeEntry).WithUserId(userId).Build())
             .AsEnumerable())
             .Build();
         _fixture.Seed<Guid>(ListHelper.CreateList(user));

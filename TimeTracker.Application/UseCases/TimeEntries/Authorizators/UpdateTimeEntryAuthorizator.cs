@@ -28,7 +28,7 @@ public class UpdateTimeEntryAuthorizator : IAuthorizator<UpdateTimeEntryHandler.
             throw new AuthorizationException(user.Email, "User does not have permission to edit own time entries.");
         }
 
-        if (timeEntry.UserId != _userContext.UserId && !user.Permissions.Any(x => x.Key == PermissionEnum.CanEditAnyTimeEntryd))
+        if (timeEntry.UserId != _userContext.UserId && !user.Permissions.Any(x => x.Key == PermissionEnum.CanEditAnyTimeEntry))
         {
             throw new AuthorizationException(user.Email, "User does not have permission to edit others' time entries.");
         }

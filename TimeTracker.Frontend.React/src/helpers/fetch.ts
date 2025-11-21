@@ -1,5 +1,12 @@
 import { fixDateTimeForResponse } from "./dateTime";
 
+// Enhanced error interface for HTTP errors
+interface HttpError extends Error {
+  status: number;
+  statusText: string;
+  errors: string[];
+}
+
 const checkResponseStatus = async (response: Response): Promise<Response> => {
   if (response.status >= 400) {
     let errorMessage = `HTTP Error ${response.status}: ${response.statusText}`;
@@ -26,10 +33,10 @@ const checkResponseStatus = async (response: Response): Promise<Response> => {
       // If response body is not JSON or can't be parsed, use default message
     }
     
-    const error = new Error(errorMessage);
-    (error as any).status = response.status;
-    (error as any).statusText = response.statusText;
-    (error as any).errors = errorList;
+    const error = new Error(errorMessage) as HttpError;
+    error.status = response.status;
+    error.statusText = response.statusText;
+    error.errors = errorList;
     throw error;
   }
   return response;

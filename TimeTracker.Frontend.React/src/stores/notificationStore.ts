@@ -12,6 +12,13 @@ export interface Notification {
   timestamp: Date;
 }
 
+// Type for API errors that may contain multiple error messages
+interface ApiError {
+  message?: string;
+  errors?: string[];
+  [key: string]: unknown;
+}
+
 interface NotificationState {
   notifications: Notification[];
   addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => string;
@@ -95,11 +102,12 @@ export const showNotification = {
   },
 
   // Helper to handle API errors automatically
-  apiError: (title: string, error: any, fallbackMessage: string = 'An error occurred') => {
-    if (error?.errors && Array.isArray(error.errors) && error.errors.length > 0) {
-      return showNotification.errorList(title, error.errors.map((e: any) => e.message), 7000);
+  apiError: (title: string, error: ApiError | Error | unknown, fallbackMessage: string = 'An error occurred') => {
+    const apiError = error as ApiError;
+    if (apiError?.errors && Array.isArray(apiError.errors) && apiError.errors.length > 0) {
+      return showNotification.errorList(title, apiError.errors);
     } else {
-      const message = error?.message || fallbackMessage;
+      const message = apiError?.message || (error as Error)?.message || fallbackMessage;
       return showNotification.error(title, message);
     }
   }
