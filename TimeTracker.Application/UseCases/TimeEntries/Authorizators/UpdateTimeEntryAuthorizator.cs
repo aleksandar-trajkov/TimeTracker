@@ -23,7 +23,7 @@ public class UpdateTimeEntryAuthorizator : IAuthorizator<UpdateTimeEntryHandler.
         var user = await _userRepository.GetByIdAsync(_userContext.UserId);
         var timeEntry = await _timeEntryRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if(!user.Permissions.Any(x => x.Key == PermissionEnum.CanEditOwnTimeEntry))
+        if (!user.Permissions.Any(x => x.Key == PermissionEnum.CanEditOwnTimeEntry))
         {
             throw new AuthorizationException(user.Email, "User does not have permission to edit own time entries.");
         }
