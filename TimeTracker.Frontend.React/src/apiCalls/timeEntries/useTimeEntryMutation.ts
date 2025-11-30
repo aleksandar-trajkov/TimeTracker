@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { executePost, executePut } from '../../helpers/fetch';
-import { showNotification } from '../../stores/notificationStore';
+import { showNotification } from '../../helpers/notifications';
 import type { TimeEntry } from '../../types/TimeEntry';
 
 export interface TimeEntryMutationData {
