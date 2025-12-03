@@ -10,7 +10,7 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddApplicationLogic(this IServiceCollection services)
     {
-        services.AddMediatorServices().AddValidators();
+        services.AddMediatorServices().AddValidators().AddAuthorizators();
 
         return services;
     }
