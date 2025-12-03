@@ -20,12 +20,19 @@ public class UserRepository : BaseRepository<User, Guid>, IUserRepository
             .ToListAsync(cancellationToken);
     }
 
+    public override async Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await this.Select()
+            .Include(u => u.Permissions)
+            .SingleAsync(u => u.Id == id, cancellationToken);
+    }
 
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         return this.Select()
             .AnyAsync(u => u.Email == email, cancellationToken);
     }
+
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         return await this.Select()

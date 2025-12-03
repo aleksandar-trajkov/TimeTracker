@@ -23,19 +23,13 @@ public class UpdateTimeEntryAuthorizator : IAuthorizator<UpdateTimeEntryHandler.
         var user = await _userRepository.GetByIdAsync(_userContext.UserId);
         var timeEntry = await _timeEntryRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (!user.Permissions.Any(x => x.Key == PermissionEnum.CanEditOwnTimeEntry))
+        if (timeEntry.UserId == _userContext.UserId && !user.Permissions.Any(x => x.Key == PermissionEnum.CanEditOwnTimeEntry || x.Key == PermissionEnum.CanEditAnyTimeEntry))
         {
             throw new AuthorizationException(user.Email, "User does not have permission to edit own time entries.");
-        }
-
-        if (timeEntry.UserId != _userContext.UserId && !user.Permissions.Any(x => x.Key == PermissionEnum.CanEditAnyTimeEntry))
+        }   
+        else if(!user.Permissions.Any(x => x.Key == PermissionEnum.CanEditAnyTimeEntry))
         {
-            throw new AuthorizationException(user.Email, "User does not have permission to edit others' time entries.");
-        }
-
-        if (!user.Permissions.Any(x => x.Key == PermissionEnum.CanEditOrganizationTimeEntries && x.EntityId == user.OrganizationId))
-        {
-            throw new AuthorizationException(user.Email, "User does not have permission to edit time entries in this organization.");
+            throw new AuthorizationException(user.Email, "User does not have permission to edit own time entries.");
         }
     }
 }
