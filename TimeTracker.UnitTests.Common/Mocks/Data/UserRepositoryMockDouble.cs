@@ -14,6 +14,12 @@ public class UserRepositoryMockDouble : MockDouble<IUserRepository>
             .Returns(users);
     }
 
+    public void GivenGetByIdAsync(Guid userId, User user)
+    {
+        Instance.GetByIdAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(user);
+    }
+
     public void GivenGetByEmail(string email, User user)
     {
         Instance.GetByEmailAsync(email, Arg.Any<CancellationToken>())
