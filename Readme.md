@@ -62,7 +62,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 - **Code Quality**: EditorConfig for consistent formatting
 - **Version Control**: Git with comprehensive .gitignore
 - **API Versioning**: URL-based versioning (v1, v2)
-- **Environment Configuration**: appsettings.json with environment overrides
+- **Environment Configuration**: Solution-wide appsettings.json files
 
 ## 🚀 Getting Started
 
@@ -83,7 +83,8 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 
 2. **Configure Database Connection**
    
-   Update `TimeTracker.WebApi/appsettings.Development.json`:
+   The project uses solution-wide appsettings files located at the root level.
+   Update `appsettings.Development.json` in the solution root:
    ```json
    {
      "ConnectionStrings": {
@@ -107,8 +108,9 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
    ```
    
    The API will be available at:
-   - **HTTPS**: `https://localhost:9622`
-   - **Swagger UI**: `https://localhost:9622/swagger/index.html`
+   - **HTTPS**: `https://localhost:5001`
+   - **HTTP**: `http://localhost:5000`
+   - **Swagger UI**: `https://localhost:5001/swagger`
 
 ### Frontend Setup (if applicable)
 
@@ -126,7 +128,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
    
    Create `.env.local`:
    ```env
-   VITE_API_BASE_URL=https://localhost:9622/api
+   VITE_API_BASE_URL=https://localhost:5001/api
    VITE_QUERY_STALE_TIME=300000
    VITE_QUERY_GC_TIME=600000
    ```
@@ -142,7 +144,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 
 1. **Build and run with Docker**
    ```bash
-   docker build -t timetracker-api .
+   docker build -t timetracker-api -f TimeTracker.WebApi/Dockerfile .
    docker run -p 8080:8080 -p 8081:8081 timetracker-api
    ```
 
@@ -163,7 +165,7 @@ dotnet test TimeTracker.UnitTests
 **Frontend Tests**
 ```bash
 cd TimeTracker.Frontend.React
-npm run test
+npm test
 npm run test:coverage
 ```
 
@@ -171,6 +173,10 @@ npm run test:coverage
 
 ```
 TimeTracker/
+├── appsettings.json                    # Solution-wide base configuration
+├── appsettings.Development.json        # Development environment settings
+├── appsettings.Staging.json            # Staging environment settings
+├── appsettings.Production.json         # Production environment settings
 ├── TimeTracker.WebApi/                 # Main API application
 ├── TimeTracker.Application/            # Business logic and use cases
 ├── TimeTracker.Application.Interfaces/ # Application contracts
@@ -186,15 +192,25 @@ TimeTracker/
 
 ## 🔧 Configuration
 
+### Solution-Wide Configuration Files
+
+The project uses **solution-wide appsettings files** located at the repository root. These files are linked to the WebApi project and provide centralized configuration management.
+
+**Available configuration files:**
+- `appsettings.json` - Base configuration for all environments
+- `appsettings.Development.json` - Development-specific settings
+- `appsettings.Staging.json` - Staging environment configuration
+- `appsettings.Production.json` - Production environment configuration
+
 ### Database Configuration
-Configure your database connection in `appsettings.json`:
+Configure your database connection in the appropriate `appsettings.{Environment}.json`:
 ```json
 {
   "ConnectionStrings": {
-    "Database": "Server=localhost;Database=TimeTracker;Trusted_Connection=True;"
+    "Database": "Server=localhost;Database=TimeTracker;Trusted_Connection=True;TrustServerCertificate=True;"
   },
   "Database": {
-    "AutoMigrate": true
+    "AutoMigrate": false
   }
 }
 ```
@@ -204,7 +220,8 @@ JWT authentication settings:
 ```json
 {
   "Auth": {
-    "SecurityKey": "your-256-bit-secret-key",
+    "SecurityKey": "your-256-bit-secret-key-minimum-32-characters",
+    "UserKey": "your-user-encryption-key",
     "Authority": "https://yourdomain.com",
     "Audience": "timetracker-api",
     "ExpirationHours": 2
@@ -213,13 +230,28 @@ JWT authentication settings:
 ```
 
 ### Health Check Configuration
-Health monitoring endpoint:
+Health monitoring endpoint (in `appsettings.json`):
 ```json
 {
   "HealthCheck": {
     "Endpoint": "/health-check"
   }
 }
+```
+
+### Environment-Specific Configuration
+
+To run with a specific environment:
+
+```bash
+# Development (default)
+dotnet run --project TimeTracker.WebApi
+
+# Staging
+dotnet run --project TimeTracker.WebApi --environment Staging
+
+# Production
+dotnet run --project TimeTracker.WebApi --environment Production
 ```
 
 ## 🏗️ Architecture
@@ -262,9 +294,17 @@ dotnet ef database update        # Apply migrations
 npm run dev          # Start development server
 npm run build        # Build for production
 npm run preview      # Preview production build
-npm run test         # Run tests
+npm test             # Run tests
 npm run lint         # Run linting
 ```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📝 License
 

@@ -361,5 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/TimeTracker.WebApi/appsettings.Development.json
-/TimeTracker.WebApi/appsettings.Development.json
+
+# Configuration files - keep base files but ignore environment-specific with secrets
+# Keep the template files in source control but add .local versions for personal overrides
+appsettings.Development.json

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using TimeTracker.Common.Configuration;
 using TimeTracker.WebApi.Configuration;
@@ -11,6 +12,13 @@ using TimeTracker.WebApi.Helpers;
 using TimeTracker.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args);
 
 builder.Services.AddCommonServices();
 builder.Services.AddApplicationLogic();
