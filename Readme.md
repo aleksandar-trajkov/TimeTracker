@@ -108,9 +108,8 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
    ```
    
    The API will be available at:
-   - **HTTPS**: `https://localhost:5001`
-   - **HTTP**: `http://localhost:5000`
-   - **Swagger UI**: `https://localhost:5001/swagger`
+   - **HTTPS**: `https://localhost:9621`
+   - **Swagger UI**: `https://localhost:9621/swagger`
 
 ### Frontend Setup (if applicable)
 
@@ -128,7 +127,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
    
    Create `.env.local`:
    ```env
-   VITE_API_BASE_URL=https://localhost:5001/api
+   VITE_API_BASE_URL=https://localhost:9621/api
    VITE_QUERY_STALE_TIME=300000
    VITE_QUERY_GC_TIME=600000
    ```

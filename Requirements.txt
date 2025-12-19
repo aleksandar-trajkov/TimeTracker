@@ -9,8 +9,8 @@ User management:
 		Change password, display name and image
 
 Admin user:
-	Can create groups of users
-	Can add/remove users from groups
+	Can create organizations of users
+	Can add/remove users from organizations
 	Can create categories / subcategories
 	
 Time tracking:
@@ -35,6 +35,12 @@ Reports:
 		Can see report of own hours
 	Admin user:
 		Can see report of group for all users and categories
+
+Categories:
+	Admin users:
+		Can create/edit/delete categories and subcategories
+	Normal users:
+		Should have read-only access to categories if permitted
 		
 Audits:
 	Every action is stored in DB in format: Action, EntityId, UserId, Timestamp
@@ -67,7 +73,7 @@ Technical:
 			React query for caching
 			Api wrapper for endpoint organization
 			Lazy loading for module deferred load
-			Zustand for cross-page browser management
+			Zustand for cross-module data management
 	Testing:
 		Backend:
 			Unit tests
