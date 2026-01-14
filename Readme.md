@@ -2,7 +2,7 @@
 
 A comprehensive time tracking solution built with **.NET 9** backend and **React** frontend, featuring user management, time entry tracking, reporting, and real-time collaboration capabilities.
 
-## ✨ Features
+## Features
 
 ### Core Functionality
 - **Time Tracking**: Track time spent on various tasks with start/stop functionality
@@ -20,7 +20,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 - **User-friendly Interface**: Modern React-based UI with Bootstrap styling
 - **Responsive Design**: Works across desktop and mobile devices
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 ### Backend (.NET 9)
 - **Framework**: ASP.NET Core 9.0 with Minimal APIs
@@ -64,7 +64,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 - **API Versioning**: URL-based versioning (v1, v2)
 - **Environment Configuration**: Solution-wide appsettings.json files
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -168,7 +168,7 @@ npm test
 npm run test:coverage
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 TimeTracker/
@@ -189,7 +189,7 @@ TimeTracker/
 └── TimeTracker.Frontend.React/         # React frontend
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Solution-Wide Configuration Files
 
@@ -253,7 +253,7 @@ dotnet run --project TimeTracker.WebApi --environment Staging
 dotnet run --project TimeTracker.WebApi --environment Production
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Clean Architecture Layers
 - **WebApi**: REST API controllers and minimal API endpoints
@@ -267,7 +267,7 @@ dotnet run --project TimeTracker.WebApi --environment Production
 - **Dependency Injection**: Loose coupling and testability
 - **Request/Response Pattern**: Structured API communication
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 - **Unit Tests**: Test individual components in isolation
 - **Integration Tests**: Test database and external service integration
@@ -297,7 +297,7 @@ npm test             # Run tests
 npm run lint         # Run linting
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -305,11 +305,11 @@ npm run lint         # Run linting
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🔗 Useful Links
+## Useful Links
 
 - **API Documentation**: Available at `/swagger` when running locally
 - **Health Check**: Available at `/health-check`
