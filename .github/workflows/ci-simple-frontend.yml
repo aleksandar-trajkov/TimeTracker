@@ -1,13 +1,14 @@
 name: Continuous Integration Frontend
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master, develop ]
   pull_request:
     branches: [ master ]
 
 env:
-  WORKING_DIRECTORY: "./TimeTracker.Frontend.React"
+  WORKING_DIRECTORY: "./src/frontend/TimeTracker.Frontend.React"
 
 jobs:
   build-and-test:

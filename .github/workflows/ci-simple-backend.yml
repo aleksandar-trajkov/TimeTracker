@@ -6,6 +6,9 @@ on:
     branches: [ master, develop, feature/* ]
   pull_request:
     branches: [ master, develop ]
+    
+env:
+  WORKING_DIRECTORY: "./src/frontend/TimeTracker.Frontend.React"
 
 jobs:
   build-and-test:
