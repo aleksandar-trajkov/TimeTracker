@@ -8,7 +8,7 @@ on:
     branches: [ master, develop ]
     
 env:
-  WORKING_DIRECTORY: "./src/frontend/TimeTracker.Frontend.React"
+  WORKING_DIRECTORY: "./src/backend"
 
 jobs:
   build-and-test:
