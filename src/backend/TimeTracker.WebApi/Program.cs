@@ -39,7 +39,15 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddMapster();
 builder.Services.AddEndpoints();
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = ctx =>
+    {
+        ctx.ProblemDetails.Extensions["traceId"] = ctx.HttpContext.TraceIdentifier;
+        ctx.ProblemDetails.Extensions["timestamp"] = DateTime.UtcNow;
+        ctx.ProblemDetails.Instance = $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}";
+    };
+});
 builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
 builder.Services.AddOpenApi();
 
