@@ -2,9 +2,9 @@ using TimeTracker.Application.UseCases.Categories.Handlers;
 
 namespace TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
 
-public class ValidUpdateCategoryCommandTheoryData : TheoryData<UpdateCategoryHandler.Command>
+public class UpdateCategoryValidatorValidTheoryData : TheoryData<UpdateCategoryHandler.Command>
 {
-    public ValidUpdateCategoryCommandTheoryData()
+    public UpdateCategoryValidatorValidTheoryData()
     {
         // Valid command with description
         Add(new UpdateCategoryHandler.Command(Guid.NewGuid(), "Valid Category Name", "Valid description"));

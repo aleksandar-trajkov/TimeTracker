@@ -34,7 +34,7 @@ public class DeleteCategoryValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(IsDeleteCategoryCommandInvalidTheoryData))]
+    [ClassData(typeof(DeleteCategoryValidatorInvalidTheoryData))]
     public async Task InvalidCommand_ShouldFailValidation(DeleteCategoryHandler.Command command, string expectedErrorMessage)
     {
         // Arrange

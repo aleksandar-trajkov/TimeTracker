@@ -18,7 +18,7 @@ public class UpdateCategoryValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(ValidUpdateCategoryCommandTheoryData))]
+    [ClassData(typeof(UpdateCategoryValidatorValidTheoryData))]
     public async Task ValidCommand_ShouldPassValidation(UpdateCategoryHandler.Command command)
     {
         // Arrange
@@ -32,7 +32,7 @@ public class UpdateCategoryValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(IsUpdateCategoryCommandInvalidTheoryData))]
+    [ClassData(typeof(UpdateCategoryValidatorInvalidTheoryData))]
     public async Task InvalidCommand_ShouldFailValidation(UpdateCategoryHandler.Command command, string expectedErrorMessage)
     {
         // Arrange

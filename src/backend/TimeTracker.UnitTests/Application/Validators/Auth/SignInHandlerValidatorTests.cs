@@ -8,13 +8,13 @@ using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.Validators.Auth;
 
-public class SignInRequestHandlerValidatorTests
+public class SignInHandlerValidatorTests
 {
     private readonly UserRepositoryMockDouble _userRepository;
 
     private readonly SignInRequestHandlerValidator _validator;
 
-    public SignInRequestHandlerValidatorTests()
+    public SignInHandlerValidatorTests()
     {
         _userRepository = new UserRepositoryMockDouble();
 

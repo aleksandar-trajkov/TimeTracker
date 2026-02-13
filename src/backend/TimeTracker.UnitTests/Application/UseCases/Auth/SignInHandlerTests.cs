@@ -13,7 +13,7 @@ using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Auth;
 
-public class SignInRequestHandlerTests
+public class SignInHandlerTests
 {
     private readonly EncryptionProvider _encryptionProvider = new EncryptionProvider();
 
@@ -23,7 +23,7 @@ public class SignInRequestHandlerTests
 
     private SignInHandler _sut;
 
-    public SignInRequestHandlerTests()
+    public SignInHandlerTests()
     {
         _userRepository = new UserRepositoryMockDouble();
 

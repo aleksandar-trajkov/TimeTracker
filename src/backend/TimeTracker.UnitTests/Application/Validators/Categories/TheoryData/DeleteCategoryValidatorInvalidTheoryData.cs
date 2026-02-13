@@ -2,9 +2,9 @@ using TimeTracker.Application.UseCases.Categories.Handlers;
 
 namespace TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
 
-public class IsDeleteCategoryCommandInvalidTheoryData : TheoryData<DeleteCategoryHandler.Command, string>
+public class DeleteCategoryValidatorInvalidTheoryData : TheoryData<DeleteCategoryHandler.Command, string>
 {
-    public IsDeleteCategoryCommandInvalidTheoryData()
+    public DeleteCategoryValidatorInvalidTheoryData()
     {
         // Empty ID
         Add(new DeleteCategoryHandler.Command(Guid.Empty),

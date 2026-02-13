@@ -18,7 +18,7 @@ public class CreateCategoryValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(ValidCreateCategoryCommandTheoryData))]
+    [ClassData(typeof(CreateCategoryValidatorValidTheoryData))]
     public async Task ValidCommand_ShouldPassValidation(CreateCategoryHandler.Command command)
     {
         // Arrange
@@ -35,7 +35,7 @@ public class CreateCategoryValidatorTests
     }
 
     [Theory]
-    [ClassData(typeof(IsCreateCategoryCommandInvalidTheoryData))]
+    [ClassData(typeof(CreateCategoryValidatorInvalidTheoryData))]
     public async Task InvalidCommand_ShouldFailValidation(CreateCategoryHandler.Command command, string expectedErrorMessage)
     {
         // Arrange

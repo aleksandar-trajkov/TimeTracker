@@ -9,13 +9,13 @@ using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.Validators.Auth;
 
-public class RememberMeSignInRequestHandlerValidatorTests
+public class RememberMeSignInHandlerValidatorTests
 {
     private readonly UserRepositoryMockDouble _userRepository;
     private readonly TokenProviderMockDouble _tokenProvider;
     private readonly RememberMeSignInRequestHandlerValidator _validator;
 
-    public RememberMeSignInRequestHandlerValidatorTests()
+    public RememberMeSignInHandlerValidatorTests()
     {
         _userRepository = new UserRepositoryMockDouble();
         _tokenProvider = new TokenProviderMockDouble();

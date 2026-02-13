@@ -22,9 +22,8 @@ const SignIn: React.FC<SignInProps> = ({ setIsSignedIn }) => {
             try {
                 const token = Cookies.get('token');
                 if (token) {
-                    // isTokenValid returns true if token is EXPIRED, so we want the opposite
-                    const isExpired = isTokenValid(token);
-                    if (!isExpired) {
+                    const isValid = isTokenValid(token);
+                    if (isValid) {
                         // Token exists and is valid, sign in immediately
                         setIsSignedIn(true);
                         return;
@@ -34,8 +33,8 @@ const SignIn: React.FC<SignInProps> = ({ setIsSignedIn }) => {
                 // Check remember me token if main token is invalid/missing
                 const rememberMeToken = Cookies.get('rememberMe');
                 if (rememberMeToken) {
-                    const isRememberMeExpired = isTokenValid(rememberMeToken);
-                    if (!isRememberMeExpired) {
+                    const isRememberMeValid = isTokenValid(rememberMeToken);
+                    if (isRememberMeValid) {
                         // Remember me token is valid, use mutation to sign in
                         rememberMeSignInMutation.mutate(rememberMeToken);
                         return;
