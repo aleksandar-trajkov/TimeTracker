@@ -397,7 +397,7 @@ describe('notifications', () => {
     it('should handle non-array errors property', () => {
       const apiError = {
         message: 'Error message',
-        errors: 'not an array' as any
+        errors: 'not an array' as unknown as { property: string; message: string }[]
       }
 
       showNotification.apiError('API Error', apiError)
