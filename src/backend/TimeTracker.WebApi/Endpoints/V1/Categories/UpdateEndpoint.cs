@@ -1,9 +1,7 @@
-using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.Categories;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.Categories;

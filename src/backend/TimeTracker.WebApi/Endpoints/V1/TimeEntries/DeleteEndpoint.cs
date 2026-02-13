@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.TimeEntries;
@@ -17,7 +16,7 @@ public class DeleteEndpoint : IEndpointDefinition
             [FromRoute] Guid id) =>
         {
             var command = new DeleteTimeEntryHandler.Command(id);
-            await mediator.SendAsync(command);
+            await mediator.Send(command);
             return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)

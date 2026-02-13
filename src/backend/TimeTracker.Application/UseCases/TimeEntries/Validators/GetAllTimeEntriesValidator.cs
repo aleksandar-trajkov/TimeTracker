@@ -21,10 +21,6 @@ public class GetAllTimeEntriesValidator : AbstractValidator<GetAllTimeEntriesHan
 
         RuleFor(x => x)
             .Must(x => (x.To - x.From).TotalDays <= 365)
-            .WithMessage("Date range cannot exceed 365 days.")
-            .Must(x => x.From <= DateTimeOffset.Now.AddDays(1))
-            .WithMessage("Start date cannot be more than 1 day in the future.")
-            .Must(x => x.To <= DateTimeOffset.Now.AddDays(1))
-            .WithMessage("End date cannot be more than 1 day in the future.");
+            .WithMessage("Date range cannot exceed 365 days.");
     }
 }

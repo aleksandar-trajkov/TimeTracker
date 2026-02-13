@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.TimeEntries;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.TimeEntries;
@@ -20,7 +19,8 @@ public class UpdateEndpoint : IEndpointDefinition
             [FromBody] UpdateTimeEntryRequest request) =>
         {
             var command = new UpdateTimeEntryHandler.Command(id, request.From, request.To, request.Description, request.CategoryId);
-            return await mediator.SendAndProcessResponseAsync<UpdateTimeEntryHandler.Command, bool>(command);
+            var result = await mediator.Send(command);
+            return Results.Ok(TypeAdapter.Adapt<bool>(result));
         })
         .Produces<bool>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)

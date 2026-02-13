@@ -1,16 +1,9 @@
 ﻿using Mapster;
-using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using Microsoft.Extensions.Options;
 using TimeTracker.Application.UseCases.Auth.Handlers;
-using TimeTracker.Domain.Auth;
-using TimeTracker.Domain.Options;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
 using TimeTracker.WebApi.Contracts.Responses.V1.Auth;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.Auth
@@ -25,7 +18,8 @@ namespace TimeTracker.WebApi.Endpoints.V1.Auth
                 [FromBody] SignInRequest request) =>
             {
                 var query = request.Adapt<SignInHandler.Query>();
-                return await mediator.SendAndProcessResponseAsync<SignInHandler.Query, SignInResponse>(query);
+                var result = await mediator.Send(query);
+                return Results.Ok(TypeAdapter.Adapt<SignInResponse>(result));
             })
                 .Produces<SignInResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

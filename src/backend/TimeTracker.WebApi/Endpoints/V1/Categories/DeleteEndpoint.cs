@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Categories.Handlers;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.Categories;
@@ -17,7 +16,8 @@ public class DeleteEndpoint : IEndpointDefinition
             [FromRoute] Guid id) =>
         {
             var command = new DeleteCategoryHandler.Command(id);
-            return await mediator.SendAsync<DeleteCategoryHandler.Command>(command);
+            await mediator.Send(command);
+            return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)
         .ProducesProblem(StatusCodes.Status401Unauthorized)

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.TimeEntries;
 using TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.TimeEntries;
@@ -20,7 +19,8 @@ public class CreateEndpoint : IEndpointDefinition
             [FromBody] CreateTimeEntryRequest request) =>
         {
             var command = request.Adapt<CreateTimeEntryHandler.Command>();
-            return await mediator.SendAndProcessResponseAsync<CreateTimeEntryHandler.Command, TimeEntryResponse>(command);
+            var response = await mediator.Send(command);
+            return Results.Ok(TypeAdapter.Adapt<TimeEntryResponse>(response));
         })
         .Produces<TimeEntryResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
-using TimeTracker.WebApi.Extensions;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.TimeEntries;
@@ -16,7 +16,8 @@ public class GetAllEndpoint : IEndpointDefinition
             [FromQuery] DateTimeOffset from,
             [FromQuery] DateTimeOffset to) =>
         {
-            return await mediator.SendAndProcessResponseAsync<GetAllTimeEntriesHandler.Query, List<TimeEntryResponse>>(new GetAllTimeEntriesHandler.Query(from, to));
+            var result = await mediator.Send(new GetAllTimeEntriesHandler.Query(from, to));
+            return Results.Ok(TypeAdapter.Adapt<List<TimeEntryResponse>>(result));
         })
                 .Produces<List<TimeEntryResponse>>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

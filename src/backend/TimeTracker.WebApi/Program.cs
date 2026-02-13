@@ -2,6 +2,7 @@ using AttributeBuilder.IoC;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
@@ -39,11 +40,13 @@ builder.Services.AddAuthorization();
 builder.Services.AddMapster();
 builder.Services.AddEndpoints();
 builder.Services.AddProblemDetails();
-builder.Services.AddSwaggerServices();
+builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
+builder.Services.AddOpenApi();
 
 
 var app = builder.Build();
 RouteGroupBuilder groupBuilder;
+app.UseExceptionHandler();
 app.UseApiVersionServices(out groupBuilder);
 if (bool.TryParse(builder.Configuration["Database:AutoMigrate"], out var autoMigrate) && autoMigrate)
 {
@@ -56,6 +59,6 @@ app.UseAuthorization();
 app.UseCors();
 app.UseMiddleware<BuildTimeHeaderMiddleware>();
 groupBuilder.MapEndpoints(app.Services);
-app.UseSwaggerServices();
+app.MapOpenApi();
 
 app.Run();
