@@ -87,7 +87,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(validToken)
         
-        expect(result).toBe(false) // false means NOT expired (token is valid)
+        expect(result).toBe(true) // true means NOT expired (token is valid)
         expect(mockJwtDecode).toHaveBeenCalledWith(validToken)
       })
 
@@ -102,7 +102,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(expiredToken)
         
-        expect(result).toBe(true) // true means expired (token is invalid)
+        expect(result).toBe(false) // false means expired (token is invalid)
         expect(mockJwtDecode).toHaveBeenCalledWith(expiredToken)
       })
 
@@ -117,7 +117,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenExpiringNow)
         
-        expect(result).toBe(true) // true means expired (currentTime > exp is false, but currentTime === exp should be treated as expired)
+        expect(result).toBe(false) // false means expired (currentTime > exp is false, but currentTime === exp should be treated as expired)
       })
     })
 
@@ -128,7 +128,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenWithoutExp)
         
-        expect(result).toBe(false) // undefined exp is not a number, so not expired
+        expect(result).toBe(true) // undefined exp is not a number, so not expired
         expect(mockJwtDecode).toHaveBeenCalledWith(tokenWithoutExp)
       })
 
@@ -138,7 +138,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenWithNullExp)
         
-        expect(result).toBe(false) // null is not a number
+        expect(result).toBe(true) // null is not a number
         expect(mockJwtDecode).toHaveBeenCalledWith(tokenWithNullExp)
       })
 
@@ -148,7 +148,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenWithUndefinedExp)
         
-        expect(result).toBe(false) // undefined is not a number
+        expect(result).toBe(true) // undefined is not a number
         expect(mockJwtDecode).toHaveBeenCalledWith(tokenWithUndefinedExp)
       })
 
@@ -158,7 +158,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenWithStringExp)
         
-        expect(result).toBe(false) // string is not a number
+        expect(result).toBe(true) // string is not a number
         expect(mockJwtDecode).toHaveBeenCalledWith(tokenWithStringExp)
       })
 
@@ -171,7 +171,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenWithZeroExp)
         
-        expect(result).toBe(true) // 1970 is definitely in the past, so expired
+        expect(result).toBe(false) // 1970 is definitely in the past, so expired
         expect(mockJwtDecode).toHaveBeenCalledWith(tokenWithZeroExp)
       })
 
@@ -186,7 +186,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(longToken)
         
-        expect(result).toBe(false) // Not expired
+        expect(result).toBe(true) // Not expired
         expect(mockJwtDecode).toHaveBeenCalledWith(longToken)
       })
     })
@@ -203,7 +203,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(almostExpiredToken)
         
-        expect(result).toBe(false) // Still valid for 1 more second
+        expect(result).toBe(true) // Still valid for 1 more second
       })
 
       it('should return true (expired) for token that expired 1 second ago', () => {
@@ -217,7 +217,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(justExpiredToken)
         
-        expect(result).toBe(true) // Expired 1 second ago
+        expect(result).toBe(false) // Expired 1 second ago
       })
 
       it('should return false (not expired) for far future expiration', () => {
@@ -231,7 +231,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(longLivedToken)
         
-        expect(result).toBe(false) // Not expired
+        expect(result).toBe(true) // Not expired
       })
 
       it('should return true (expired) for very old expiration', () => {
@@ -245,7 +245,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(veryOldToken)
         
-        expect(result).toBe(true) // Expired years ago
+        expect(result).toBe(false) // Expired years ago
       })
     })
 
@@ -262,8 +262,8 @@ describe('tokenCheck', () => {
         const result1 = isTokenValid(validToken)
         const result2 = isTokenValid(validToken)
         
-        expect(result1).toBe(false) // Not expired
-        expect(result2).toBe(false) // Not expired
+        expect(result1).toBe(true) // Not expired
+        expect(result2).toBe(true) // Not expired
         expect(mockJwtDecode).toHaveBeenCalledTimes(2)
       })
 
@@ -281,8 +281,8 @@ describe('tokenCheck', () => {
         const validResult = isTokenValid('valid.token')
         const expiredResult = isTokenValid('expired.token')
         
-        expect(validResult).toBe(false) // Not expired
-        expect(expiredResult).toBe(true) // Expired
+        expect(validResult).toBe(true) // Not expired
+        expect(expiredResult).toBe(false) // Expired
         expect(mockJwtDecode).toHaveBeenCalledTimes(2)
       })
     })
@@ -299,7 +299,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(tokenWithFractionalExp)
         
-        expect(result).toBe(true) // Should be expired because floor makes them same second, but actual time is later
+        expect(result).toBe(false) // Should be expired because floor makes them same second, but actual time is later
       })
 
       it('should handle millisecond precision edge case', () => {
@@ -313,7 +313,7 @@ describe('tokenCheck', () => {
 
         const result = isTokenValid(edgeCaseToken)
         
-        expect(result).toBe(false) // Should not be expired - exp is in next second
+        expect(result).toBe(true) // Should not be expired - exp is in next second
       })
     })
   })

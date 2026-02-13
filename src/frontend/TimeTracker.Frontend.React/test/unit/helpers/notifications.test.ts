@@ -195,6 +195,17 @@ describe('notifications', () => {
       })
     })
 
+    it('should show single ApiValidationError object as regular error notification', () => {
+      showNotification.errorList('Error Title', [{ property: 'email', message: 'Email is required' }])
+
+      expect(mockAddNotification).toHaveBeenCalledWith({
+        type: 'error',
+        title: 'Error Title',
+        message: 'Email is required',
+        duration: undefined
+      })
+    })
+
     it('should format multiple errors as numbered list', () => {
       showNotification.errorList('Validation Errors', [
         'Field 1 is required',
@@ -206,6 +217,35 @@ describe('notifications', () => {
         type: 'error',
         title: 'Validation Errors',
         message: '1. Field 1 is required\n2. Field 2 is invalid\n3. Field 3 must be unique',
+        duration: 7000
+      })
+    })
+
+    it('should format multiple ApiValidationError objects as numbered list', () => {
+      showNotification.errorList('Validation Errors', [
+        { property: 'email', message: 'Email is required' },
+        { property: 'password', message: 'Password is too short' },
+        { property: 'username', message: 'Username already exists' }
+      ])
+
+      expect(mockAddNotification).toHaveBeenCalledWith({
+        type: 'error',
+        title: 'Validation Errors',
+        message: '1. Email is required\n2. Password is too short\n3. Username already exists',
+        duration: 7000
+      })
+    })
+
+    it('should handle mixed string and ApiValidationError objects', () => {
+      showNotification.errorList('Mixed Errors', [
+        'Simple error message',
+        { property: 'email', message: 'Email is invalid' }
+      ])
+
+      expect(mockAddNotification).toHaveBeenCalledWith({
+        type: 'error',
+        title: 'Mixed Errors',
+        message: '1. Simple error message\n2. Email is invalid',
         duration: 7000
       })
     })
@@ -245,6 +285,25 @@ describe('notifications', () => {
         type: 'error',
         title: 'API Error',
         message: '1. Error 1\n2. Error 2\n3. Error 3',
+        duration: 7000
+      })
+    })
+
+    it('should handle error with ApiValidationError array', () => {
+      const apiError = {
+        message: 'Validation failed',
+        errors: [
+          { property: 'email', message: 'Email is required' },
+          { property: 'password', message: 'Password must be at least 8 characters' }
+        ]
+      }
+
+      showNotification.apiError('API Error', apiError)
+
+      expect(mockAddNotification).toHaveBeenCalledWith({
+        type: 'error',
+        title: 'API Error',
+        message: '1. Email is required\n2. Password must be at least 8 characters',
         duration: 7000
       })
     })
@@ -323,6 +382,22 @@ describe('notifications', () => {
       const apiError = {
         message: 'Error message',
         errors: []
+      }
+
+      showNotification.apiError('API Error', apiError)
+
+      expect(mockAddNotification).toHaveBeenCalledWith({
+        type: 'error',
+        title: 'API Error',
+        message: 'Error message',
+        duration: undefined
+      })
+    })
+
+    it('should handle non-array errors property', () => {
+      const apiError = {
+        message: 'Error message',
+        errors: 'not an array' as any
       }
 
       showNotification.apiError('API Error', apiError)

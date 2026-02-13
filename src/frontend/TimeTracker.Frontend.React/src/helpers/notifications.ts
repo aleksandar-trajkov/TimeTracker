@@ -27,7 +27,7 @@ export const showNotification = {
     useNotificationStore.getState().addNotification({ type: 'info', title, message, duration }),
 
   // Show multiple errors with the same title
-  errorList: (title: string, errors: ApiValidationError[], duration?: number) => {
+  errorList: (title: string, errors: (string | ApiValidationError)[], duration?: number) => {
     const store = useNotificationStore.getState();
     
     if (!errors || errors.length === 0) {
@@ -37,11 +37,15 @@ export const showNotification = {
     
     if (errors.length === 1) {
       // Single error, show as regular error notification
-      return store.addNotification({ type: 'error', title, message: errors[0].message, duration });
+      const message = typeof errors[0] === 'string' ? errors[0] : errors[0].message;
+      return store.addNotification({ type: 'error', title, message, duration });
     }
     
     // Multiple errors, show as a single notification with formatted message
-    const formattedMessage = errors.map((error, index) => `${index + 1}. ${error.message}`).join('\n');
+    const formattedMessage = errors.map((error, index) => {
+      const message = typeof error === 'string' ? error : error.message;
+      return `${index + 1}. ${message}`;
+    }).join('\n');
     return store.addNotification({ 
       type: 'error', 
       title, 

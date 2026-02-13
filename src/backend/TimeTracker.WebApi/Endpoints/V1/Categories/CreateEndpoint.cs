@@ -19,7 +19,7 @@ public class CreateEndpoint : IEndpointDefinition
             [FromBody] CreateCategoryRequest request) =>
         {
             var command = request.Adapt<CreateCategoryHandler.Command>();
-            var response =  await mediator.Send(command);
+            var response = await mediator.Send(command);
             return TypeAdapter.Adapt<CreateCategoryResponse>(response);
         })
         .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
