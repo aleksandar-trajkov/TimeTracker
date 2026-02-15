@@ -15,9 +15,11 @@ public class GetByIdEndpoint : IEndpointDefinition
     {
         return app.MapGet(EndpointUrl, async (
             [FromServices] IMediator mediator,
-            [FromRoute] Guid id) =>
+            [FromRoute] Guid id,
+            CancellationToken cancellationToken) =>
         {
-            var result = await mediator.Send(new GetTimeEntryByIdHandler.Query(id));
+            var query = new GetTimeEntryByIdHandler.Query(id);
+            var result = await mediator.Send(query, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<TimeEntryResponse>(result));
         })
         .Produces<TimeEntryResponse>(StatusCodes.Status200OK)

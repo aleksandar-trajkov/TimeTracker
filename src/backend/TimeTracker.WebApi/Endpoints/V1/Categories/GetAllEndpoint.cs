@@ -13,9 +13,11 @@ public class GetAllEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapGet(EndpointUrl, async ([FromServices] IMediator mediator,
-            [FromQuery] Guid organizationId) =>
+            [FromQuery] Guid organizationId,
+            CancellationToken cancellationToken) =>
         {
-            var result = await mediator.Send(new GetAllCategoriesHandler.Query(organizationId));
+            var query = new GetAllCategoriesHandler.Query(organizationId);
+            var result = await mediator.Send(query, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<List<CategoryResponse>>(result));
         })
                 .Produces<List<CategoryResponse>>(StatusCodes.Status200OK)

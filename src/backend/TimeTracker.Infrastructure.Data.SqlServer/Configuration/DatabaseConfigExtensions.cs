@@ -19,6 +19,7 @@ public static class DatabaseConfigExtensions
             options.UseSqlServer(connectionString, u =>
             {
                 u.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                u.EnableRetryOnFailure();
             });
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });

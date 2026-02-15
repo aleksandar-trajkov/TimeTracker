@@ -16,10 +16,11 @@ public class UpdateEndpoint : IEndpointDefinition
         return app.MapPut(EndpointUrl, async (
             [FromServices] IMediator mediator,
             [FromRoute] Guid id,
-            [FromBody] UpdateTimeEntryRequest request) =>
+            [FromBody] UpdateTimeEntryRequest request,
+            CancellationToken cancellationToken) =>
         {
             var command = new UpdateTimeEntryHandler.Command(id, request.From, request.To, request.Description, request.CategoryId);
-            var result = await mediator.Send(command);
+            var result = await mediator.Send(command, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<bool>(result));
         })
         .Produces<bool>(StatusCodes.Status200OK)

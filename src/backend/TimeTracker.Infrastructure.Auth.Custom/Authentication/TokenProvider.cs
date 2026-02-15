@@ -67,7 +67,7 @@ internal sealed class TokenProvider : ITokenProvider
     {
         if (rememberMeToken != null)
         {
-            var decryptedString = _encryptionProvider.Encrypt(rememberMeToken, _authOptions.UserKey);
+            var decryptedString = _encryptionProvider.Decrypt(rememberMeToken, _authOptions.UserKey);
             return decryptedString.TrimStart(Fluff).TrimEnd(Fluff);
         }
         return null;

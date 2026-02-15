@@ -16,10 +16,11 @@ public class CreateEndpoint : IEndpointDefinition
     {
         return app.MapPost(EndpointUrl, async (
             [FromServices] IMediator mediator,
-            [FromBody] CreateTimeEntryRequest request) =>
+            [FromBody] CreateTimeEntryRequest request,
+            CancellationToken cancellationToken) =>
         {
             var command = request.Adapt<CreateTimeEntryHandler.Command>();
-            var response = await mediator.Send(command);
+            var response = await mediator.Send(command, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<TimeEntryResponse>(response));
         })
         .Produces<TimeEntryResponse>(StatusCodes.Status201Created)

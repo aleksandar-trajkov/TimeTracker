@@ -13,10 +13,11 @@ public class DeleteEndpoint : IEndpointDefinition
     {
         return app.MapDelete(EndpointUrl, async (
             [FromServices] IMediator mediator,
-            [FromRoute] Guid id) =>
+            [FromRoute] Guid id,
+            CancellationToken cancellationToken) =>
         {
             var command = new DeleteTimeEntryHandler.Command(id);
-            await mediator.Send(command);
+            await mediator.Send(command, cancellationToken);
             return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)

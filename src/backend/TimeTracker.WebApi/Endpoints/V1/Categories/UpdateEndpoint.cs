@@ -15,10 +15,11 @@ public class UpdateEndpoint : IEndpointDefinition
         return app.MapPut(EndpointUrl, async (
             [FromServices] IMediator mediator,
             [FromRoute] Guid id,
-            [FromBody] UpdateCategoryRequest request) =>
+            [FromBody] UpdateCategoryRequest request,
+            CancellationToken cancellationToken) =>
         {
             var command = new UpdateCategoryHandler.Command(id, request.Name, request.Description);
-            var result = await mediator.Send(command);
+            var result = await mediator.Send(command, cancellationToken);
 
             return result ? Results.NoContent() : Results.NotFound();
         })

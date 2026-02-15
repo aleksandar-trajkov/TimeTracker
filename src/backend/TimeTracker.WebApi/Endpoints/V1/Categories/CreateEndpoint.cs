@@ -16,10 +16,11 @@ public class CreateEndpoint : IEndpointDefinition
     {
         return app.MapPost(EndpointUrl, async (
             [FromServices] IMediator mediator,
-            [FromBody] CreateCategoryRequest request) =>
+            [FromBody] CreateCategoryRequest request,
+            CancellationToken cancellationToken) =>
         {
             var command = request.Adapt<CreateCategoryHandler.Command>();
-            var response = await mediator.Send(command);
+            var response = await mediator.Send(command, cancellationToken);
             return TypeAdapter.Adapt<CreateCategoryResponse>(response);
         })
         .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)

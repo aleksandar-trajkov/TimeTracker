@@ -14,9 +14,11 @@ public class GetAllEndpoint : IEndpointDefinition
     {
         return app.MapGet(EndpointUrl, async ([FromServices] IMediator mediator,
             [FromQuery] DateTimeOffset from,
-            [FromQuery] DateTimeOffset to) =>
+            [FromQuery] DateTimeOffset to,
+            CancellationToken cancellationToken) =>
         {
-            var result = await mediator.Send(new GetAllTimeEntriesHandler.Query(from, to));
+            var query = new GetAllTimeEntriesHandler.Query(from, to);
+            var result = await mediator.Send(query, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<List<TimeEntryResponse>>(result));
         })
                 .Produces<List<TimeEntryResponse>>(StatusCodes.Status200OK)

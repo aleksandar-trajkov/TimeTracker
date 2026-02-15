@@ -22,7 +22,7 @@ public class ExceptionHandlingMiddleware : IExceptionHandler
         {
             case ValidationException validationEx:
                 await HandleValidationException(httpContext, validationEx, cancellationToken);
-                return true;
+                break;
 
             case AuthenticationException authEx:
                 await Results.Problem(new ProblemDetails
@@ -30,9 +30,11 @@ public class ExceptionHandlingMiddleware : IExceptionHandler
                     Title = "Unauthorized",
                     Detail = authEx.Message,
                     Status = StatusCodes.Status401Unauthorized,
-                    Extensions = { ["email"] = authEx.Email }
+                    Extensions = {
+                        ["email"] = authEx.Email
+                    }
                 }).ExecuteAsync(httpContext);
-                return true;
+                break;
 
             case AuthorizationException authzEx:
                 await Results.Problem(new ProblemDetails
@@ -40,54 +42,70 @@ public class ExceptionHandlingMiddleware : IExceptionHandler
                     Title = "Forbidden",
                     Detail = authzEx.Message,
                     Status = StatusCodes.Status403Forbidden,
-                    Extensions = { ["email"] = authzEx.Email, ["permission"] = authzEx.Permission }
+                    Extensions = {
+                        ["email"] = authzEx.Email,
+                        ["permission"] = authzEx.Permission
+                    }
                 }).ExecuteAsync(httpContext);
-                return true;
+                break;
+
+            case TaskCanceledException taskCanceledEx:
+                await Results.Problem(new ProblemDetails
+                {
+                    Title = "Client cancelled",
+                    Detail = taskCanceledEx.Message,
+                    Status = StatusCodes.Status499ClientClosedRequest                    
+                }).ExecuteAsync(httpContext);
+                break;
 
             default:
                 _logger.LogError(exception, "An unhandled exception occurred");
                 await Results.Problem(exception.Message).ExecuteAsync(httpContext);
-                return true;
+                break;
         }
+        return true;
     }
 
     private static async Task HandleValidationException(HttpContext httpContext, ValidationException validationEx, CancellationToken cancellationToken)
     {
+
+        ProblemDetails problemDetails; 
         var errors = validationEx.Errors.Select(error => new ValidationErrorResponse
         {
             Property = error.PropertyName,
             Message = error.ErrorMessage
         });
 
-        ProblemDetails problemDetails;
-
-        if (validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.NotFound))
+        problemDetails = validationEx switch
         {
-            problemDetails = new ProblemDetails
-            {
-                Title = "Not found",
-                Status = StatusCodes.Status404NotFound,
-                Extensions = { ["errors"] = errors }
-            };
-        }
-        else if (validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.Conflict))
-        {
-            problemDetails = new ProblemDetails
-            {
-                Title = "Conflict",
-                Status = StatusCodes.Status409Conflict,
-                Extensions = { ["errors"] = errors }
-            };
-        }
-        else
-        {
-            problemDetails = new ProblemDetails
-            {
-                Title = "Bad Request",
-                Status = StatusCodes.Status400BadRequest,
-                Extensions = { ["errors"] = errors }
-            };
-        }
+            _ when validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.NotFound) =>
+                new ProblemDetails
+                {
+                    Title = "Not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Extensions = { 
+                        ["errors"] = errors 
+                    }
+                },
+            _ when validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.Conflict) =>
+                new ProblemDetails
+                {
+                    Title = "Conflict",
+                    Status = StatusCodes.Status409Conflict,
+                    Extensions = {
+                        ["errors"] = errors
+                    }
+                },
+            _ =>
+                new ProblemDetails
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Extensions = {
+                        ["errors"] = errors
+                    }
+                }
+        };
 
         await Results.Problem(problemDetails).ExecuteAsync(httpContext);
     }
