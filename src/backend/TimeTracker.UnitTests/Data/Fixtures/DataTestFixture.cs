@@ -12,9 +12,8 @@ namespace TimeTracker.UnitTests.Data.Fixtures;
 
 public class DataTestFixture : IDisposable
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
         .WithName($"test-db-{Guid.NewGuid()}")
-        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
         .Build();
 
     private readonly DatabaseContext _context;
