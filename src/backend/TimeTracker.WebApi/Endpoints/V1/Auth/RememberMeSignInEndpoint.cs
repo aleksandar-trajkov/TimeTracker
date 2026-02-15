@@ -16,7 +16,7 @@ public class RememberMeSignInEndpoint : IEndpointDefinition
     {
         return app.MapPost(EndpointUrl, async (
             [FromServices] IMediator mediator,
-            [FromBody] RememberMeSignInRequest request, 
+            [FromBody] RememberMeSignInRequest request,
             CancellationToken cancellationToken) =>
         {
             var query = request.Adapt<RememberMeSignInHandler.Query>();

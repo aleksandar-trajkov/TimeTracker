@@ -54,7 +54,7 @@ public class ExceptionHandlingMiddleware : IExceptionHandler
                 {
                     Title = "Client cancelled",
                     Detail = taskCanceledEx.Message,
-                    Status = StatusCodes.Status499ClientClosedRequest                    
+                    Status = StatusCodes.Status499ClientClosedRequest
                 }).ExecuteAsync(httpContext);
                 break;
 
@@ -69,7 +69,7 @@ public class ExceptionHandlingMiddleware : IExceptionHandler
     private static async Task HandleValidationException(HttpContext httpContext, ValidationException validationEx, CancellationToken cancellationToken)
     {
 
-        ProblemDetails problemDetails; 
+        ProblemDetails problemDetails;
         var errors = validationEx.Errors.Select(error => new ValidationErrorResponse
         {
             Property = error.PropertyName,
@@ -83,8 +83,8 @@ public class ExceptionHandlingMiddleware : IExceptionHandler
                 {
                     Title = "Not found",
                     Status = StatusCodes.Status404NotFound,
-                    Extensions = { 
-                        ["errors"] = errors 
+                    Extensions = {
+                        ["errors"] = errors
                     }
                 },
             _ when validationEx.Errors.All(x => x.ErrorCode == ValidationErrorCodes.Conflict) =>
