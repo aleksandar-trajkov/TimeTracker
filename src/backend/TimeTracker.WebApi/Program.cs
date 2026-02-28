@@ -50,9 +50,9 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
 builder.Services.AddOpenApi();
 
+RouteGroupBuilder groupBuilder;
 
 var app = builder.Build();
-RouteGroupBuilder groupBuilder;
 app.UseExceptionHandler();
 app.UseApiVersionServices(out groupBuilder);
 if (bool.TryParse(builder.Configuration["Database:AutoMigrate"], out var autoMigrate) && autoMigrate)

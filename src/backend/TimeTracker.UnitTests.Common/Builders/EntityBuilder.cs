@@ -1,6 +1,7 @@
 ﻿namespace TimeTracker.UnitTests.Common.Builders;
 
-public abstract class EntityBuilder<TBuilder, TEntity> where TBuilder : EntityBuilder<TBuilder, TEntity>, new()
+public abstract class EntityBuilder<TBuilder, TEntity> 
+    where TBuilder : EntityBuilder<TBuilder, TEntity>, new()
     where TEntity : class
 {
     protected abstract TEntity Instance { get; }

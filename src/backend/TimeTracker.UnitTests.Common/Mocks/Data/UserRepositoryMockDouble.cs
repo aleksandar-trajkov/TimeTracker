@@ -23,7 +23,7 @@ public class UserRepositoryMockDouble : MockDouble<IUserRepository>
     public void GivenGetByEmail(string email, User user)
     {
         Instance.GetByEmailAsync(email, Arg.Any<CancellationToken>())
-            .ReturnsAsync(user);
+            .Returns(user);
     }
 
     public void GivenGetByEmailThrows(string email, Exception exception)
