@@ -1,4 +1,4 @@
-﻿using TimeTracker.Application.UseCases.Auth.Handlers;
+using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.UnitTests.Common.Builders.Application.Auth;
 
 namespace TimeTracker.UnitTests.Application.Validators.Auth.TheoryData

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using NSubstitute;
 using TimeTracker.Application.UseCases.Auth.Dtos;
 using TimeTracker.Application.UseCases.Auth.Handlers;

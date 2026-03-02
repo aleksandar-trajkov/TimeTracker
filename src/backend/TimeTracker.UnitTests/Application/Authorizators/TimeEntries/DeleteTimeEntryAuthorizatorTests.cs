@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Authorizators;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.Domain.Auth;

@@ -2,28 +2,43 @@
 
 public static class StringExtensions
 {
-    public static string TrimStart(this string target, string trimString)
+    public static string TrimStart(this string target, params string[] trimStrings)
     {
-        if (string.IsNullOrEmpty(trimString)) return target;
-
         string result = target;
-        while (result.StartsWith(trimString))
+        bool changed;
+        do
         {
-            result = result.Substring(trimString.Length);
-        }
-
+            changed = false;
+            foreach (var trimString in trimStrings)
+            {
+                if (string.IsNullOrEmpty(trimString)) continue;
+                while (result.StartsWith(trimString))
+                {
+                    result = result.Substring(trimString.Length);
+                    changed = true;
+                }
+            }
+        } while (changed);
         return result;
     }
-    public static string TrimEnd(this string target, string trimString)
+
+    public static string TrimEnd(this string target, params string[] trimStrings)
     {
-        if (string.IsNullOrEmpty(trimString)) return target;
-
         string result = target;
-        while (result.EndsWith(trimString))
+        bool changed;
+        do
         {
-            result = result.Substring(0, result.Length - trimString.Length);
-        }
-
+            changed = false;
+            foreach (var trimString in trimStrings)
+            {
+                if (string.IsNullOrEmpty(trimString)) continue;
+                while (result.EndsWith(trimString))
+                {
+                    result = result.Substring(0, result.Length - trimString.Length);
+                    changed = true;
+                }
+            }
+        } while (changed);
         return result;
     }
 }

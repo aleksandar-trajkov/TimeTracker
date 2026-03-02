@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Application.UseCases.Categories.Validators;
 using TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
