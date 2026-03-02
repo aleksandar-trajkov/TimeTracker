@@ -1,4 +1,4 @@
-using MediatR;
+using LiteBus.Commands.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.WebApi.Interfaces;
@@ -12,12 +12,12 @@ public class DeleteEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapDelete(EndpointUrl, async (
-            [FromServices] IMediator mediator,
+            [FromServices] ICommandMediator mediator,
             [FromRoute] Guid id,
             CancellationToken cancellationToken) =>
         {
             var command = new DeleteTimeEntryHandler.Command(id);
-            await mediator.Send(command, cancellationToken);
+            await mediator.SendAsync(command, cancellationToken);
             return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)

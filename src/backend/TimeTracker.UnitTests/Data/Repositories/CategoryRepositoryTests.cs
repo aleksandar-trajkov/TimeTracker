@@ -1,5 +1,4 @@
 using AwesomeAssertions;
-using TimeTracker.Domain;
 using TimeTracker.Infrastructure.Data.SqlServer.Repositories;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Data.Fixtures;

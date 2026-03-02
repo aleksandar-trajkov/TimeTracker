@@ -1,5 +1,5 @@
+using LiteBus.Commands.Abstractions;
 using Mapster;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.TimeEntries;
@@ -14,13 +14,13 @@ public class UpdateEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPut(EndpointUrl, async (
-            [FromServices] IMediator mediator,
+            [FromServices] ICommandMediator mediator,
             [FromRoute] Guid id,
             [FromBody] UpdateTimeEntryRequest request,
             CancellationToken cancellationToken) =>
         {
             var command = new UpdateTimeEntryHandler.Command(id, request.From, request.To, request.Description, request.CategoryId);
-            var result = await mediator.Send(command, cancellationToken);
+            var result = await mediator.SendAsync(command, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<bool>(result));
         })
         .Produces<bool>(StatusCodes.Status200OK)

@@ -1,18 +1,13 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
-using System.Reflection.Metadata.Ecma335;
-using TimeTracker.Application.Behaviours;
+﻿using LiteBus.Commands.Abstractions;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Application.UseCases.Auth.Dtos;
 using TimeTracker.Common.Encryption;
-using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
 
 namespace TimeTracker.Application.UseCases.Auth.Handlers;
 
-public class SignInHandler : IRequestHandler<SignInHandler.Query, SignInResponseDto>
+public class SignInHandler : ICommandHandler<SignInHandler.Query, SignInResponseDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenProvider _tokenProvider;
@@ -24,7 +19,7 @@ public class SignInHandler : IRequestHandler<SignInHandler.Query, SignInResponse
         _tokenProvider = tokenProvider;
         _encryptionProvider = encryptionProvider;
     }
-    public async Task<SignInResponseDto> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<SignInResponseDto> HandleAsync(Query request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
 
@@ -46,5 +41,5 @@ public class SignInHandler : IRequestHandler<SignInHandler.Query, SignInResponse
         };
     }
 
-    public record Query(string Email, string Password, bool RememberMe) : IRequest<SignInResponseDto>;
+    public record Query(string Email, string Password, bool RememberMe) : ICommand<SignInResponseDto>;
 }

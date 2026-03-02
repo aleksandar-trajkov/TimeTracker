@@ -1,11 +1,11 @@
-using MediatR;
+using LiteBus.Commands.Abstractions;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.TimeEntries.Handlers;
 
-public class CreateTimeEntryHandler : IRequestHandler<CreateTimeEntryHandler.Command, TimeEntry>
+public class CreateTimeEntryHandler : ICommandHandler<CreateTimeEntryHandler.Command, TimeEntry>
 {
     private readonly IUserContext _userContext;
     private readonly ITimeEntryRepository _timeEntryRepository;
@@ -16,7 +16,7 @@ public class CreateTimeEntryHandler : IRequestHandler<CreateTimeEntryHandler.Com
         _timeEntryRepository = timeEntryRepository;
     }
 
-    public async Task<TimeEntry> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<TimeEntry> HandleAsync(Command request, CancellationToken cancellationToken)
     {
         var timeEntry = new TimeEntry
         {
@@ -33,5 +33,5 @@ public class CreateTimeEntryHandler : IRequestHandler<CreateTimeEntryHandler.Com
         return timeEntry;
     }
 
-    public record Command(DateTimeOffset From, DateTimeOffset To, string Description, Guid CategoryId) : IRequest<TimeEntry>;
+    public record Command(DateTimeOffset From, DateTimeOffset To, string Description, Guid CategoryId) : ICommand<TimeEntry>;
 }

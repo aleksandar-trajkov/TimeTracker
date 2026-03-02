@@ -1,5 +1,5 @@
-﻿using Mapster;
-using MediatR;
+﻿using LiteBus.Queries.Abstractions;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.WebApi.Contracts.Responses.V1.Categories;
@@ -12,12 +12,13 @@ public class GetAllEndpoint : IEndpointDefinition
     internal static readonly string EndpointUrl = "/categories";
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
-        return app.MapGet(EndpointUrl, async ([FromServices] IMediator mediator,
+        return app.MapGet(EndpointUrl, async (
+            [FromServices] IQueryMediator mediator,
             [FromQuery] Guid organizationId,
             CancellationToken cancellationToken) =>
         {
             var query = new GetAllCategoriesHandler.Query(organizationId);
-            var result = await mediator.Send(query, cancellationToken);
+            var result = await mediator.QueryAsync(query, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<List<CategoryResponse>>(result));
         })
                 .Produces<List<CategoryResponse>>(StatusCodes.Status200OK)

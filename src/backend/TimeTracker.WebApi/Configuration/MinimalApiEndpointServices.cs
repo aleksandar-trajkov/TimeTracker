@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Reflection;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Configuration;

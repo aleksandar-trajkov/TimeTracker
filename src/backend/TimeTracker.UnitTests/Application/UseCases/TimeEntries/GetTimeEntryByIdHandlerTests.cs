@@ -45,7 +45,7 @@ public class GetTimeEntryByIdHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -76,7 +76,7 @@ public class GetTimeEntryByIdHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
 
         // Act
-        var act = async () => await _sut.Handle(query, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         await act.Should().ThrowAsync<UnauthorizedAccessException>()
@@ -102,7 +102,7 @@ public class GetTimeEntryByIdHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
 
         // Act & Assert
-        await _sut.Handle(query, cancellationToken);
+        await _sut.HandleAsync(query, cancellationToken);
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class GetTimeEntryByIdHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().BeSameAs(timeEntry);
@@ -147,7 +147,7 @@ public class GetTimeEntryByIdHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
 
         // Act
-        var act = async () => await _sut.Handle(query, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         await act.Should().NotThrowAsync();

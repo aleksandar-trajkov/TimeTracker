@@ -1,4 +1,4 @@
-using MediatR;
+using LiteBus.Commands.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.Categories;
@@ -13,13 +13,13 @@ public class UpdateEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPut(EndpointUrl, async (
-            [FromServices] IMediator mediator,
+            [FromServices] ICommandMediator mediator,
             [FromRoute] Guid id,
             [FromBody] UpdateCategoryRequest request,
             CancellationToken cancellationToken) =>
         {
             var command = new UpdateCategoryHandler.Command(id, request.Name, request.Description);
-            var result = await mediator.Send(command, cancellationToken);
+            var result = await mediator.SendAsync(command, cancellationToken);
 
             return result ? Results.NoContent() : Results.NotFound();
         })

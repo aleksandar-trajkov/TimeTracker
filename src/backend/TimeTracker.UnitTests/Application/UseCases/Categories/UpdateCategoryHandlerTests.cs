@@ -1,7 +1,5 @@
 using AwesomeAssertions;
-using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
-using TimeTracker.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
@@ -35,7 +33,7 @@ public class UpdateCategoryHandlerTests
         _categoryRepository.GivenUpdateAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().BeTrue();
@@ -66,7 +64,7 @@ public class UpdateCategoryHandlerTests
         _categoryRepository.GivenUpdateAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().BeTrue();
@@ -96,7 +94,7 @@ public class UpdateCategoryHandlerTests
         _categoryRepository.GivenUpdateAsyncFails();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().BeFalse();
@@ -119,7 +117,7 @@ public class UpdateCategoryHandlerTests
         _categoryRepository.GivenUpdateAsync(cancellationToken);
 
         // Act
-        var result = await _sut.Handle(command, cancellationToken);
+        var result = await _sut.HandleAsync(command, cancellationToken);
 
         // Assert
         result.Should().BeTrue();
@@ -149,7 +147,7 @@ public class UpdateCategoryHandlerTests
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
 
         // Act
-        var result = await _sut.Handle(command, cancellationToken);
+        var result = await _sut.HandleAsync(command, cancellationToken);
 
         // Assert
         result.Should().BeFalse();

@@ -45,7 +45,7 @@ public class UpdateTimeEntryHandlerTests
         _timeEntryRepository.GivenUpdateAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().BeTrue();
@@ -79,7 +79,7 @@ public class UpdateTimeEntryHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
 
         // Act
-        var act = async () => await _sut.Handle(command, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         await act.Should().ThrowAsync<UnauthorizedAccessException>()
@@ -109,7 +109,7 @@ public class UpdateTimeEntryHandlerTests
         _timeEntryRepository.GivenUpdateAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().BeTrue();
@@ -139,7 +139,7 @@ public class UpdateTimeEntryHandlerTests
         _timeEntryRepository.GivenUpdateAsync();
 
         // Act & Assert
-        await _sut.Handle(command, cancellationToken);
+        await _sut.HandleAsync(command, cancellationToken);
     }
 
     [Fact]
@@ -165,7 +165,7 @@ public class UpdateTimeEntryHandlerTests
         _timeEntryRepository.GivenUpdateAsync();
 
         // Act
-        await _sut.Handle(command, CancellationToken.None);
+        await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         existingTimeEntry.UserId.Should().Be(userId);
@@ -199,7 +199,7 @@ public class UpdateTimeEntryHandlerTests
         _timeEntryRepository.GivenUpdateAsync();
 
         // Act
-        await _sut.Handle(command, CancellationToken.None);
+        await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         existingTimeEntry.From.Should().Be(newFrom);

@@ -1,12 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
 using Testcontainers.MsSql;
 using TimeTracker.Domain.Base;
 using TimeTracker.Infrastructure.Data.SqlServer;
-using TimeTracker.Infrastructure.Data.SqlServer.Interfaces;
 
 namespace TimeTracker.UnitTests.Data.Fixtures;
 

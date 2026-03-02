@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
+using LiteBus.Commands;
+using LiteBus.Extensions.Microsoft.DependencyInjection;
+using LiteBus.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using TimeTracker.Application.Behaviours;
 using TimeTracker.Application.Interfaces.Auth;
-using TimeTracker.Application.Interfaces.Data.Base;
-using TimeTracker.Application.UseCases.TimeEntries.Authorizators;
-using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 
 namespace TimeTracker.Application.Configuration;
 
@@ -13,11 +12,10 @@ public static class ServicesConfigExtensions
 {
     public static IServiceCollection AddMediatorServices(this IServiceCollection services)
     {
-        services.AddMediatR(config =>
+        services.AddLiteBus(config =>
         {
-            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            config.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
+            config.AddCommandModule(module => module.RegisterFromAssembly(Assembly.GetExecutingAssembly()));
+            config.AddQueryModule(module => module.RegisterFromAssembly(Assembly.GetExecutingAssembly()));
         });
 
         return services;

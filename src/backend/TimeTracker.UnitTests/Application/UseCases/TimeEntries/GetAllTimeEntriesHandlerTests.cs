@@ -41,7 +41,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, timeEntries);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -63,7 +63,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -84,7 +84,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
 
         // Act
-        await _sut.Handle(query, CancellationToken.None);
+        await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert - verify the correct userId was used (implicitly by the mock setup)
     }
@@ -103,7 +103,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
 
         // Act
-        await _sut.Handle(query, CancellationToken.None);
+        await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert - verify from and to were passed correctly (implicitly by the mock setup)
     }
@@ -123,7 +123,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
 
         // Act & Assert
-        await _sut.Handle(query, cancellationToken);
+        await _sut.HandleAsync(query, cancellationToken);
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, timeEntries);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().HaveCount(3);
@@ -188,7 +188,7 @@ public class GetAllTimeEntriesHandlerTests
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, timeEntries);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().AllSatisfy(te => te.UserId.Should().Be(userId));

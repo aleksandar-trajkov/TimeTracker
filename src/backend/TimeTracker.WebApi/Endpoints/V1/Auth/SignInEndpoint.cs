@@ -1,5 +1,5 @@
-﻿using Mapster;
-using MediatR;
+﻿using LiteBus.Commands.Abstractions;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.Auth;
@@ -14,12 +14,12 @@ public class SignInEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPost(EndpointUrl, async (
-            [FromServices] IMediator mediator,
+            [FromServices] ICommandMediator mediator,
             [FromBody] SignInRequest request,
             CancellationToken cancellationToken) =>
         {
             var query = request.Adapt<SignInHandler.Query>();
-            var result = await mediator.Send(query, cancellationToken);
+            var result = await mediator.SendAsync(query, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<SignInResponse>(result));
         })
             .Produces<SignInResponse>(StatusCodes.Status200OK)

@@ -1,8 +1,6 @@
 using AwesomeAssertions;
 using TimeTracker.Application.Helpers;
-using TimeTracker.Domain;
 using TimeTracker.Domain.Auth;
-using TimeTracker.Domain.Base;
 using TimeTracker.Infrastructure.Data.SqlServer.Repositories;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;

@@ -1,8 +1,6 @@
 using AwesomeAssertions;
-using NSubstitute;
 using TimeTracker.Application.UseCases.Auth.Dtos;
 using TimeTracker.Application.UseCases.Auth.Handlers;
-using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
 using TimeTracker.UnitTests.Common.Builders.Application.Auth;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
@@ -46,7 +44,7 @@ public class RememberMeSignInHandlerTests
             .Build();
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -68,7 +66,7 @@ public class RememberMeSignInHandlerTests
             .Build();
 
         // Act
-        var act = async () => await _sut.Handle(query, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         var exception = await act.Should().ThrowAsync<AuthenticationException>()
@@ -89,7 +87,7 @@ public class RememberMeSignInHandlerTests
             .Build();
 
         // Act
-        var act = async () => await _sut.Handle(query, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         var exception = await act.Should().ThrowAsync<AuthenticationException>()
@@ -112,7 +110,7 @@ public class RememberMeSignInHandlerTests
             .Build();
 
         // Act
-        var act = async () => await _sut.Handle(query, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         await act.Should().ThrowAsync<AuthenticationException>()
@@ -139,7 +137,7 @@ public class RememberMeSignInHandlerTests
             .Build();
 
         // Act
-        var act = async () => await _sut.Handle(query, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         var exception = await act.Should().ThrowAsync<AuthenticationException>()

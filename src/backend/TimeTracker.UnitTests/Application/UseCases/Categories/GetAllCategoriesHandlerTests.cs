@@ -1,5 +1,4 @@
 using AwesomeAssertions;
-using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain;
@@ -35,7 +34,7 @@ public class GetAllCategoriesHandlerTests
         var query = new GetAllCategoriesHandler.Query(organizationId);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -54,7 +53,7 @@ public class GetAllCategoriesHandlerTests
         var query = new GetAllCategoriesHandler.Query(organizationId);
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

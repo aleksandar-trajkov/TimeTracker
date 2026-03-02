@@ -1,14 +1,9 @@
 using AttributeBuilder.IoC;
 using Mapster;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TimeTracker.Common.Configuration;
 using TimeTracker.WebApi.Configuration;
-using TimeTracker.WebApi.Helpers;
 using TimeTracker.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);

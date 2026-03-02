@@ -1,9 +1,9 @@
-using MediatR;
+using LiteBus.Commands.Abstractions;
 using TimeTracker.Application.Interfaces.Data;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
 
-public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryHandler.Command>
+public class DeleteCategoryHandler : ICommandHandler<DeleteCategoryHandler.Command>
 {
     private readonly ICategoryRepository _categoryRepository;
 
@@ -12,10 +12,10 @@ public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryHandler.Comma
         _categoryRepository = categoryRepository;
     }
 
-    public async Task Handle(Command request, CancellationToken cancellationToken)
+    public async Task HandleAsync(Command request, CancellationToken cancellationToken)
     {
         await _categoryRepository.DeleteAsync(request.Id, cancellationToken);
     }
 
-    public record Command(Guid Id) : IRequest;
+    public record Command(Guid Id) : ICommand;
 }

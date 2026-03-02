@@ -1,10 +1,7 @@
 using AwesomeAssertions;
-using FluentValidation;
-using TimeTracker.Application.Behaviours;
 using TimeTracker.Application.UseCases.Auth.Dtos;
 using TimeTracker.Application.UseCases.Auth.Handlers;
 using TimeTracker.Common.Encryption;
-using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
 using TimeTracker.UnitTests.Common.Builders.Application.Auth;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
@@ -54,7 +51,7 @@ public class SignInHandlerTests
             .Build();
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -85,7 +82,7 @@ public class SignInHandlerTests
             .Build();
 
         // Act
-        var result = await _sut.Handle(query, CancellationToken.None);
+        var result = await _sut.HandleAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -113,7 +110,7 @@ public class SignInHandlerTests
             .Build();
 
         // Act
-        var result = await Record.ExceptionAsync(() => _sut.Handle(query, CancellationToken.None));
+        var result = await Record.ExceptionAsync(() => _sut.HandleAsync(query, CancellationToken.None));
 
         // Assert
         result.Should().NotBeNull();
@@ -142,7 +139,7 @@ public class SignInHandlerTests
             .Build();
 
         // Act
-        var result = await Record.ExceptionAsync(() => _sut.Handle(query, CancellationToken.None));
+        var result = await Record.ExceptionAsync(() => _sut.HandleAsync(query, CancellationToken.None));
 
         // Assert
         result.Should().NotBeNull();

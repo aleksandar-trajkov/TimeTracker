@@ -38,7 +38,7 @@ public class DeleteTimeEntryHandlerTests
         _timeEntryRepository.GivenDeleteAsync();
 
         // Act
-        await _sut.Handle(command, CancellationToken.None);
+        await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert - no exception thrown
     }
@@ -62,7 +62,7 @@ public class DeleteTimeEntryHandlerTests
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
 
         // Act
-        var act = async () => await _sut.Handle(command, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         await act.Should().ThrowAsync<UnauthorizedAccessException>()
@@ -89,7 +89,7 @@ public class DeleteTimeEntryHandlerTests
         _timeEntryRepository.GivenDeleteAsync();
 
         // Act & Assert
-        await _sut.Handle(command, cancellationToken);
+        await _sut.HandleAsync(command, cancellationToken);
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class DeleteTimeEntryHandlerTests
         _timeEntryRepository.GivenDeleteAsync();
 
         // Act
-        await _sut.Handle(command, CancellationToken.None);
+        await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert - verify the method was called (implicitly by the mock setup)
     }
@@ -135,7 +135,7 @@ public class DeleteTimeEntryHandlerTests
         _timeEntryRepository.GivenDeleteAsync();
 
         // Act
-        var act = async () => await _sut.Handle(command, CancellationToken.None);
+        var act = async () => await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         await act.Should().NotThrowAsync();

@@ -1,11 +1,11 @@
-using MediatR;
+using LiteBus.Queries.Abstractions;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.TimeEntries.Handlers;
 
-public class GetTimeEntryByIdHandler : IRequestHandler<GetTimeEntryByIdHandler.Query, TimeEntry>
+public class GetTimeEntryByIdHandler : IQueryHandler<GetTimeEntryByIdHandler.Query, TimeEntry>
 {
     private readonly IUserContext _userContext;
     private readonly ITimeEntryRepository _timeEntryRepository;
@@ -16,7 +16,7 @@ public class GetTimeEntryByIdHandler : IRequestHandler<GetTimeEntryByIdHandler.Q
         _timeEntryRepository = timeEntryRepository;
     }
 
-    public async Task<TimeEntry> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<TimeEntry> HandleAsync(Query request, CancellationToken cancellationToken)
     {
         var timeEntry = await _timeEntryRepository.GetByIdAsync(request.Id, cancellationToken);
 
@@ -29,5 +29,5 @@ public class GetTimeEntryByIdHandler : IRequestHandler<GetTimeEntryByIdHandler.Q
         return timeEntry;
     }
 
-    public record Query(Guid Id) : IRequest<TimeEntry>;
+    public record Query(Guid Id) : IQuery<TimeEntry>;
 }

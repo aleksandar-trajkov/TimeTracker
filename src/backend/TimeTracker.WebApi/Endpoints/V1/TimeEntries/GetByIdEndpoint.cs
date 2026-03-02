@@ -1,5 +1,5 @@
+using LiteBus.Queries.Abstractions;
 using Mapster;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.WebApi.Contracts.Responses.V1.TimeEntries;
@@ -14,12 +14,12 @@ public class GetByIdEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapGet(EndpointUrl, async (
-            [FromServices] IMediator mediator,
+            [FromServices] IQueryMediator mediator,
             [FromRoute] Guid id,
             CancellationToken cancellationToken) =>
         {
             var query = new GetTimeEntryByIdHandler.Query(id);
-            var result = await mediator.Send(query, cancellationToken);
+            var result = await mediator.QueryAsync(query, cancellationToken);
             return Results.Ok(TypeAdapter.Adapt<TimeEntryResponse>(result));
         })
         .Produces<TimeEntryResponse>(StatusCodes.Status200OK)

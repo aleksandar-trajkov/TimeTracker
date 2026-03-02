@@ -1,6 +1,5 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
-using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
@@ -35,7 +34,7 @@ public class CreateTimeEntryHandlerTests
         _timeEntryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -62,7 +61,7 @@ public class CreateTimeEntryHandlerTests
         _timeEntryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.UserId.Should().Be(userId);
@@ -82,7 +81,7 @@ public class CreateTimeEntryHandlerTests
         _timeEntryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Id.Should().NotBe(Guid.Empty);
@@ -103,7 +102,7 @@ public class CreateTimeEntryHandlerTests
         _timeEntryRepository.GivenInsertAsync();
 
         // Act & Assert
-        await _sut.Handle(command, cancellationToken);
+        await _sut.HandleAsync(command, cancellationToken);
     }
 
     [Fact]
@@ -120,7 +119,7 @@ public class CreateTimeEntryHandlerTests
         _timeEntryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Description.Should().Be("A");
@@ -141,7 +140,7 @@ public class CreateTimeEntryHandlerTests
         _timeEntryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Description.Should().Be(longDescription);

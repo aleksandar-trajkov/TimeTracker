@@ -1,5 +1,5 @@
+using LiteBus.Commands.Abstractions;
 using Mapster;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.Categories;
@@ -15,12 +15,12 @@ public class CreateEndpoint : IEndpointDefinition
     public IEndpointConventionBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPost(EndpointUrl, async (
-            [FromServices] IMediator mediator,
+            [FromServices] ICommandMediator mediator,
             [FromBody] CreateCategoryRequest request,
             CancellationToken cancellationToken) =>
         {
             var command = request.Adapt<CreateCategoryHandler.Command>();
-            var response = await mediator.Send(command, cancellationToken);
+            var response = await mediator.SendAsync(command, cancellationToken);
             return TypeAdapter.Adapt<CreateCategoryResponse>(response);
         })
         .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)

@@ -1,10 +1,9 @@
-using MediatR;
+using LiteBus.Commands.Abstractions;
 using TimeTracker.Application.Interfaces.Data;
-using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
 
-public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Command, bool>
+public class UpdateCategoryHandler : ICommandHandler<UpdateCategoryHandler.Command, bool>
 {
     private readonly ICategoryRepository _categoryRepository;
 
@@ -13,7 +12,7 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Comma
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<bool> HandleAsync(Command request, CancellationToken cancellationToken)
     {
         var existingCategory = await _categoryRepository.GetByIdAsync(request.Id, cancellationToken);
 
@@ -25,5 +24,5 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Comma
         return result > 0;
     }
 
-    public record Command(Guid Id, string Name, string? Description) : IRequest<bool>;
+    public record Command(Guid Id, string Name, string? Description) : ICommand<bool>;
 }

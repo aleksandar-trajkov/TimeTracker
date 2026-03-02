@@ -1,8 +1,4 @@
-using AwesomeAssertions;
-using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
-using TimeTracker.Domain;
-using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Categories;
@@ -29,7 +25,7 @@ public class DeleteCategoryHandlerTests
         _categoryRepository.GivenDeleteAsync();
 
         // Act
-        await _sut.Handle(command, CancellationToken.None);
+        await _sut.HandleAsync(command, CancellationToken.None);
 
         await _categoryRepository.VerifyDeleteAsyncWasCalledWith(categoryId, CancellationToken.None);
     }
@@ -46,7 +42,7 @@ public class DeleteCategoryHandlerTests
         _categoryRepository.GivenDeleteAsync(cancellationToken);
 
         // Act
-        await _sut.Handle(command, cancellationToken);
+        await _sut.HandleAsync(command, cancellationToken);
 
         await _categoryRepository.VerifyDeleteAsyncWasCalledWith(categoryId, cancellationToken);
     }

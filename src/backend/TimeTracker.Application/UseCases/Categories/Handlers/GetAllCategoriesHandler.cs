@@ -1,11 +1,10 @@
-﻿using MediatR;
-using TimeTracker.Application.Interfaces.Auth;
+﻿using LiteBus.Queries.Abstractions;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
 
-public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesHandler.Query, List<Category>>
+public class GetAllCategoriesHandler : IQueryHandler<GetAllCategoriesHandler.Query, List<Category>>
 {
     private readonly ICategoryRepository _categoryRepository;
 
@@ -13,9 +12,9 @@ public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesHandler.Q
     {
         _categoryRepository = categoryRepository;
     }
-    public async Task<List<Category>> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<List<Category>> HandleAsync(Query request, CancellationToken cancellationToken)
     {
         return (await _categoryRepository.GetAllAsync(request.OrganizationId, cancellationToken)).ToList();
     }
-    public record Query(Guid OrganizationId) : IRequest<List<Category>>;
+    public record Query(Guid OrganizationId) : IQuery<List<Category>>;
 }

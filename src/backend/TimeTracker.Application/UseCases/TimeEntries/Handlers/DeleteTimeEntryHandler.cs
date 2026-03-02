@@ -1,10 +1,10 @@
-using MediatR;
+using LiteBus.Commands.Abstractions;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.Interfaces.Data;
 
 namespace TimeTracker.Application.UseCases.TimeEntries.Handlers;
 
-public class DeleteTimeEntryHandler : IRequestHandler<DeleteTimeEntryHandler.Command>
+public class DeleteTimeEntryHandler : ICommandHandler<DeleteTimeEntryHandler.Command>
 {
     private readonly IUserContext _userContext;
     private readonly ITimeEntryRepository _timeEntryRepository;
@@ -15,7 +15,7 @@ public class DeleteTimeEntryHandler : IRequestHandler<DeleteTimeEntryHandler.Com
         _timeEntryRepository = timeEntryRepository;
     }
 
-    public async Task Handle(Command request, CancellationToken cancellationToken)
+    public async Task HandleAsync(Command request, CancellationToken cancellationToken)
     {
         var existingTimeEntry = await _timeEntryRepository.GetByIdAsync(request.Id, cancellationToken);
 
@@ -28,5 +28,5 @@ public class DeleteTimeEntryHandler : IRequestHandler<DeleteTimeEntryHandler.Com
         await _timeEntryRepository.DeleteAsync(request.Id, cancellationToken);
     }
 
-    public record Command(Guid Id) : IRequest;
+    public record Command(Guid Id) : ICommand;
 }

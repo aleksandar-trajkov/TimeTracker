@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Infrastructure.Data.SqlServer.Base;

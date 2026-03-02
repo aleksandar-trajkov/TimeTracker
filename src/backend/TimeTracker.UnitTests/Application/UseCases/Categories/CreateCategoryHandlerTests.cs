@@ -1,7 +1,5 @@
 using AwesomeAssertions;
-using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
-using TimeTracker.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
@@ -28,7 +26,7 @@ public class CreateCategoryHandlerTests
         _categoryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().NotBe(Guid.Empty);
@@ -50,7 +48,7 @@ public class CreateCategoryHandlerTests
         _categoryRepository.GivenInsertAsync();
 
         // Act
-        var result = await _sut.Handle(command, CancellationToken.None);
+        var result = await _sut.HandleAsync(command, CancellationToken.None);
 
         // Assert
         result.Should().NotBe(Guid.Empty);
@@ -73,7 +71,7 @@ public class CreateCategoryHandlerTests
         _categoryRepository.GivenInsertAsync(cancellationToken);
 
         // Act & Assert
-        await _sut.Handle(command, cancellationToken);
+        await _sut.HandleAsync(command, cancellationToken);
 
 
         var cat = new CategoryBuilder()

@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using LiteBus.Commands.Abstractions;
 using TimeTracker.Application.Interfaces.Auth;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Application.UseCases.Auth.Dtos;
@@ -6,7 +6,7 @@ using TimeTracker.Domain.Exceptions;
 
 namespace TimeTracker.Application.UseCases.Auth.Handlers;
 
-public class RememberMeSignInHandler : IRequestHandler<RememberMeSignInHandler.Query, SignInResponseDto>
+public class RememberMeSignInHandler : ICommandHandler<RememberMeSignInHandler.Query, SignInResponseDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenProvider _tokenProvider;
@@ -17,7 +17,7 @@ public class RememberMeSignInHandler : IRequestHandler<RememberMeSignInHandler.Q
         _tokenProvider = tokenProvider;
     }
 
-    public async Task<SignInResponseDto> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<SignInResponseDto> HandleAsync(Query request, CancellationToken cancellationToken)
     {
         var email = _tokenProvider.TryGetLoginEmailFromRememberMeToken(request.RememberMeToken);
 
@@ -45,5 +45,5 @@ public class RememberMeSignInHandler : IRequestHandler<RememberMeSignInHandler.Q
         };
     }
 
-    public record Query(string RememberMeToken) : IRequest<SignInResponseDto>;
+    public record Query(string RememberMeToken) : ICommand<SignInResponseDto>;
 }

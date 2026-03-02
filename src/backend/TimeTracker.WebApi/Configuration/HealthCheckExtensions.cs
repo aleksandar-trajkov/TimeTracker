@@ -1,6 +1,4 @@
 ﻿using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using TimeTracker.WebApi.Options;
 
 namespace TimeTracker.WebApi.Configuration;
 
