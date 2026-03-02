@@ -25,7 +25,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
             .WithName("Test Organization 2")
             .WithDescription("Test Description")
             .Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         // Act
         var result = await _sut.FindByIdAsync(organization.Id, CancellationToken.None);
@@ -58,7 +58,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
             .WithName("Test Organization")
             .WithDescription("Test Description")
             .Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         // Act
         var result = await _sut.GetByIdAsync(organization.Id, CancellationToken.None);
@@ -86,7 +86,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         // Act
         var result = await _sut.ExistsAsync(organization.Id, CancellationToken.None);
@@ -145,7 +145,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
             .WithName("Original Name")
             .WithDescription("Original Description")
             .Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         // Modify the organization
         organization.Name = "Updated Name";
@@ -176,7 +176,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         // Act
         var result = await _sut.DeleteAsync(organization, true, CancellationToken.None);
@@ -201,7 +201,7 @@ public class OrganizationRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         // Act
         await _sut.DeleteAsync(organization.Id, CancellationToken.None);

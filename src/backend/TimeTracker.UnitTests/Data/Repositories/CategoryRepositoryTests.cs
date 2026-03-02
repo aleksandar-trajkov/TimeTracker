@@ -22,13 +22,13 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder()
             .WithOrganizationId(organization.Id)
             .WithName("Test Category")
             .Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Act
         var result = await _sut.FindByIdAsync(category.Id, CancellationToken.None);
@@ -58,13 +58,13 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder()
             .WithOrganizationId(organization.Id)
             .WithName("Test Category")
             .Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Act
         var result = await _sut.GetByIdAsync(category.Id, CancellationToken.None);
@@ -92,10 +92,10 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Act
         var result = await _sut.ExistsAsync(category.Id, CancellationToken.None);
@@ -122,7 +122,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder()
             .WithOrganizationId(organization.Id)
@@ -153,13 +153,13 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder()
             .WithOrganizationId(organization.Id)
             .WithName("Original Name")
             .Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Modify the category
         category.Name = "Updated Name";
@@ -190,10 +190,10 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Act
         var result = await _sut.DeleteAsync(category, true, CancellationToken.None);
@@ -218,10 +218,10 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Act
         await _sut.DeleteAsync(category.Id, CancellationToken.None);
@@ -247,10 +247,10 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
-        _fixture.Seed<Guid>(new[] { category });
+        _fixture.Seed<Guid>(category);
 
         // Act
         await _sut.DeleteAsync(category.Id, CancellationToken.None);
@@ -265,7 +265,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
 
@@ -284,7 +284,7 @@ public class CategoryRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(new[] { organization });
+        _fixture.Seed<Guid>(organization);
 
         var category = new CategoryBuilder().WithOrganizationId(organization.Id).Build();
 

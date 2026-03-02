@@ -25,14 +25,14 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder()
             .WithUserId(user.Id)
             .WithKey(PermissionEnum.CanEditOwnTimeEntry)
             .Build();
-        _fixture.Seed<Guid>(new[] { permission });
+        _fixture.Seed<Guid>(permission);
 
         // Act
         var result = await _sut.FindByIdAsync(permission.Id, CancellationToken.None);
@@ -64,14 +64,14 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder()
             .WithUserId(user.Id)
             .WithKey(PermissionEnum.CanEditOwnTimeEntry)
             .Build();
-        _fixture.Seed<Guid>(new[] { permission });
+        _fixture.Seed<Guid>(permission);
 
         // Act
         var result = await _sut.GetByIdAsync(permission.Id, CancellationToken.None);
@@ -101,11 +101,11 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder().WithUserId(user.Id).Build();
-        _fixture.Seed<Guid>(new[] { permission });
+        _fixture.Seed<Guid>(permission);
 
         // Act
         var result = await _sut.ExistsAsync(permission.Id, CancellationToken.None);
@@ -134,8 +134,8 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder()
             .WithUserId(user.Id)
@@ -177,11 +177,11 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder().WithUserId(user.Id).Build();
-        _fixture.Seed<Guid>(new[] { permission });
+        _fixture.Seed<Guid>(permission);
 
         // Act
         var result = await _sut.DeleteAsync(permission, true, CancellationToken.None);
@@ -208,11 +208,11 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder().WithUserId(user.Id).Build();
-        _fixture.Seed<Guid>(new[] { permission });
+        _fixture.Seed<Guid>(permission);
 
         // Act
         await _sut.DeleteAsync(permission.Id, CancellationToken.None);
@@ -239,8 +239,8 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder().WithUserId(user.Id).Build();
 
@@ -261,8 +261,8 @@ public class PermissionRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var permission = new PermissionBuilder().WithUserId(user.Id).Build();
 

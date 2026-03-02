@@ -30,7 +30,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
         // Arrange
         var organization1 = new OrganizationBuilder().Build();
         var organization2 = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization1, organization2));
+        _fixture.Seed<Guid>(ListHelper.CreateList(organization1, organization2).ToArray());
 
         // Create users for organization1
         var user1Id = Guid.NewGuid();
@@ -68,13 +68,11 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithLastName("Three")
             .Build();
 
-        _fixture.Seed<Guid>(ListHelper.CreateList(user1, user2, user3));
+        _fixture.Seed<Guid>(user1, user2, user3);
 
         // Seed permissions
-        var user1Permissions = (ICollection<Domain.Auth.Permission>)user1.Permissions;
-        var user2Permissions = (ICollection<Domain.Auth.Permission>)user2.Permissions;
-        _fixture.Seed<Guid>(user1Permissions);
-        _fixture.Seed<Guid>(user2Permissions);
+        _fixture.Seed<Guid>(user1.Permissions.ToArray());
+        _fixture.Seed<Guid>(user2.Permissions.ToArray());
 
         // Act
         var result = await _sut.GetAllAsync(organization1.Id, CancellationToken.None);
@@ -105,7 +103,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         // Act
         var result = await _sut.GetAllAsync(organization.Id, CancellationToken.None);
@@ -134,7 +132,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var userWithoutPermissions = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -142,7 +140,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithFirstName("No")
             .WithLastName("Permissions")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(userWithoutPermissions));
+        _fixture.Seed<Guid>(userWithoutPermissions);
 
         // Act
         var result = await _sut.GetAllAsync(organization.Id, CancellationToken.None);
@@ -162,13 +160,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("cancellation@test.com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         using var cts = new CancellationTokenSource();
         cts.Cancel();
@@ -183,7 +181,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var userId = Guid.NewGuid();
         var user = new UserBuilder()
@@ -195,10 +193,9 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
                 new PermissionBuilder().WithKey(PermissionEnum.CanEditAnyTimeEntry).WithUserId(userId).Build())
             .AsEnumerable())
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
-        var permissions = (ICollection<Domain.Auth.Permission>)user.Permissions;
-        _fixture.Seed<Guid>(permissions);
+        _fixture.Seed<Guid>(user.Permissions.ToArray());
 
         // Act
         var result = await _sut.GetByEmailAsync(user.Email, CancellationToken.None);
@@ -228,13 +225,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("cancellation2@test.com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         using var cts = new CancellationTokenSource();
         cts.Cancel();
@@ -249,13 +246,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("exists@example.com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         // Act
         var result = await _sut.ExistsByEmailAsync(user.Email, CancellationToken.None);
@@ -282,13 +279,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("CaseSensitive@Test.Com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         // Act
         var result = await _sut.ExistsByEmailAsync("casesensitive@test.com", CancellationToken.None);
@@ -318,7 +315,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -326,7 +323,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithFirstName("John")
             .WithLastName("Doe")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         // Act
         var result = await _sut.FindByIdAsync(user.Id, CancellationToken.None);
@@ -358,7 +355,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -366,7 +363,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithFirstName("John")
             .WithLastName("Doe")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         // Act
         var result = await _sut.GetByIdAsync(user.Id, CancellationToken.None);
@@ -396,13 +393,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var user = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("exists2@example.com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(user));
+        _fixture.Seed<Guid>(user);
 
         // Act
         var result = await _sut.ExistsAsync(user.Id, CancellationToken.None);
@@ -429,7 +426,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var newUser = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -465,7 +462,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var userToUpdate = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -473,7 +470,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
             .WithFirstName("Original")
             .WithLastName("Name")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(userToUpdate));
+        _fixture.Seed<Guid>(userToUpdate);
 
         // Create updated version of the user
         var updatedUser = new UserBuilder()
@@ -513,13 +510,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var userToDelete = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("delete@test.com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(userToDelete));
+        _fixture.Seed<Guid>(userToDelete);
 
         // Act
         var result = await _sut.DeleteAsync(userToDelete, true, CancellationToken.None);
@@ -544,13 +541,13 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var userToDelete = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("deletewithid@test.com")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(userToDelete));
+        _fixture.Seed<Guid>(userToDelete);
 
         // Act
         await _sut.DeleteAsync(userToDelete.Id, CancellationToken.None);
@@ -575,7 +572,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var tempUser = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -597,14 +594,14 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var userToUpdate = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("updatepersist@test.com")
             .WithFirstName("Original")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(userToUpdate));
+        _fixture.Seed<Guid>(userToUpdate);
 
         var updatedUser = new UserBuilder()
             .WithId(userToUpdate.Id)
@@ -631,7 +628,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var pendingUser = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -658,7 +655,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var newUser = new UserBuilder()
             .WithOrganizationId(organization.Id)
@@ -681,14 +678,14 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     {
         // Arrange
         var organization = new OrganizationBuilder().Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(organization));
+        _fixture.Seed<Guid>(organization);
 
         var existingUser = new UserBuilder()
             .WithOrganizationId(organization.Id)
             .WithEmail("existinguser@test.com")
             .WithFirstName("Existing")
             .Build();
-        _fixture.Seed<Guid>(ListHelper.CreateList(existingUser));
+        _fixture.Seed<Guid>(existingUser);
 
         var updatedUser = new UserBuilder()
             .WithId(existingUser.Id)

@@ -44,7 +44,7 @@ public class DataTestFixture : IDisposable
 
     public DatabaseContext Context => _context;
 
-    public void Seed<T>(IEnumerable<BaseModel<T>> seedData)
+    public void Seed<T>(params BaseModel<T>[] seedData)
     {
         foreach (var item in seedData)
         {

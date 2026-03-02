@@ -25,15 +25,15 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder()
             .WithUserId(user.Id)
             .WithCode("TEST123456")
             .AsValid()
             .Build();
-        _fixture.Seed<Guid>(new[] { verificationCode });
+        _fixture.Seed<Guid>(verificationCode);
 
         // Act
         var result = await _sut.FindByIdAsync(verificationCode.Id, CancellationToken.None);
@@ -66,15 +66,15 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder()
             .WithUserId(user.Id)
             .WithCode("TEST123456")
             .AsValid()
             .Build();
-        _fixture.Seed<Guid>(new[] { verificationCode });
+        _fixture.Seed<Guid>(verificationCode);
 
         // Act
         var result = await _sut.GetByIdAsync(verificationCode.Id, CancellationToken.None);
@@ -105,12 +105,11 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder().WithUserId(user.Id).Build();
-        _fixture.Seed<Guid>(new[] { verificationCode });
-
+        _fixture.Seed<Guid>(verificationCode);
         // Act
         var result = await _sut.ExistsAsync(verificationCode.Id, CancellationToken.None);
 
@@ -138,8 +137,8 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder()
             .WithUserId(user.Id)
@@ -175,14 +174,14 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder()
             .WithUserId(user.Id)
             .AsValid()
             .Build();
-        _fixture.Seed<Guid>(new[] { verificationCode });
+        _fixture.Seed<Guid>(verificationCode);
 
         // Modify the verification code
         verificationCode.IsUsed = true;
@@ -215,12 +214,11 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder().WithUserId(user.Id).Build();
-        _fixture.Seed<Guid>(new[] { verificationCode });
-
+        _fixture.Seed<Guid>(verificationCode);
         // Act
         var result = await _sut.DeleteAsync(verificationCode, true, CancellationToken.None);
 
@@ -246,12 +244,11 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder().WithUserId(user.Id).Build();
-        _fixture.Seed<Guid>(new[] { verificationCode });
-
+        _fixture.Seed<Guid>(verificationCode);
         // Act
         await _sut.DeleteAsync(verificationCode.Id, CancellationToken.None);
 
@@ -277,8 +274,8 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder().WithUserId(user.Id).Build();
 
@@ -299,8 +296,8 @@ public class VerificationCodeRepositoryTests : IClassFixture<DataTestFixture>
         var organization = new OrganizationBuilder().Build();
         var user = new UserBuilder().WithOrganizationId(organization.Id).Build();
 
-        _fixture.Seed<Guid>(new[] { organization });
-        _fixture.Seed<Guid>(new[] { user });
+        _fixture.Seed<Guid>(organization);
+        _fixture.Seed<Guid>(user);
 
         var verificationCode = new VerificationCodeBuilder().WithUserId(user.Id).Build();
 
