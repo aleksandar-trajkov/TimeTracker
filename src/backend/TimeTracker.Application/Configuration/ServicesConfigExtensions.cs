@@ -1,9 +1,12 @@
 ﻿using FluentValidation;
 using LiteBus.Commands;
 using LiteBus.Extensions.Microsoft.DependencyInjection;
+using LiteBus.Messaging;
 using LiteBus.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Reflection.Emit;
+using TimeTracker.Application.Behaviours;
 using TimeTracker.Application.Interfaces.Auth;
 
 namespace TimeTracker.Application.Configuration;
@@ -14,6 +17,12 @@ public static class ServicesConfigExtensions
     {
         services.AddLiteBus(config =>
         {
+            config.AddMessageModule(module =>
+            {
+                module.Register(typeof(ValidationPreHandler<>));
+                module.Register(typeof(AuthorizationPreHandler<>));
+                module.Register(typeof(GlobalLoggingPreHandler<>));
+            });
             config.AddCommandModule(module => module.RegisterFromAssembly(Assembly.GetExecutingAssembly()));
             config.AddQueryModule(module => module.RegisterFromAssembly(Assembly.GetExecutingAssembly()));
         });

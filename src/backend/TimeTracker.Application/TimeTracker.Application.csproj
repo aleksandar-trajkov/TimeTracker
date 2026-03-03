@@ -11,6 +11,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="LiteBus.Commands.Extensions.Microsoft.DependencyInjection" Version="4.3.0" />
     <PackageReference Include="LiteBus.Queries.Extensions.Microsoft.DependencyInjection" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
