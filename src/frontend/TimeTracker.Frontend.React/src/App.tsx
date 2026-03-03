@@ -18,8 +18,8 @@ const SettingsModule = lazy(() => import('./modules/settings/SettingsModule'));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Number(import.meta.env.VITE_QUERY_STALE_TIME),
-      gcTime: Number(import.meta.env.VITE_QUERY_GC_TIME)
+      staleTime: parseInt(import.meta.env.VITE_QUERY_STALE_TIME),
+      gcTime: parseInt(import.meta.env.VITE_QUERY_GC_TIME)
     },
   },
 });
