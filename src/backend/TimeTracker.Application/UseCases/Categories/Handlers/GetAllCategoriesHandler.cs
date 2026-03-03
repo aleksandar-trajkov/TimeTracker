@@ -1,5 +1,6 @@
 ﻿using LiteBus.Queries.Abstractions;
 using TimeTracker.Application.Interfaces.Data;
+using TimeTracker.Common.Caching;
 using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
@@ -16,5 +17,13 @@ public class GetAllCategoriesHandler : IQueryHandler<GetAllCategoriesHandler.Que
     {
         return (await _categoryRepository.GetAllAsync(request.OrganizationId, cancellationToken)).ToList();
     }
-    public record Query(Guid OrganizationId) : IQuery<List<Category>>;
+    public record Query(Guid OrganizationId) : IQuery<List<Category>>, ICacheable
+    {
+        public string CachePrefix { get; set; } = CachingHelper.CacheKeyPrefixes.Categories;
+
+        public string GetCacheKey()
+        {
+            return $"{CachePrefix}:{nameof(OrganizationId)}-{OrganizationId}";
+        }
+    };
 }

@@ -3,6 +3,7 @@ using Mapster;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TimeTracker.Common.Configuration;
+using TimeTracker.Common.Serialization;
 using TimeTracker.WebApi.Configuration;
 using TimeTracker.WebApi.Middlewares;
 
@@ -23,8 +24,14 @@ builder.Services.AddHealthCheck(builder.Configuration);
 builder.Services.AddApiVersionServices();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    var defaultOptions = JsonSerializerHelper.DefaultOptions;
+    options.SerializerOptions.PropertyNamingPolicy = defaultOptions.PropertyNamingPolicy;
+    options.SerializerOptions.Converters.Clear();
+    foreach (var converter in defaultOptions.Converters)
+    {
+        options.SerializerOptions.Converters.Add(converter);
+    }
+    options.SerializerOptions.DefaultIgnoreCondition = defaultOptions.DefaultIgnoreCondition;
 });
 builder.Services.AddCors(options =>
 {

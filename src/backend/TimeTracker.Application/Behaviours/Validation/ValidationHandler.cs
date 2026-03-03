@@ -3,13 +3,13 @@ using LiteBus.Commands.Abstractions;
 using LiteBus.Messaging.Abstractions;
 using LiteBus.Queries.Abstractions;
 
-namespace TimeTracker.Application.Behaviours;
+namespace TimeTracker.Application.Behaviours.Validation;
 
-public class ValidationPreHandler<TRequest> : IAsyncMessagePreHandler<TRequest> where TRequest : class
+public class ValidationHandler<TRequest> : IAsyncMessagePreHandler<TRequest> where TRequest : class
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public ValidationPreHandler(IEnumerable<IValidator<TRequest>> validators)
+    public ValidationHandler(IEnumerable<IValidator<TRequest>> validators)
     {
         _validators = validators;
     }

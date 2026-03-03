@@ -1,4 +1,4 @@
-﻿namespace TimeTracker.Application.Behaviours;
+﻿namespace TimeTracker.Common.Validation;
 
 public static class ValidationErrorCodes
 {

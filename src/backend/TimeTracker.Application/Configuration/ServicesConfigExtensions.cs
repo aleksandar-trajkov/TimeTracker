@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Reflection.Emit;
 using TimeTracker.Application.Behaviours;
+using TimeTracker.Application.Behaviours.Authorization;
+using TimeTracker.Application.Behaviours.Validation;
 using TimeTracker.Application.Interfaces.Auth;
 
 namespace TimeTracker.Application.Configuration;
@@ -19,9 +21,9 @@ public static class ServicesConfigExtensions
         {
             config.AddMessageModule(module =>
             {
-                module.Register(typeof(ValidationPreHandler<>));
-                module.Register(typeof(AuthorizationPreHandler<>));
-                module.Register(typeof(GlobalLoggingPreHandler<>));
+                module.Register(typeof(GlobalLoggingHandler<>));
+                module.Register(typeof(ValidationHandler<>));
+                module.Register(typeof(AuthorizationHandler<>));
             });
             config.AddCommandModule(module => module.RegisterFromAssembly(Assembly.GetExecutingAssembly()));
             config.AddQueryModule(module => module.RegisterFromAssembly(Assembly.GetExecutingAssembly()));

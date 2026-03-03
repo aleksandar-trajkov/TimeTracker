@@ -6,11 +6,11 @@ using System.Text;
 
 namespace TimeTracker.Application.Behaviours;
 
-public sealed class GlobalLoggingPreHandler<T> : IAsyncMessagePreHandler<T> where T : class
+public sealed class GlobalLoggingHandler<T> : IAsyncMessagePreHandler<T> where T : class
 {
-    private readonly ILogger<GlobalLoggingPreHandler<T>> _logger;
+    private readonly ILogger<GlobalLoggingHandler<T>> _logger;
 
-    public GlobalLoggingPreHandler(ILogger<GlobalLoggingPreHandler<T>> logger)
+    public GlobalLoggingHandler(ILogger<GlobalLoggingHandler<T>> logger)
     {
         _logger = logger;
     }
