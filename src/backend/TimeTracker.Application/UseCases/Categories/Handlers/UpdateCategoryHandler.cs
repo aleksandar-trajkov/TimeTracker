@@ -1,5 +1,7 @@
 using MediatR;
 using TimeTracker.Application.Interfaces.Data;
+using TimeTracker.Application.UseCases.Caching.Handlers;
+using TimeTracker.Common.Caching;
 using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
@@ -7,10 +9,12 @@ namespace TimeTracker.Application.UseCases.Categories.Handlers;
 public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Command, bool>
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IMediator _mediator;
 
-    public UpdateCategoryHandler(ICategoryRepository categoryRepository)
+    public UpdateCategoryHandler(ICategoryRepository categoryRepository, IMediator mediator)
     {
         _categoryRepository = categoryRepository;
+        _mediator = mediator;
     }
 
     public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
@@ -21,6 +25,8 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryHandler.Comma
         existingCategory.Description = request.Description;
 
         var result = await _categoryRepository.UpdateAsync(existingCategory, true, cancellationToken);
+
+        await _mediator.Publish(new ClearCacheHandler.Command(CachingKeys.Categories), cancellationToken);
 
         return result > 0;
     }

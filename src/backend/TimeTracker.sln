@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11505.172 d18.3
+VisualStudioVersion = 18.3.11505.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Domain", "1. Domain", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -45,6 +45,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Infrastructure.Email.Smtp", "TimeTracker.Infrastructure.Email.Smtp\TimeTracker.Infrastructure.Email.Smtp.csproj", "{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Common", "TimeTracker.Common\TimeTracker.Common.csproj", "{E89590D7-4D12-472C-8707-C75529A03BC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Infrastructure.Caching.Memory", "TimeTracker.Infrastructure.Caching.Memory\TimeTracker.Infrastructure.Caching.Memory.csproj", "{32A7EC30-1272-4103-9335-6A60E0BB6228}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +106,10 @@ Global
 		{E89590D7-4D12-472C-8707-C75529A03BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E89590D7-4D12-472C-8707-C75529A03BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E89590D7-4D12-472C-8707-C75529A03BC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A7EC30-1272-4103-9335-6A60E0BB6228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A7EC30-1272-4103-9335-6A60E0BB6228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A7EC30-1272-4103-9335-6A60E0BB6228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A7EC30-1272-4103-9335-6A60E0BB6228}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{721F9CCE-F4B5-4C3F-ABF7-3C3A6045F13A} = {266AD54D-294A-4677-A5A0-430860345226}
 		{A045FF8E-BA25-4CF7-9DFC-FC85849BCD9B} = {266AD54D-294A-4677-A5A0-430860345226}
 		{E89590D7-4D12-472C-8707-C75529A03BC2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{32A7EC30-1272-4103-9335-6A60E0BB6228} = {266AD54D-294A-4677-A5A0-430860345226}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA4001BF-542F-44E9-8214-8BE8453CDDD4}

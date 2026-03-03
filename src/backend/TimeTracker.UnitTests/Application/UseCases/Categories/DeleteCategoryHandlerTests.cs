@@ -3,6 +3,7 @@ using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain;
+using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.UseCases.Categories;
@@ -10,12 +11,14 @@ namespace TimeTracker.UnitTests.Application.UseCases.Categories;
 public class DeleteCategoryHandlerTests
 {
     private readonly CategoryRepositoryMockDouble _categoryRepository;
+    private readonly MediatorMockDouble _mediator;
     private readonly DeleteCategoryHandler _sut;
 
     public DeleteCategoryHandlerTests()
     {
         _categoryRepository = new CategoryRepositoryMockDouble();
-        _sut = new DeleteCategoryHandler(_categoryRepository.Instance);
+        _mediator = new MediatorMockDouble();
+        _sut = new DeleteCategoryHandler(_categoryRepository.Instance, _mediator.Instance);
     }
 
     [Fact]

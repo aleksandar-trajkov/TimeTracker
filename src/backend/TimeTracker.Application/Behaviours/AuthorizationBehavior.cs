@@ -14,6 +14,8 @@ public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
     }
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(next);
+
         foreach (var authorizator in _authorizators)
         {
             await authorizator.AuthorizeAsync(request, cancellationToken);

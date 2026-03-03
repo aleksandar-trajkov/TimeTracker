@@ -18,6 +18,7 @@ public static class ServicesConfigExtensions
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             config.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
+            config.AddOpenBehavior(typeof(CachingBehavior<,>));
         });
 
         return services;

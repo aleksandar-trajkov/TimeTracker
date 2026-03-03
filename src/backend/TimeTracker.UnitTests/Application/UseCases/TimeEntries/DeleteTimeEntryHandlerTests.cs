@@ -1,6 +1,7 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.UnitTests.Common.Builders.Domain;
+using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
@@ -10,13 +11,15 @@ public class DeleteTimeEntryHandlerTests
 {
     private readonly UserContextMockDouble _userContext;
     private readonly TimeEntryRepositoryMockDouble _timeEntryRepository;
+    private readonly MediatorMockDouble _mediator;
     private readonly DeleteTimeEntryHandler _sut;
 
     public DeleteTimeEntryHandlerTests()
     {
         _userContext = new UserContextMockDouble();
         _timeEntryRepository = new TimeEntryRepositoryMockDouble();
-        _sut = new DeleteTimeEntryHandler(_userContext.Instance, _timeEntryRepository.Instance);
+        _mediator = new MediatorMockDouble();
+        _sut = new DeleteTimeEntryHandler(_userContext.Instance, _timeEntryRepository.Instance, _mediator.Instance);
     }
 
     [Fact]

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using TimeTracker.Application.Behaviours;
+using TimeTracker.Common.Validation;
 using TimeTracker.Domain.Exceptions;
 using TimeTracker.WebApi.Contracts.Responses;
 

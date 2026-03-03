@@ -7,6 +7,7 @@ using System;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TimeTracker.Common.Configuration;
+using TimeTracker.WebApi.BackgroundWorkers;
 using TimeTracker.WebApi.Configuration;
 using TimeTracker.WebApi.Helpers;
 using TimeTracker.WebApi.Middlewares;
@@ -23,6 +24,7 @@ builder.Configuration
 builder.Services.AddCommonServices();
 builder.Services.AddApplicationLogic();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddCaching();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddHealthCheck(builder.Configuration);
 builder.Services.AddApiVersionServices();
@@ -49,6 +51,7 @@ builder.Services.AddProblemDetails(options =>
 });
 builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<CacheCleanupWorker>();
 
 RouteGroupBuilder groupBuilder;
 
