@@ -4,8 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useSignInMutation } from '../../../../src/apiCalls/auth/useSignInMutation'
 import type { SignInRequest, TokenResponse } from '../../../../src/apiCalls/auth/types'
 import * as fetchHelpers from '../../../../src/helpers/fetch'
-import * as tokenExpiry from '../../../../src/helpers/token'
-import Cookies from 'js-cookie'
+import * as tokenHelpers from '../../../../src/helpers/token'
 
 // Mock the dependencies
 vi.mock('../../../../src/helpers/fetch', () => ({
@@ -13,26 +12,11 @@ vi.mock('../../../../src/helpers/fetch', () => ({
 }))
 
 vi.mock('../../../../src/helpers/token', () => ({
+  applyTokenResponse: vi.fn(),
   calculateTokenExpiry: vi.fn(),
   getRememberMeExpiry: vi.fn(),
   getTokenUserDetails: vi.fn(),
   default: vi.fn()
-}))
-
-vi.mock('js-cookie', () => ({
-  default: {
-    set: vi.fn(),
-    remove: vi.fn()
-  }
-}))
-
-// Mock user store
-vi.mock('../../../../src/stores/userStore', () => ({
-  default: {
-    getState: () => ({
-      setUser: vi.fn()
-    })
-  }
 }))
 
 // Mock environment variable
@@ -69,8 +53,6 @@ describe('useSignInMutation', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(tokenExpiry.calculateTokenExpiry).mockReturnValue(7)
-    vi.mocked(tokenExpiry.getRememberMeExpiry).mockReturnValue(30)
   })
 
   it('should call executePost with correct parameters', async () => {
@@ -90,7 +72,7 @@ describe('useSignInMutation', () => {
     })
   })
 
-  it('should set cookies and call setIsSignedIn on successful sign in', async () => {
+  it('should call applyTokenResponse and setIsSignedIn on successful sign in with rememberMe=true', async () => {
     vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
 
     const { result } = renderHook(() => useSignInMutation({ setIsSignedIn: mockSetIsSignedIn }), {
@@ -103,12 +85,14 @@ describe('useSignInMutation', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: 7 })
-    expect(Cookies.set).toHaveBeenCalledWith('rememberMe', 'mock-remember-me-token', { expires: 30 })
+    expect(tokenHelpers.applyTokenResponse).toHaveBeenCalledWith(
+      'mock-jwt-token',
+      'mock-remember-me-token'
+    )
     expect(mockSetIsSignedIn).toHaveBeenCalledWith(true)
   })
 
-  it('should not set remember me cookie when rememberMe is false', async () => {
+  it('should not pass remember me token to applyTokenResponse when rememberMe is false', async () => {
     const credentialsWithoutRememberMe = { ...mockCredentials, rememberMe: false }
     vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
 
@@ -122,12 +106,11 @@ describe('useSignInMutation', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: 7 })
-    expect(Cookies.set).not.toHaveBeenCalledWith('rememberMe', expect.any(String), expect.any(Object))
+    expect(tokenHelpers.applyTokenResponse).toHaveBeenCalledWith('mock-jwt-token', null)
     expect(mockSetIsSignedIn).toHaveBeenCalledWith(true)
   })
 
-  it('should not set remember me cookie when rememberMeToken is not provided', async () => {
+  it('should not pass remember me token when rememberMeToken is not in response', async () => {
     const tokenResponseWithoutRememberMe = { token: 'mock-jwt-token' }
     vi.mocked(fetchHelpers.executePost).mockResolvedValue(tokenResponseWithoutRememberMe)
 
@@ -141,8 +124,7 @@ describe('useSignInMutation', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: 7 })
-    expect(Cookies.set).not.toHaveBeenCalledWith('rememberMe', expect.any(String), expect.any(Object))
+    expect(tokenHelpers.applyTokenResponse).toHaveBeenCalledWith('mock-jwt-token', undefined)
     expect(mockSetIsSignedIn).toHaveBeenCalledWith(true)
   })
 
@@ -164,10 +146,10 @@ describe('useSignInMutation', () => {
     expect(result.current.error?.message).toBe(errorMessage)
     expect(console.error).toHaveBeenCalledWith('Sign in failed:', expect.any(Error))
     expect(mockSetIsSignedIn).not.toHaveBeenCalled()
-    expect(Cookies.set).not.toHaveBeenCalled()
+    expect(tokenHelpers.applyTokenResponse).not.toHaveBeenCalled()
   })
 
-  it('should not set cookies when token is missing in response', async () => {
+  it('should not call applyTokenResponse when token is missing in response', async () => {
     const invalidTokenResponse = {} as TokenResponse
     vi.mocked(fetchHelpers.executePost).mockResolvedValue(invalidTokenResponse)
 
@@ -181,46 +163,8 @@ describe('useSignInMutation', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(Cookies.set).not.toHaveBeenCalled()
+    expect(tokenHelpers.applyTokenResponse).not.toHaveBeenCalled()
     expect(mockSetIsSignedIn).not.toHaveBeenCalled()
-  })
-
-  it('should use calculated token expiry', async () => {
-    const customTokenExpiry = 14
-    vi.mocked(tokenExpiry.calculateTokenExpiry).mockReturnValue(customTokenExpiry)
-    vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
-
-    const { result } = renderHook(() => useSignInMutation({ setIsSignedIn: mockSetIsSignedIn }), {
-      wrapper: createWrapper(),
-    })
-
-    result.current.mutate(mockCredentials)
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true)
-    })
-
-    expect(tokenExpiry.calculateTokenExpiry).toHaveBeenCalled()
-    expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', { expires: customTokenExpiry })
-  })
-
-  it('should use calculated remember me expiry', async () => {
-    const customRememberMeExpiry = 60
-    vi.mocked(tokenExpiry.getRememberMeExpiry).mockReturnValue(customRememberMeExpiry)
-    vi.mocked(fetchHelpers.executePost).mockResolvedValue(mockTokenResponse)
-
-    const { result } = renderHook(() => useSignInMutation({ setIsSignedIn: mockSetIsSignedIn }), {
-      wrapper: createWrapper(),
-    })
-
-    result.current.mutate(mockCredentials)
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true)
-    })
-
-    expect(tokenExpiry.getRememberMeExpiry).toHaveBeenCalled()
-    expect(Cookies.set).toHaveBeenCalledWith('rememberMe', 'mock-remember-me-token', { expires: customRememberMeExpiry })
   })
 
   it('should have correct mutation configuration', () => {

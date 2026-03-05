@@ -6,6 +6,24 @@ import '@testing-library/jest-dom'
 import App from '../../src/App'
 import React from 'react'
 
+// Mock js-cookie so getInitialSignedInState returns false (no token in tests)
+vi.mock('js-cookie', () => ({
+  default: {
+    get: vi.fn().mockReturnValue(undefined),
+    set: vi.fn(),
+    remove: vi.fn()
+  }
+}))
+
+// Mock the token module to prevent side effects from userStore imports
+vi.mock('../../src/helpers/token', () => ({
+  default: vi.fn().mockReturnValue(false),
+  applyTokenResponse: vi.fn(),
+  getTokenUserDetails: vi.fn(),
+  calculateTokenExpiry: vi.fn().mockReturnValue(1),
+  getRememberMeExpiry: vi.fn().mockReturnValue(14)
+}))
+
 // Mock the lazy-loaded components
 vi.mock('../../src/modules/auth/SignIn', () => ({
   default: ({ setIsSignedIn }: { setIsSignedIn: (value: boolean) => void }) => (

@@ -1,7 +1,9 @@
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.WebApi.Contracts.Requests.V1.Categories;
+using TimeTracker.WebApi.Contracts.Responses.V1.Categories;
 using TimeTracker.WebApi.Interfaces;
 
 namespace TimeTracker.WebApi.Endpoints.V1.Categories;
@@ -21,9 +23,9 @@ public class UpdateEndpoint : IEndpointDefinition
             var command = new UpdateCategoryHandler.Command(id, request.Name, request.Description);
             var result = await mediator.Send(command, cancellationToken);
 
-            return result ? Results.NoContent() : Results.NotFound();
+            return Results.Ok(TypeAdapter.Adapt<CategoryResponse>(result));
         })
-        .Produces(StatusCodes.Status204NoContent)
+        .Produces<CategoryResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status401Unauthorized)
         .ProducesProblem(StatusCodes.Status404NotFound)

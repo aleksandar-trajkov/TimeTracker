@@ -21,7 +21,7 @@ public class CreateEndpoint : IEndpointDefinition
         {
             var command = request.Adapt<CreateTimeEntryHandler.Command>();
             var response = await mediator.Send(command, cancellationToken);
-            return Results.Ok(TypeAdapter.Adapt<TimeEntryResponse>(response));
+            return Results.Created(string.Empty, TypeAdapter.Adapt<TimeEntryResponse>(response));
         })
         .Produces<TimeEntryResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)

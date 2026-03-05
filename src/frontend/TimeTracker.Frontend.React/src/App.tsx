@@ -1,11 +1,13 @@
 import { Suspense, lazy } from 'react'
+import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Cookies from 'js-cookie';
 import Layout from './Layout';
 import Loading from './Loading';
 import { ToastContainer } from './components/notifications';
-import React from 'react';
+import isTokenValid from './helpers/token';
 
 // Lazy load modules for better performance
 const SignIn = lazy(() => import('./modules/auth/SignIn'));
@@ -24,8 +26,17 @@ const queryClient = new QueryClient({
   },
 });
 
+const getInitialSignedInState = (): boolean => {
+  try {
+    const token = Cookies.get('token');
+    return !!token && isTokenValid(token);
+  } catch {
+    return false;
+  }
+};
+
 const App: React.FC = () => {
-    const  [signedIn, setSignedIn] = React.useState<boolean>(false);
+    const [signedIn, setSignedIn] = React.useState<boolean>(getInitialSignedInState);
 
   return (
     <QueryClientProvider client={queryClient}>

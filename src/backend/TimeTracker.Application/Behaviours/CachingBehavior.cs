@@ -21,11 +21,11 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     {
         ArgumentNullException.ThrowIfNull(next);
 
-        if(request is Cacheable cacheable)
+        if (request is Cacheable cacheable)
         {
             var cacheKey = cacheable.GetCacheKey();
             var cachedResponse = _cache.Get<TResponse>(cacheable.CacheKeyPrefix, cacheKey);
-            if(cachedResponse != null)
+            if (cachedResponse != null)
             {
                 return cachedResponse;
             }

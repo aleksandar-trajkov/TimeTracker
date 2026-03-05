@@ -1,5 +1,7 @@
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
+import Cookies from 'js-cookie';
 import type { User } from '../types/User';
+import useUserStore from '../stores/userStore';
 
 /**
  * Check if a JWT token is expired
@@ -60,6 +62,23 @@ export const calculateTokenExpiry = (defaultHours: number = 2): number => {
  */
 export const getRememberMeExpiry = (): number => {
     return 14; // 14 days for remember me tokens
+};
+
+/**
+ * Persist a token response to cookies and user store.
+ * @param token - The JWT access token
+ * @param rememberMeToken - Optional remember-me token to persist
+ */
+export const applyTokenResponse = (token: string, rememberMeToken?: string | null): void => {
+    const tokenExpiryDays = calculateTokenExpiry();
+    Cookies.set('token', token, { expires: tokenExpiryDays });
+    const decodedUser = getTokenUserDetails(token);
+    if (decodedUser) {
+        useUserStore.getState().setUser(decodedUser);
+    }
+    if (rememberMeToken) {
+        Cookies.set('rememberMe', rememberMeToken, { expires: getRememberMeExpiry() });
+    }
 };
 
 export default isTokenValid;

@@ -41,7 +41,7 @@ public class UpdateCategoryHandlerTests
         var result = await _sut.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().BeTrue();
+        result.Should().BeSameAs(existingCategory);
 
         var expectedCategory = new CategoryBuilder()
             .WithId(categoryId)
@@ -72,7 +72,7 @@ public class UpdateCategoryHandlerTests
         var result = await _sut.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().BeTrue();
+        result.Should().BeSameAs(existingCategory);
 
         var expectedCategory = new CategoryBuilder()
             .WithId(categoryId)
@@ -102,7 +102,7 @@ public class UpdateCategoryHandlerTests
         var result = await _sut.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().BeFalse();
+        result.Should().BeSameAs(existingCategory);
     }
 
     [Fact]
@@ -125,7 +125,7 @@ public class UpdateCategoryHandlerTests
         var result = await _sut.Handle(command, cancellationToken);
 
         // Assert
-        result.Should().BeTrue();
+        result.Should().BeSameAs(existingCategory);
 
         var expectedCategory = new CategoryBuilder()
             .WithId(categoryId)
@@ -155,7 +155,7 @@ public class UpdateCategoryHandlerTests
         var result = await _sut.Handle(command, cancellationToken);
 
         // Assert
-        result.Should().BeFalse();
+        result.Should().BeSameAs(existingCategory);
 
         // Verify GetByIdAsync was called with the cancellation token
         await _categoryRepository.VerifyGetByIdAsyncWasCalledWith(categoryId, cancellationToken);
