@@ -61,6 +61,7 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
                             <th>Start Time</th>
                             <th>End Time</th>
                             <th>Category</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,6 +81,7 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
                                         </span>
                                     )}
                                 </td>
+                                <td>{entry.description}</td>
                             </tr>
                         ))}
                     </tbody>

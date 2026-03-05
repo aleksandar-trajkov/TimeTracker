@@ -10,6 +10,7 @@ import useUserStore from '../../stores/userStore';
 interface TimeEntryPopupProps {
     onClose: () => void;
     timeEntry?: TimeEntry | null;
+    isOpen: boolean;
 }
 
 interface FormData {
@@ -19,7 +20,7 @@ interface FormData {
     categoryId: string;
 }
 
-const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = null }) => {
+const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = null, isOpen }) => {
     const organizationId = useUserStore(state => state.user?.organizationId);
     const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategoriesQuery(organizationId || '');
     
@@ -36,6 +37,8 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
         categoryId: timeEntry?.category?.id || '',
     }));
 
+    const [validationError, setValidationError] = useState<string | null>(null);
+
     const handleSubmit = (e?: React.FormEvent) => {
         if (e) {
             e.preventDefault();
@@ -43,9 +46,11 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
 
         // Validation
         if (!formData.from || !formData.to || !formData.categoryId) {
-            console.error('All fields are required');
+            setValidationError('Start time, end time and category are required.');
             return;
         }
+
+        setValidationError(null);
 
         // Prepare mutation data
         const mutationData = {
@@ -57,11 +62,11 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
         };
 
         timeEntryMutation.mutate(mutationData);
-    };    if (!timeEntry) return null;
+    };
 
     return (
         <Modal 
-            isOpen={true} 
+            isOpen={isOpen} 
             onClose={onClose} 
             size="md"
         >
@@ -72,6 +77,12 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
 
             <ModalBody>
                 <form onSubmit={handleSubmit}>
+                    {validationError && (
+                        <div className="alert alert-warning py-2" role="alert">
+                            {validationError}
+                        </div>
+                    )}
+
                     <Input
                         id="description"
                         name="description"
@@ -120,9 +131,9 @@ const TimeEntryPopup: React.FC<TimeEntryPopupProps> = ({ onClose, timeEntry = nu
                                 containerClassName="mb-3"
                             />
                         </div>
-                        </div>
-                        <div className="row">
+                    </div>
 
+                    <div className="row">
                         <div className="col-md">
                             <DateTimePicker
                                 id="to"

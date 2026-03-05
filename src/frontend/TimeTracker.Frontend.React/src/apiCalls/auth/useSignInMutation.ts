@@ -1,9 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
 import { executePost } from '../../helpers/fetch';
-import { calculateTokenExpiry, getRememberMeExpiry, getTokenUserDetails } from '../../helpers/token';
+import { applyTokenResponse } from '../../helpers/token';
 import type { SignInRequest, TokenResponse, UseSignInMutationProps } from './types';
-import useUserStore from '../../stores/userStore';
 
 // Hook for sign in mutation
 export const useSignInMutation = ({ setIsSignedIn }: UseSignInMutationProps) => {
@@ -13,16 +11,10 @@ export const useSignInMutation = ({ setIsSignedIn }: UseSignInMutationProps) => 
         },
         onSuccess: (tokenResponse: TokenResponse, variables: SignInRequest) => {
             if (tokenResponse && tokenResponse.token) {
-                const tokenExpiryDays = calculateTokenExpiry();
-                
-                Cookies.set('token', tokenResponse.token, { expires: tokenExpiryDays });
-                const decodedUser = getTokenUserDetails(tokenResponse.token);
-                if (decodedUser) {
-                    useUserStore.getState().setUser(decodedUser);
-                }
-                if (variables.rememberMe && tokenResponse.rememberMeToken) {
-                    Cookies.set('rememberMe', tokenResponse.rememberMeToken, { expires: getRememberMeExpiry() });
-                }
+                applyTokenResponse(
+                    tokenResponse.token,
+                    variables.rememberMe ? tokenResponse.rememberMeToken : null
+                );
                 setIsSignedIn(true);
             }
         },
