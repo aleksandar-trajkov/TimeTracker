@@ -17,7 +17,7 @@ public class ClearCacheHandler : INotificationHandler<ClearCacheHandler.Command>
     public async Task Handle(Command notification, CancellationToken cancellationToken)
     {
         _cache.RemovePrefix(notification.CacheKeyPrefix);
-        await Task.CompletedTask;  
+        await Task.CompletedTask;
     }
 
     public record Command(string CacheKeyPrefix) : INotification;

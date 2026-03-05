@@ -51,7 +51,7 @@ public class UpdateTimeEntryHandlerTests
         var result = await _sut.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().BeTrue();
+        result.Should().BeSameAs(existingTimeEntry);
         existingTimeEntry.From.Should().Be(newFrom);
         existingTimeEntry.To.Should().Be(newTo);
         existingTimeEntry.Description.Should().Be(newDescription);
@@ -115,7 +115,7 @@ public class UpdateTimeEntryHandlerTests
         var result = await _sut.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().BeTrue();
+        result.Should().BeSameAs(existingTimeEntry);
     }
 
     [Fact]
