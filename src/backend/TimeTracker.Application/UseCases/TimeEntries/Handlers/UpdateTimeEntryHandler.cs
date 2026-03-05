@@ -7,7 +7,7 @@ using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.TimeEntries.Handlers;
 
-public class UpdateTimeEntryHandler : IRequestHandler<UpdateTimeEntryHandler.Command, bool>
+public class UpdateTimeEntryHandler : IRequestHandler<UpdateTimeEntryHandler.Command, TimeEntry>
 {
     private readonly IUserContext _userContext;
     private readonly ITimeEntryRepository _timeEntryRepository;
@@ -20,7 +20,7 @@ public class UpdateTimeEntryHandler : IRequestHandler<UpdateTimeEntryHandler.Com
         _mediator = mediator;
     }
 
-    public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<TimeEntry> Handle(Command request, CancellationToken cancellationToken)
     {
         var existingTimeEntry = await _timeEntryRepository.GetByIdAsync(request.Id, cancellationToken);
 
@@ -39,8 +39,8 @@ public class UpdateTimeEntryHandler : IRequestHandler<UpdateTimeEntryHandler.Com
 
         await _mediator.Publish(new ClearCacheHandler.Command(CachingKeys.TimeEntries), cancellationToken);
 
-        return result > 0;
+        return existingTimeEntry;
     }
 
-    public record Command(Guid Id, DateTimeOffset From, DateTimeOffset To, string Description, Guid CategoryId) : IRequest<bool>;
+    public record Command(Guid Id, DateTimeOffset From, DateTimeOffset To, string Description, Guid CategoryId) : IRequest<TimeEntry>;
 }

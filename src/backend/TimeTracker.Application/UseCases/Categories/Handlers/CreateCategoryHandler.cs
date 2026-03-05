@@ -6,7 +6,7 @@ using TimeTracker.Domain;
 
 namespace TimeTracker.Application.UseCases.Categories.Handlers;
 
-public class CreateCategoryHandler : IRequestHandler<CreateCategoryHandler.Command, Guid>
+public class CreateCategoryHandler : IRequestHandler<CreateCategoryHandler.Command, Category>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IMediator _mediator;
@@ -17,7 +17,7 @@ public class CreateCategoryHandler : IRequestHandler<CreateCategoryHandler.Comma
         _mediator = mediator;
     }
 
-    public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<Category> Handle(Command request, CancellationToken cancellationToken)
     {
         var category = new Category
         {
@@ -31,8 +31,8 @@ public class CreateCategoryHandler : IRequestHandler<CreateCategoryHandler.Comma
 
         await _mediator.Publish(new ClearCacheHandler.Command(CachingKeys.Categories), cancellationToken);
 
-        return category.Id;
+        return category;
     }
 
-    public record Command(string Name, string? Description, Guid? OrganizationId) : IRequest<Guid>;
+    public record Command(string Name, string? Description, Guid? OrganizationId) : IRequest<Category>;
 }
