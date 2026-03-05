@@ -111,7 +111,7 @@ const CategoriesModule: React.FC = () => {
                         {categories.length === 0 ? (
                             <div className="text-center py-5">
                                 <h3 className="text-muted">No categories found</h3>
-                                <p className="text-muted">Create a category to organise your time entries.</p>
+                                <p className="text-muted">Create a category to organize your time entries.</p>
                             </div>
                         ) : (
                             <table className="table table-striped table-hover">

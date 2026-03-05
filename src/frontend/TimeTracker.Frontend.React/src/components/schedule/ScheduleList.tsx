@@ -55,7 +55,7 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
                 <table key={date} className="table table-striped table-hover mb-4">
                     <thead className="table-dark">
                         <tr>
-                            <th colSpan={3}>{date}</th>
+                            <th colSpan={4}>{date}</th>
                         </tr>
                         <tr>
                             <th>Start Time</th>
