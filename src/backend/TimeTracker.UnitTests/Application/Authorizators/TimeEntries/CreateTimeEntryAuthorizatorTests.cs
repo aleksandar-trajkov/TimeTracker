@@ -29,23 +29,12 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryCommandBuilder()
-            .WithFrom(DateTimeOffset.Now)
-            .WithTo(DateTimeOffset.Now.AddHours(1))
-            .WithDescription("Test description")
-            .WithCategoryId(categoryId)
-            .Build();
+        var command = new CreateTimeEntryCommandBuilder().Build();
 
         var user = new UserBuilder()
-            .WithId(userId)
-            .WithEmail("test@example.com")
-            .WithPermissions(new[]
-            {
-                new PermissionBuilder()
-                    .WithKey(PermissionEnum.CanEditOwnTimeEntry)
-                    .WithUserId(userId)
-                    .Build()
-            })
+            .WithPermissions(new PermissionBuilder()
+                .WithKey(PermissionEnum.CanEditOwnTimeEntry)
+                .Build())
             .Build();
 
         _userContext.GivenUserId(userId);
@@ -64,23 +53,13 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryCommandBuilder()
-            .WithFrom(DateTimeOffset.Now)
-            .WithTo(DateTimeOffset.Now.AddHours(1))
-            .WithDescription("Test description")
-            .WithCategoryId(categoryId)
-            .Build();
+        var command = new CreateTimeEntryCommandBuilder().Build();
 
         var user = new UserBuilder()
             .WithId(userId)
-            .WithEmail("test@example.com")
-            .WithPermissions(new[]
-            {
-                new PermissionBuilder()
-                    .WithKey(PermissionEnum.CanEditAnyTimeEntry)
-                    .WithUserId(userId)
-                    .Build()
-            })
+            .WithPermissions(new PermissionBuilder()
+                .WithKey(PermissionEnum.CanEditAnyTimeEntry)
+                .Build())
             .Build();
 
         _userContext.GivenUserId(userId);
@@ -99,18 +78,9 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryCommandBuilder()
-            .WithFrom(DateTimeOffset.Now)
-            .WithTo(DateTimeOffset.Now.AddHours(1))
-            .WithDescription("Test description")
-            .WithCategoryId(categoryId)
-            .Build();
+        var command = new CreateTimeEntryCommandBuilder().Build();
 
-        var user = new UserBuilder()
-            .WithId(userId)
-            .WithEmail("test@example.com")
-            .WithPermissions(Array.Empty<Permission>())
-            .Build();
+        var user = new UserBuilder().Build();
 
         _userContext.GivenUserId(userId);
         _userRepository.GivenGetByIdAsync(userId, user);
@@ -129,23 +99,12 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryCommandBuilder()
-            .WithFrom(DateTimeOffset.Now)
-            .WithTo(DateTimeOffset.Now.AddHours(1))
-            .WithDescription("Test description")
-            .WithCategoryId(categoryId)
-            .Build();
+        var command = new CreateTimeEntryCommandBuilder().Build();
 
         var user = new UserBuilder()
-            .WithId(userId)
-            .WithEmail("test@example.com")
-            .WithPermissions(new[]
-            {
-                new PermissionBuilder()
-                    .WithKey(PermissionEnum.CanEditOrganizationTimeEntries)
-                    .WithUserId(userId)
-                    .Build()
-            })
+            .WithPermissions(new PermissionBuilder()
+                .WithKey(PermissionEnum.CanEditOrganizationTimeEntries)
+                .Build())
             .Build();
 
         _userContext.GivenUserId(userId);

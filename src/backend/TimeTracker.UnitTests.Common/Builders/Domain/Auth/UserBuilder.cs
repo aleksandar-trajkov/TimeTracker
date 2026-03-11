@@ -70,7 +70,7 @@ public class UserBuilder : EntityBuilder<UserBuilder, User>
         return this;
     }
 
-    public UserBuilder WithPermissions(IEnumerable<Permission> permissions)
+    public UserBuilder WithPermissions(params IEnumerable<Permission> permissions)
     {
         _permissions = permissions;
         return this;
