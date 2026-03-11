@@ -1,14 +1,16 @@
 using TimeTracker.Domain;
-using TimeTracker.UnitTests.Common.Extensions;
+using Bogus;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain;
 
 public class TimeEntryBuilder : EntityBuilder<TimeEntryBuilder, TimeEntry>
 {
+    private static readonly Faker Faker = new();
+
     private Guid _id = Guid.NewGuid();
     private DateTimeOffset _from = DateTimeOffset.Now.AddHours(-2);
     private DateTimeOffset _to = DateTimeOffset.Now;
-    private string _description = Random.Shared.GenerateString(10, 100);
+    private string _description = Faker.Lorem.Sentence();
     private Guid _categoryId = Guid.NewGuid();
     private Guid _userId = Guid.NewGuid();
 

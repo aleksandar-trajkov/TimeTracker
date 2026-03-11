@@ -1,13 +1,15 @@
 using TimeTracker.Domain;
-using TimeTracker.UnitTests.Common.Extensions;
+using Bogus;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain;
 
 public class CategoryBuilder : EntityBuilder<CategoryBuilder, Category>
 {
+    private static readonly Faker Faker = new();
+
     private Guid _id = Guid.NewGuid();
-    private string _name = Random.Shared.GenerateString(5, 20);
-    private string? _description = Random.Shared.GenerateString(10, 50);
+    private string _name = Faker.Commerce.Categories(1).First();
+    private string? _description = Faker.Lorem.Sentence();
     private Guid _organizationId = Guid.NewGuid();
 
     protected override Category Instance => new Category

@@ -2,7 +2,6 @@
 using NSubstitute.ExceptionExtensions;
 using TimeTracker.Application.Interfaces.Data;
 using TimeTracker.Domain.Auth;
-using TimeTracker.UnitTests.Common.Extensions;
 
 namespace TimeTracker.UnitTests.Common.Mocks.Data;
 

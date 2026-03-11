@@ -1,18 +1,17 @@
 using AwesomeAssertions;
+using Bogus;
 using TimeTracker.Application.Helpers;
-using TimeTracker.Domain;
 using TimeTracker.Domain.Auth;
-using TimeTracker.Domain.Base;
 using TimeTracker.Infrastructure.Data.SqlServer.Repositories;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
-using TimeTracker.UnitTests.Common.Extensions;
 using TimeTracker.UnitTests.Data.Fixtures;
 
 namespace TimeTracker.UnitTests.Data.Repositories;
 
 public class UserRepositoryTests : IClassFixture<DataTestFixture>
 {
+    private static readonly Faker Faker = new();
     private readonly UserRepository _sut;
     private readonly DataTestFixture _fixture;
 
@@ -212,7 +211,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     public async Task GetByEmailAsync_ShouldThrowInvalidOperationException_WhenEmailDoesNotExist()
     {
         // Arrange
-        var nonExistentEmail = Random.Shared.GenerateEmail(10);
+        var nonExistentEmail = Faker.Internet.Email();
 
         // Act & Assert
         var act = async () => await _sut.GetByEmailAsync(nonExistentEmail, CancellationToken.None);
@@ -265,7 +264,7 @@ public class UserRepositoryTests : IClassFixture<DataTestFixture>
     public async Task ExistsByEmailAsync_ShouldReturnFalse_WhenEmailDoesNotExist()
     {
         // Arrange
-        var nonExistentEmail = Random.Shared.GenerateEmail(10);
+        var nonExistentEmail = Faker.Internet.Email();
 
         // Act
         var result = await _sut.ExistsByEmailAsync(nonExistentEmail, CancellationToken.None);

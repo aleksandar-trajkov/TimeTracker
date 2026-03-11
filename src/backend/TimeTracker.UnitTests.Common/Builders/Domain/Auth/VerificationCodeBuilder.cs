@@ -1,12 +1,14 @@
 using TimeTracker.Domain.Auth;
-using TimeTracker.UnitTests.Common.Extensions;
+using Bogus;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 
 public class VerificationCodeBuilder : EntityBuilder<VerificationCodeBuilder, VerificationCode>
 {
+    private static readonly Faker Faker = new();
+
     private Guid _id = Guid.NewGuid();
-    private string _code = Random.Shared.GenerateString(10, 20);
+    private string _code = Faker.Random.AlphaNumeric(Faker.Random.Int(10, 20));
     private bool _isUsed = false;
     private DateTime _expiresAt = DateTime.UtcNow.AddHours(24);
     private Guid _userId = Guid.NewGuid();

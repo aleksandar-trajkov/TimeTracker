@@ -1,12 +1,14 @@
 ﻿using TimeTracker.Application.UseCases.Auth.Handlers;
-using TimeTracker.UnitTests.Common.Extensions;
+using Bogus;
 
 namespace TimeTracker.UnitTests.Common.Builders.Application.Auth
 {
     public class SignInQueryBuilder : EntityBuilder<SignInQueryBuilder, SignInHandler.Query>
     {
-        private string _email = Random.Shared.GenerateEmail(10);
-        private string _password = Random.Shared.GenerateString(10, 30);
+        private static readonly Faker Faker = new();
+
+        private string _email = Faker.Internet.Email();
+        private string _password = Faker.Random.AlphaNumeric(Faker.Random.Int(10, 30));
         private bool _rememberMe = true;
 
         protected override SignInHandler.Query Instance => new SignInHandler.Query(_email, _password, _rememberMe);

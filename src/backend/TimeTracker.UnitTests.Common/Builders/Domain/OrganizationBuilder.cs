@@ -1,13 +1,15 @@
 using TimeTracker.Domain;
-using TimeTracker.UnitTests.Common.Extensions;
+using Bogus;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain;
 
 public class OrganizationBuilder : EntityBuilder<OrganizationBuilder, Organization>
 {
+    private static readonly Faker Faker = new();
+
     private Guid _id = Guid.NewGuid();
-    private string _name = Random.Shared.GenerateString(5, 20);
-    private string? _description = Random.Shared.GenerateString(10, 50);
+    private string _name = Faker.Company.CompanyName();
+    private string? _description = Faker.Company.CatchPhrase();
 
     protected override Organization Instance => new Organization
     {

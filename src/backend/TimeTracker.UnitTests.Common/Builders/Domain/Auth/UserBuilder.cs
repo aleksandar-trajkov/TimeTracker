@@ -1,15 +1,17 @@
 ﻿using TimeTracker.Domain.Auth;
-using TimeTracker.UnitTests.Common.Extensions;
+using Bogus;
 
 namespace TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 
 public class UserBuilder : EntityBuilder<UserBuilder, User>
 {
+    private static readonly Faker Faker = new();
+
     private Guid _id = Guid.NewGuid();
-    private string _firstName = Random.Shared.GenerateString(5, 20);
-    private string _lastName = Random.Shared.GenerateString(10, 30);
-    private string _email = Random.Shared.GenerateEmail(10);
-    private string _passwordHash = Random.Shared.GenerateString(512);
+    private string _firstName = Faker.Name.FirstName();
+    private string _lastName = Faker.Name.LastName();
+    private string _email = Faker.Internet.Email();
+    private string _passwordHash = Faker.Random.AlphaNumeric(512);
     private bool _isActive = true;
     private Guid _organizationId = Guid.NewGuid();
     private IEnumerable<Permission> _permissions = new List<Permission>();
