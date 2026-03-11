@@ -18,10 +18,10 @@ jobs:
     steps:
       
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: 24.x
         cache: 'npm'
@@ -45,7 +45,7 @@ jobs:
 
     - name: 'Report Coverage'
       if: always() 
-      uses:  davelosert/vitest-coverage-report-action@v2
+      uses:  davelosert/vitest-coverage-report-action@v2.9.3
       with:        
         working-directory: ${{ env.WORKING_DIRECTORY}}
         comment-on: "none"
@@ -56,7 +56,7 @@ jobs:
         echo "Build completed successfully"
         
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.0
       if: github.event_name == 'push'
       with:
         name: build-artifacts-${{ github.sha }}
@@ -69,10 +69,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '24.x'
         cache-dependency-path: "${{ env.WORKING_DIRECTORY}}/package-lock.json"
