@@ -1,6 +1,6 @@
 ﻿# Time Tracking Application
 
-A comprehensive time tracking solution built with **.NET 9** backend and **React** frontend, featuring user management, time entry tracking, reporting, and real-time collaboration capabilities.
+A comprehensive time tracking solution built with **.NET 10** backend and **React** frontend, featuring user management, time entry tracking, reporting, and real-time collaboration capabilities.
 
 ## Features
 
@@ -22,14 +22,14 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 
 ## Technologies Used
 
-### Backend (.NET 9)
+### Backend (.NET 10)
 - **Framework**: ASP.NET Core 10.0 with Minimal APIs
 - **Architecture**: Clean Architecture with CQRS pattern
 - **Patterns**: 
   - **MediatR**: Command/Query handling and pipeline behaviors
   - **FluentValidation**: Request validation middleware
   - **Repository Pattern**: Data access abstraction
-- **Database**: SQL Server with Entity Framework Core 9.0
+- **Database**: SQL Server with Entity Framework Core 10.0
 - **Authentication**: JWT Bearer tokens with custom implementation
 - **API Documentation**: Swagger/OpenAPI with API versioning
 - **Object Mapping**: Mapster for DTO mapping
@@ -68,7 +68,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 
 ### Prerequisites
 
-- **.NET 9 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/9.0)
+- **.NET 10 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/10.0)
 - **SQL Server** (LocalDB, Express, or Full) - [Download here](https://www.microsoft.com/sql-server/sql-server-downloads)
 - **Node.js 20+** (for frontend) - [Download here](https://nodejs.org/)
 - **Docker** (optional) - [Download here](https://www.docker.com/products/docker-desktop)
