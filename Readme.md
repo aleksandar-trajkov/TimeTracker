@@ -23,7 +23,7 @@ A comprehensive time tracking solution built with **.NET 9** backend and **React
 ## Technologies Used
 
 ### Backend (.NET 9)
-- **Framework**: ASP.NET Core 9.0 with Minimal APIs
+- **Framework**: ASP.NET Core 10.0 with Minimal APIs
 - **Architecture**: Clean Architecture with CQRS pattern
 - **Patterns**: 
   - **MediatR**: Command/Query handling and pipeline behaviors
