@@ -3,6 +3,7 @@ using TimeTracker.Application.UseCases.TimeEntries.Authorizators;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
@@ -34,7 +35,9 @@ public class DeleteTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -70,7 +73,9 @@ public class DeleteTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -107,7 +112,9 @@ public class DeleteTimeEntryAuthorizatorTests
         var userId = Guid.NewGuid();
         var otherUserId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -143,7 +150,9 @@ public class DeleteTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -175,7 +184,9 @@ public class DeleteTimeEntryAuthorizatorTests
         var userId = Guid.NewGuid();
         var otherUserId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -213,7 +224,9 @@ public class DeleteTimeEntryAuthorizatorTests
         var userId = Guid.NewGuid();
         var otherUserId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)

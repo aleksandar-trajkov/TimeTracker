@@ -2,6 +2,7 @@ using AwesomeAssertions;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Application.UseCases.Categories.Validators;
 using TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
+using TimeTracker.UnitTests.Common.Builders.Application.Categories;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
 namespace TimeTracker.UnitTests.Application.Validators.Categories;
@@ -24,7 +25,9 @@ public class DeleteCategoryValidatorTests
         var categoryId = Guid.NewGuid();
         _categoryRepository.GivenExistsAsync(categoryId, true);
 
-        var command = new DeleteCategoryHandler.Command(categoryId);
+        var command = new DeleteCategoryCommandBuilder()
+            .WithId(categoryId)
+            .Build();
 
         // Act
         var result = await _validator.ValidateAsync(command);

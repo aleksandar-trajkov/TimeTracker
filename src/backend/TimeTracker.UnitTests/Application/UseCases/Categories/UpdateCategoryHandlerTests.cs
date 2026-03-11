@@ -2,6 +2,7 @@ using AwesomeAssertions;
 using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain;
+using TimeTracker.UnitTests.Common.Builders.Application.Categories;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Data;
@@ -32,7 +33,11 @@ public class UpdateCategoryHandlerTests
             .WithDescription("Original Description")
             .Build();
 
-        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+        var command = new UpdateCategoryCommandBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription("Updated Description")
+            .Build();
 
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
         _categoryRepository.GivenUpdateAsync();
@@ -63,7 +68,11 @@ public class UpdateCategoryHandlerTests
             .WithDescription("Original Description")
             .Build();
 
-        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", null);
+        var command = new UpdateCategoryCommandBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription(null)
+            .Build();
 
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
         _categoryRepository.GivenUpdateAsync();
@@ -93,7 +102,11 @@ public class UpdateCategoryHandlerTests
             .WithName("Original Name")
             .Build();
 
-        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+        var command = new UpdateCategoryCommandBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription("Updated Description")
+            .Build();
 
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
         _categoryRepository.GivenUpdateAsyncFails();
@@ -115,7 +128,11 @@ public class UpdateCategoryHandlerTests
             .WithName("Original Name")
             .Build();
 
-        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+        var command = new UpdateCategoryCommandBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription("Updated Description")
+            .Build();
         var cancellationToken = new CancellationToken(true);
 
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);
@@ -146,7 +163,11 @@ public class UpdateCategoryHandlerTests
             .WithName("Original Name")
             .Build();
 
-        var command = new UpdateCategoryHandler.Command(categoryId, "Updated Name", "Updated Description");
+        var command = new UpdateCategoryCommandBuilder()
+            .WithId(categoryId)
+            .WithName("Updated Name")
+            .WithDescription("Updated Description")
+            .Build();
         var cancellationToken = new CancellationToken(true);
 
         _categoryRepository.GivenGetByIdAsync(categoryId, existingCategory);

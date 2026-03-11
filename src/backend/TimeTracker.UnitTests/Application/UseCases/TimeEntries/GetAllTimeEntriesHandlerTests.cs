@@ -1,6 +1,7 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.Domain;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
@@ -35,7 +36,10 @@ public class GetAllTimeEntriesHandlerTests
             new TimeEntryBuilder().WithUserId(userId).Build()
         };
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, timeEntries);
@@ -57,7 +61,10 @@ public class GetAllTimeEntriesHandlerTests
         var from = DateTimeOffset.Now.AddDays(-7);
         var to = DateTimeOffset.Now;
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
@@ -78,7 +85,10 @@ public class GetAllTimeEntriesHandlerTests
         var from = DateTimeOffset.Now.AddDays(-1);
         var to = DateTimeOffset.Now;
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
@@ -97,7 +107,10 @@ public class GetAllTimeEntriesHandlerTests
         var from = DateTimeOffset.Parse("2024-01-01T00:00:00Z");
         var to = DateTimeOffset.Parse("2024-01-31T23:59:59Z");
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, new List<TimeEntry>());
@@ -116,7 +129,10 @@ public class GetAllTimeEntriesHandlerTests
         var from = DateTimeOffset.Now.AddDays(-7);
         var to = DateTimeOffset.Now;
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
         var cancellationToken = new CancellationToken(true);
 
         _userContext.GivenUserId(userId);
@@ -153,7 +169,10 @@ public class GetAllTimeEntriesHandlerTests
                 .Build()
         };
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, timeEntries);
@@ -182,7 +201,10 @@ public class GetAllTimeEntriesHandlerTests
             new TimeEntryBuilder().WithUserId(userId).Build()
         };
 
-        var query = new GetAllTimeEntriesHandler.Query(from, to);
+        var query = new GetAllTimeEntriesQueryBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetAllAsync(userId, from, to, timeEntries);

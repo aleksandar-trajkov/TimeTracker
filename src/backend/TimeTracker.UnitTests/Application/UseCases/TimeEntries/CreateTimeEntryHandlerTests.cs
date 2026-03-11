@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
@@ -32,7 +33,12 @@ public class CreateTimeEntryHandlerTests
         var to = DateTimeOffset.Now;
         var description = "Working on feature X";
 
-        var command = new CreateTimeEntryHandler.Command(from, to, description, categoryId);
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(from)
+            .WithTo(to)
+            .WithDescription(description)
+            .WithCategoryId(categoryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenInsertAsync();
@@ -55,11 +61,12 @@ public class CreateTimeEntryHandlerTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "Test entry",
-            Guid.NewGuid());
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Test entry")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenInsertAsync();
@@ -75,11 +82,12 @@ public class CreateTimeEntryHandlerTests
     public async Task Handle_ShouldGenerateNewGuidForTimeEntry()
     {
         // Arrange
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "Test entry",
-            Guid.NewGuid());
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Test entry")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(Guid.NewGuid());
         _timeEntryRepository.GivenInsertAsync();
@@ -95,11 +103,12 @@ public class CreateTimeEntryHandlerTests
     public async Task Handle_WhenCancellationRequested_ShouldPassCancellationToken()
     {
         // Arrange
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "Test entry",
-            Guid.NewGuid());
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Test entry")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         var cancellationToken = new CancellationToken(true);
         _userContext.GivenUserId(Guid.NewGuid());
@@ -113,11 +122,12 @@ public class CreateTimeEntryHandlerTests
     public async Task Handle_WithShortDescription_ShouldCreateTimeEntry()
     {
         // Arrange
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "A",
-            Guid.NewGuid());
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("A")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(Guid.NewGuid());
         _timeEntryRepository.GivenInsertAsync();
@@ -134,11 +144,12 @@ public class CreateTimeEntryHandlerTests
     {
         // Arrange
         var longDescription = new string('x', 500);
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            longDescription,
-            Guid.NewGuid());
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription(longDescription)
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(Guid.NewGuid());
         _timeEntryRepository.GivenInsertAsync();

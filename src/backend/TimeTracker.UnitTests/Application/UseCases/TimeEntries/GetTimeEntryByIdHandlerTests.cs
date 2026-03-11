@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
@@ -39,7 +40,9 @@ public class GetTimeEntryByIdHandlerTests
             .WithCategoryId(categoryId)
             .Build();
 
-        var query = new GetTimeEntryByIdHandler.Query(timeEntryId);
+        var query = new GetTimeEntryByIdQueryBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
@@ -70,7 +73,9 @@ public class GetTimeEntryByIdHandlerTests
             .WithUserId(otherUserId)
             .Build();
 
-        var query = new GetTimeEntryByIdHandler.Query(timeEntryId);
+        var query = new GetTimeEntryByIdQueryBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
@@ -95,7 +100,9 @@ public class GetTimeEntryByIdHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var query = new GetTimeEntryByIdHandler.Query(timeEntryId);
+        var query = new GetTimeEntryByIdQueryBuilder()
+            .WithId(timeEntryId)
+            .Build();
         var cancellationToken = new CancellationToken(true);
 
         _userContext.GivenUserId(userId);
@@ -117,7 +124,9 @@ public class GetTimeEntryByIdHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var query = new GetTimeEntryByIdHandler.Query(timeEntryId);
+        var query = new GetTimeEntryByIdQueryBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);
@@ -141,7 +150,9 @@ public class GetTimeEntryByIdHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var query = new GetTimeEntryByIdHandler.Query(timeEntryId);
+        var query = new GetTimeEntryByIdQueryBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, timeEntry);

@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
@@ -34,7 +35,9 @@ public class DeleteTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -59,7 +62,9 @@ public class DeleteTimeEntryHandlerTests
             .WithUserId(otherUserId)
             .Build();
 
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -84,7 +89,9 @@ public class DeleteTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
         var cancellationToken = new CancellationToken(true);
 
         _userContext.GivenUserId(userId);
@@ -107,7 +114,9 @@ public class DeleteTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -131,7 +140,9 @@ public class DeleteTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new DeleteTimeEntryHandler.Command(timeEntryId);
+        var command = new DeleteTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);

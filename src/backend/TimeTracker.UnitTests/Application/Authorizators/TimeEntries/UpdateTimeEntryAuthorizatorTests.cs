@@ -3,6 +3,7 @@ using TimeTracker.Application.UseCases.TimeEntries.Authorizators;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
@@ -35,12 +36,13 @@ public class UpdateTimeEntryAuthorizatorTests
         var userId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Updated description",
-            categoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Updated description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -77,12 +79,13 @@ public class UpdateTimeEntryAuthorizatorTests
         var userId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Updated description",
-            categoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Updated description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -120,12 +123,13 @@ public class UpdateTimeEntryAuthorizatorTests
         var otherUserId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Updated description",
-            categoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Updated description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -162,12 +166,13 @@ public class UpdateTimeEntryAuthorizatorTests
         var userId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Updated description",
-            categoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Updated description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)
@@ -200,12 +205,13 @@ public class UpdateTimeEntryAuthorizatorTests
         var otherUserId = Guid.NewGuid();
         var timeEntryId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Updated description",
-            categoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Updated description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var timeEntry = new TimeEntryBuilder()
             .WithId(timeEntryId)

@@ -3,6 +3,7 @@ using TimeTracker.Application.UseCases.TimeEntries.Authorizators;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
 using TimeTracker.Domain.Auth;
 using TimeTracker.Domain.Exceptions;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
 using TimeTracker.UnitTests.Common.Mocks.Data;
@@ -28,11 +29,12 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Test description",
-            categoryId);
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Test description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var user = new UserBuilder()
             .WithId(userId)
@@ -62,11 +64,12 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Test description",
-            categoryId);
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Test description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var user = new UserBuilder()
             .WithId(userId)
@@ -96,11 +99,12 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Test description",
-            categoryId);
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Test description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var user = new UserBuilder()
             .WithId(userId)
@@ -125,11 +129,12 @@ public class CreateTimeEntryAuthorizatorTests
         // Arrange
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        var command = new CreateTimeEntryHandler.Command(
-            DateTimeOffset.Now,
-            DateTimeOffset.Now.AddHours(1),
-            "Test description",
-            categoryId);
+        var command = new CreateTimeEntryCommandBuilder()
+            .WithFrom(DateTimeOffset.Now)
+            .WithTo(DateTimeOffset.Now.AddHours(1))
+            .WithDescription("Test description")
+            .WithCategoryId(categoryId)
+            .Build();
 
         var user = new UserBuilder()
             .WithId(userId)

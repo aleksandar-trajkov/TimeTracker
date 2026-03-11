@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using TimeTracker.Application.UseCases.TimeEntries.Handlers;
+using TimeTracker.UnitTests.Common.Builders.Application.TimeEntries;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Auth;
@@ -41,7 +42,13 @@ public class UpdateTimeEntryHandlerTests
             .WithDescription("Old description")
             .Build();
 
-        var command = new UpdateTimeEntryHandler.Command(timeEntryId, newFrom, newTo, newDescription, categoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(newFrom)
+            .WithTo(newTo)
+            .WithDescription(newDescription)
+            .WithCategoryId(categoryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -71,12 +78,13 @@ public class UpdateTimeEntryHandlerTests
             .WithUserId(otherUserId)
             .Build();
 
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "Updated description",
-            Guid.NewGuid());
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Updated description")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -100,12 +108,13 @@ public class UpdateTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now.AddHours(-2),
-            DateTimeOffset.Now,
-            "Updated",
-            Guid.NewGuid());
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now.AddHours(-2))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Updated")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -129,12 +138,13 @@ public class UpdateTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "Updated",
-            Guid.NewGuid());
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Updated")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         var cancellationToken = new CancellationToken(true);
         _userContext.GivenUserId(userId);
@@ -156,12 +166,13 @@ public class UpdateTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            DateTimeOffset.Now.AddHours(-1),
-            DateTimeOffset.Now,
-            "Updated description",
-            Guid.NewGuid());
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(DateTimeOffset.Now.AddHours(-1))
+            .WithTo(DateTimeOffset.Now)
+            .WithDescription("Updated description")
+            .WithCategoryId(Guid.NewGuid())
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);
@@ -190,12 +201,13 @@ public class UpdateTimeEntryHandlerTests
             .WithUserId(userId)
             .Build();
 
-        var command = new UpdateTimeEntryHandler.Command(
-            timeEntryId,
-            newFrom,
-            newTo,
-            newDescription,
-            newCategoryId);
+        var command = new UpdateTimeEntryCommandBuilder()
+            .WithId(timeEntryId)
+            .WithFrom(newFrom)
+            .WithTo(newTo)
+            .WithDescription(newDescription)
+            .WithCategoryId(newCategoryId)
+            .Build();
 
         _userContext.GivenUserId(userId);
         _timeEntryRepository.GivenGetByIdAsync(timeEntryId, existingTimeEntry);

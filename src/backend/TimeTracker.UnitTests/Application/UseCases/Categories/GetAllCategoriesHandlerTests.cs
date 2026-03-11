@@ -2,6 +2,7 @@ using AwesomeAssertions;
 using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain;
+using TimeTracker.UnitTests.Common.Builders.Application.Categories;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks.Data;
 
@@ -32,7 +33,9 @@ public class GetAllCategoriesHandlerTests
 
         _categoryRepository.GivenGetAllAsync(organizationId, categories);
 
-        var query = new GetAllCategoriesHandler.Query(organizationId);
+        var query = new GetAllCategoriesQueryBuilder()
+            .WithOrganizationId(organizationId)
+            .Build();
 
         // Act
         var result = await _sut.Handle(query, CancellationToken.None);
@@ -51,7 +54,9 @@ public class GetAllCategoriesHandlerTests
         var emptyCategories = new List<Category>();
         _categoryRepository.GivenGetAllAsync(organizationId, emptyCategories);
 
-        var query = new GetAllCategoriesHandler.Query(organizationId);
+        var query = new GetAllCategoriesQueryBuilder()
+            .WithOrganizationId(organizationId)
+            .Build();
 
         // Act
         var result = await _sut.Handle(query, CancellationToken.None);

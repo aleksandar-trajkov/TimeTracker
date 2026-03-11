@@ -2,6 +2,7 @@ using AwesomeAssertions;
 using NSubstitute;
 using TimeTracker.Application.UseCases.Categories.Handlers;
 using TimeTracker.Domain;
+using TimeTracker.UnitTests.Common.Builders.Application.Categories;
 using TimeTracker.UnitTests.Common.Builders.Domain;
 using TimeTracker.UnitTests.Common.Mocks;
 using TimeTracker.UnitTests.Common.Mocks.Data;
@@ -26,7 +27,11 @@ public class CreateCategoryHandlerTests
     {
         // Arrange
         var organizationId = Guid.NewGuid();
-        var command = new CreateCategoryHandler.Command("Test Category", "Test Description", organizationId);
+        var command = new CreateCategoryCommandBuilder()
+            .WithName("Test Category")
+            .WithDescription("Test Description")
+            .WithOrganizationId(organizationId)
+            .Build();
 
         _categoryRepository.GivenInsertAsync();
 
@@ -48,7 +53,11 @@ public class CreateCategoryHandlerTests
     {
         // Arrange
         var organizationId = Guid.NewGuid();
-        var command = new CreateCategoryHandler.Command("Test Category", null, organizationId);
+        var command = new CreateCategoryCommandBuilder()
+            .WithName("Test Category")
+            .WithDescription(null)
+            .WithOrganizationId(organizationId)
+            .Build();
 
         _categoryRepository.GivenInsertAsync();
 
@@ -70,7 +79,11 @@ public class CreateCategoryHandlerTests
     {
         // Arrange
         var organizationId = Guid.NewGuid();
-        var command = new CreateCategoryHandler.Command("Test Category", "Test Description", organizationId);
+        var command = new CreateCategoryCommandBuilder()
+            .WithName("Test Category")
+            .WithDescription("Test Description")
+            .WithOrganizationId(organizationId)
+            .Build();
         var cancellationToken = new CancellationToken(true);
 
         _categoryRepository.GivenInsertAsync(cancellationToken);

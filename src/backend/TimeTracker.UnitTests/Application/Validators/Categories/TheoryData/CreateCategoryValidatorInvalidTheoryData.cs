@@ -1,4 +1,5 @@
 using TimeTracker.Application.UseCases.Categories.Handlers;
+using TimeTracker.UnitTests.Common.Builders.Application.Categories;
 
 namespace TimeTracker.UnitTests.Application.Validators.Categories.TheoryData;
 
@@ -7,27 +8,27 @@ public class CreateCategoryValidatorInvalidTheoryData : TheoryData<CreateCategor
     public CreateCategoryValidatorInvalidTheoryData()
     {
         // Empty name
-        Add(new CreateCategoryHandler.Command(string.Empty, "Valid description", Guid.NewGuid()),
+        Add(new CreateCategoryCommandBuilder().WithName(string.Empty).WithDescription("Valid description").WithOrganizationId(Guid.NewGuid()).Build(),
             "Category name is required.");
 
         // Null name
-        Add(new CreateCategoryHandler.Command(null!, "Valid description", Guid.NewGuid()),
+        Add(new CreateCategoryCommandBuilder().WithName(null!).WithDescription("Valid description").WithOrganizationId(Guid.NewGuid()).Build(),
             "Category name is required.");
 
         // Whitespace only name
-        Add(new CreateCategoryHandler.Command("   ", "Valid description", Guid.NewGuid()),
+        Add(new CreateCategoryCommandBuilder().WithName("   ").WithDescription("Valid description").WithOrganizationId(Guid.NewGuid()).Build(),
             "Category name is required.");
 
         // Name too long (201 characters)
-        Add(new CreateCategoryHandler.Command(new string('a', 201), "Valid description", Guid.NewGuid()),
+        Add(new CreateCategoryCommandBuilder().WithName(new string('a', 201)).WithDescription("Valid description").WithOrganizationId(Guid.NewGuid()).Build(),
             "Category name cannot exceed 200 characters.");
 
         // Description too long (1001 characters)
-        Add(new CreateCategoryHandler.Command("Valid name", new string('a', 1001), Guid.NewGuid()),
+        Add(new CreateCategoryCommandBuilder().WithName("Valid name").WithDescription(new string('a', 1001)).WithOrganizationId(Guid.NewGuid()).Build(),
             "Category description cannot exceed 1000 characters.");
 
         // Organization does not exist
-        Add(new CreateCategoryHandler.Command("Valid name", "Valid description", Guid.NewGuid()),
+        Add(new CreateCategoryCommandBuilder().WithName("Valid name").WithDescription("Valid description").WithOrganizationId(Guid.NewGuid()).Build(),
             "Organization does not exist.");
     }
 }
