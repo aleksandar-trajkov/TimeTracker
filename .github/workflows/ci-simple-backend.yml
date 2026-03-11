@@ -18,15 +18,15 @@ jobs:
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
       
     - name: Setup .NET 10
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5.2.0
       with:
         dotnet-version: '10.0.x'
         
     - name: Cache NuGet packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5.0.3
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -53,20 +53,20 @@ jobs:
         DOCKER_HOST: unix:///var/run/docker.sock
 
     - name: Upload Test Result Files
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: test-results
         path: ${{ github.workspace }}/**/TestResults/**/*
         retention-days: 5
 
     - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2.16.1
+      uses: EnricoMi/publish-unit-test-result-action@v2.23.0
       if: always()
       with:
         trx_files: "${{ github.workspace }}/**/*.trx"
         
     - name: Combine Coverage Reports # This is because one report is produced per project, and we want one result for all of them.
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.5.3
       with:
         reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
         targetdir: "${{ github.workspace }}" # REQUIRED # The directory where the generated report should be saved.
@@ -78,7 +78,7 @@ jobs:
         toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
 
     - name: Upload Combined Coverage XML
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: coverage
         path: ${{ github.workspace }}/Cobertura.xml
@@ -106,12 +106,12 @@ jobs:
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
       with:
         fetch-depth: 0
         
     - name: Setup .NET 10
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5.2.0
       with:
         dotnet-version: '10.0.x'
         
