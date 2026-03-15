@@ -1,4 +1,4 @@
-Time tracker: 
+Time tracker:
 
 User management:
 	Log in:
